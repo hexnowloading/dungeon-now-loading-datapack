@@ -1,0 +1,23 @@
+from reapermc:flag_handler import NewFlag
+
+
+is_holding_item = NewFlag('is_holding_item')
+is_holding_item.set_handler_path(f"reaper_framework:__internal__/flag_handler/is_holding_item")
+
+
+@is_holding_item.handler
+def handler():
+    predicate is_holding_item.generate_path('is_holding_item') {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "equipment": {
+                "mainhand": {
+                    "nbt": "{dnl.item:1b}"
+                }
+            }
+        }
+    }
+
+    with is_holding_item.set_condition():
+        if predicate is_holding_item.generate_path('is_holding_item')

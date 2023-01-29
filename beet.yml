@@ -1,0 +1,27 @@
+name: dnl
+version: '0.0.1'
+author: HexNowLoading
+description: A dungeon made by Hex
+
+data_pack:
+  load: [src]
+  zipped: false
+
+output: 'build'
+
+require:
+  - bolt
+  - bolt_expressions
+  - reapermc
+
+pipeline:
+  - mecha
+  - plugins.remove_empty_files
+
+meta:
+  bolt:
+    entrypoint:
+      - dnl:*
+  dnl:
+    namespace: 'dnl'
+    difficulty: 1

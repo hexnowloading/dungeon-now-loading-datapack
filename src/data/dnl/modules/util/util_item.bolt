@@ -1,0 +1,36 @@
+from bolt_expressions import Scoreboard, Data
+from nbtlib import Float, Byte, String
+
+macro advancement_consume_item
+        namespace=brigadier:string{"type": "word"}
+        name=brigadier:string{"type": "word"}:
+    advancement f"{namespace.value}:item/{name.value}" {
+        "criteria": {
+            "requirement": {
+                "trigger": "minecraft:consume_item",
+                "conditions": {
+                    "item": {
+                        "nbt": f"{{{namespace.value}.{name.value}:1b}}"
+                    }
+                }
+            }
+        },
+        "rewards": {
+            "function": f"{namespace.value}:item/{name.value}/trigger"
+        }
+    }
+
+macro predicate_consume_item
+    namespace=brigadier:string{"type": "word"}
+    name=brigadier:string{"type": "word"}:
+    predicate f"{namespace.value}:item/{name.value}" {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "equipment": {
+                "mainhand": {
+                    "nbt": f"{{{namespace.value}.{name.value}:1b}}"
+                }
+            }
+        }
+    }

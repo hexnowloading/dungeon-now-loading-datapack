@@ -1,0 +1,17 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ../flag/is_holding_item import is_holding_item
+from reapermc:event/on_player_tick import on_player_tick
+
+on_player_holding_item = Event('on_player_holding_item')
+on_player_holding_item.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_holding_item")
+
+
+@on_player_holding_item.handler
+def handler():
+
+    @listener(on_player_tick)
+    def _on_player_tick():
+        execute function on_player_holding_item.generate_path('holding_item'):
+            if Flag(is_holding_item):
+                on_player_holding_item.trigger()

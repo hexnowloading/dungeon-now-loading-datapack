@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "nbt": "{dnl.forbidden_apple:1b}"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "dnl:item/forbidden_apple/trigger"
+  }
+}
