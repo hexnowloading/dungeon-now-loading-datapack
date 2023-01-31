@@ -7,10 +7,12 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
         ".vscode": true,
-        ".beet_cache": true
+        ".beet_cache": true,
+        ".idea": true
     },
     "hide-files.files": [
         ".vscode",
-        ".beet_cache"
+        ".beet_cache",
+        ".idea"
     ]
 }

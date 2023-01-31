@@ -1,0 +1,242 @@
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:modify_heart":
+    tag @s add dnl.player_opening_setting
+    schedule function ./modify_heart/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+function ./modify_heart/display:
+    as @a[tag=dnl.player_opening_setting] run function ./modify_heart/options:
+        tag @s remove dnl.player_opening_setting
+        function ../util/air_text
+        tellraw @s [{"text":"                            ","strikethrough":true},{"text":" Heart Settings ","color":"gold","strikethrough":false,"bold":true},{"text":"                            ","strikethrough":true}]
+        tellraw @s {"text":"Change how many hearts you have!"}
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"[ Heart Piece ] ","color":"aqua"},{"text":"- Purple hearts that the player gains from consuming the forbidden fruit.","color":"white"}]
+        tellraw @s [{"text":"[ Bonus Heart ] ","color":"aqua"},{"text":"- Extra hearts that the player gains from filling all heart pieces.","color":"white"}]
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"Current Health Bar","color":"gold"}]
+        tellraw @s {"text":""}
+        function ./modify_heart/display_heart_piece
+        tellraw @s {"text":""}
+        function ./modify_heart/display_health
+        tellraw @s {"text":"❤❤❤❤❤❤❤❤❤❤","color":"dark_red"}
+        tellraw @s {"text":""}
+        function ./modify_heart/calculate_limit
+        # [ x ] [ x ] [ x ] [ x ]
+        if score @s dnl.max_health matches ..0 if score #dnl.world_maximum_heart_piece dnl.int matches ..0 run tellraw @s [{"text":"[ -10 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ -1 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ +1 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ +10 ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}]
+        # [ x ] [ x ] [ o ] [ x ]
+        if score @s dnl.max_health matches ..0 if score #dnl.world_maximum_heart_piece dnl.int matches 1..9 if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ -1 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ +1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_1"}},{"text":"[ +10 ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}]
+        # [ x ] [ o ] [ o ] [ x ]
+        if score @s dnl.max_health matches 1..9 if score #dnl.world_maximum_heart_piece dnl.int matches 1..19 if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int if score @s dnl.max_health > #dnl.world_maximum_heart_piece_minus_10 dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ -1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_1"}},{"text":"[ +1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_1"}},{"text":"[ +10 ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}]
+        # [ x ] [ o ] [ x ] [ x ]
+        if score @s dnl.max_health matches 1..9 if score #dnl.world_maximum_heart_piece dnl.int matches 1..9 if score @s dnl.max_health = #dnl.world_maximum_heart_piece dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ -1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_1"}},{"text":"[ +1 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ +10 ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}]
+        # [ x ] [ x ] [ o ] [ o ]
+        if score @s dnl.max_health matches ..0 if score #dnl.world_maximum_heart_piece dnl.int matches 10.. run tellraw @s [{"text":"[ -10 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ -1 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ +1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_1"}},{"text":"[ +10 ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_10"}}]
+        # [ x ] [ o ] [ o ] [ o ]
+        if score @s dnl.max_health matches 1..9 if score #dnl.world_maximum_heart_piece dnl.int matches 10.. if score @s dnl.max_health <= #dnl.world_maximum_heart_piece_minus_10 dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ -1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_1"}},{"text":"[ +1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_1"}},{"text":"[ +10 ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_10"}}]
+        # [ o ] [ o ] [ o ] [ o ]
+        if score @s dnl.max_health matches 10..90 if score #dnl.world_maximum_heart_piece dnl.int matches 10.. if score @s dnl.max_health <= #dnl.world_maximum_heart_piece_minus_10 dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_10"}},{"text":"[ -1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_1"}},{"text":"[ +1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_1"}},{"text":"[ +10 ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_10"}}]
+        # [ o ] [ o ] [ o ] [ x ]
+        if score @s dnl.max_health matches 10.. if score #dnl.world_maximum_heart_piece dnl.int matches 10.. if score @s dnl.max_health > #dnl.world_maximum_heart_piece_minus_10 dnl.int if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_10"}},{"text":"[ -1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_1"}},{"text":"[ +1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/add_1"}},{"text":"[ +10 ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}]
+        # [ o ] [ o ] [ x ] [ x ]
+        if score @s dnl.max_health matches 10.. if score #dnl.world_maximum_heart_piece dnl.int matches 10.. if score @s dnl.max_health = #dnl.world_maximum_heart_piece dnl.int run tellraw @s [{"text":"[ -10 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_10"}},{"text":"[ -1 ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/sub_1"}},{"text":"[ +1 ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}},{"text":"[ +10 ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}]
+        if score @s dnl.max_health matches 1.. run tellraw @s {"text":"[ Reset ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Sets health to 0!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/reset"}}
+        if score @s dnl.max_health matches ..0 run tellraw @s {"text":"[ Reset ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Sets health to 0!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/modify_heart/null"}}
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"text":" Go Back","color":"white"}]
+
+function ./modify_heart/calculate_limit:
+    scoreboard players operation #dnl.world_maximum_heart_piece_minus_10 dnl.int = #dnl.world_maximum_heart_piece dnl.int
+    scoreboard players operation #dnl.world_maximum_heart_piece_minus_10 dnl.int -= #dnl.10 dnl.constant
+
+function ./modify_heart/null:
+    playsound minecraft:block.note_block.guitar master @s ~ ~ ~ 1 0.1 1
+
+function ./modify_heart/reset:
+    scoreboard players set @s dnl.max_health 0
+    function ./modify_heart/update_health
+    tag @s add dnl.player_opening_setting
+    schedule function ./modify_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./modify_heart/sub_10:
+    scoreboard players remove @s dnl.max_health 10
+    function ./modify_heart/update_health
+    tag @s add dnl.player_opening_setting
+    schedule function ./modify_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./modify_heart/sub_1:
+    scoreboard players remove @s dnl.max_health 1
+    function ./modify_heart/update_health
+    tag @s add dnl.player_opening_setting
+    schedule function ./modify_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./modify_heart/add_1:
+    scoreboard players add @s dnl.max_health 1
+    function ./modify_heart/update_health
+    tag @s add dnl.player_opening_setting
+    schedule function ./modify_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./modify_heart/add_10:
+    scoreboard players add @s dnl.max_health 10
+    function ./modify_heart/update_health
+    tag @s add dnl.player_opening_setting
+    schedule function ./modify_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./modify_heart/update_health:
+    attribute @s[scores={dnl.max_health=0}] minecraft:generic.max_health base set 20
+    attribute @s[scores={dnl.max_health=1..3}] minecraft:generic.max_health base set 22
+    attribute @s[scores={dnl.max_health=4..8}] minecraft:generic.max_health base set 24
+    attribute @s[scores={dnl.max_health=9..15}] minecraft:generic.max_health base set 26
+    attribute @s[scores={dnl.max_health=16..24}] minecraft:generic.max_health base set 28
+    attribute @s[scores={dnl.max_health=25..35}] minecraft:generic.max_health base set 30
+    attribute @s[scores={dnl.max_health=36..48}] minecraft:generic.max_health base set 32
+    attribute @s[scores={dnl.max_health=49..63}] minecraft:generic.max_health base set 34
+    attribute @s[scores={dnl.max_health=64..80}] minecraft:generic.max_health base set 36
+    attribute @s[scores={dnl.max_health=81..99}] minecraft:generic.max_health base set 38
+    attribute @s[scores={dnl.max_health=100..}] minecraft:generic.max_health base set 40
+
+    effect give @s minecraft:instant_health 1 100 true
+
+    if entity @s[scores={dnl.max_health=1,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=4,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=9,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=16,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=25,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=36,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=49,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=64,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=81,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+    if entity @s[scores={dnl.max_health=100,dnl.time_since_death=1..}] positioned ^ ^ ^1 run particle minecraft:heart ~ ~2 ~ 0 0 0 1 1
+
+function ./modify_heart/display_health:
+    if score @s dnl.max_health matches ..0 run tellraw @s {"text":""}
+    if score @s dnl.max_health matches 1..3 run tellraw @s {"text":"❤","color":"red"}
+    if score @s dnl.max_health matches 4..8 run tellraw @s {"text":"❤❤","color":"red"}
+    if score @s dnl.max_health matches 9..15 run tellraw @s {"text":"❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 16..24 run tellraw @s {"text":"❤❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 25..35 run tellraw @s {"text":"❤❤❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 36..48 run tellraw @s {"text":"❤❤❤❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 49..63 run tellraw @s {"text":"❤❤❤❤❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 64..80 run tellraw @s {"text":"❤❤❤❤❤❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 81..99 run tellraw @s {"text":"❤❤❤❤❤❤❤❤❤","color":"red"}
+    if score @s dnl.max_health matches 100.. run tellraw @s {"text":"❤❤❤❤❤❤❤❤❤❤","color":"red"}
+
+function ./modify_heart/display_heart_piece:
+    if score #dnl.world_maximum_heart dnl.int matches 0 run tellraw @s[scores={dnl.max_health=0}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 0 run tellraw @s[scores={dnl.max_health=0}] {"text":" 1 ♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 1 run tellraw @s[scores={dnl.max_health=1}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 1 run tellraw @s[scores={dnl.max_health=1}] {"text":" 3 ♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=2}] {"text":" 2 ♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=3}] {"text":" 1 ♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 2 run tellraw @s[scores={dnl.max_health=4}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 2 run tellraw @s[scores={dnl.max_health=4}] {"text":" 5 ♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=5}] {"text":" 4 ♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=6}] {"text":" 3 ♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=7}] {"text":" 2 ♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=8}] {"text":" 1 ♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 3 run tellraw @s[scores={dnl.max_health=9}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 3 run tellraw @s[scores={dnl.max_health=9}] {"text":" 7 ♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=10}] {"text":" 6 ♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=11}] {"text":" 5 ♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=12}] {"text":" 4 ♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=13}] {"text":" 3 ♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=14}] {"text":" 2 ♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=15}] {"text":" 1 ♥♥♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 4 run tellraw @s[scores={dnl.max_health=16}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 4 run tellraw @s[scores={dnl.max_health=16}] {"text":" 9 ♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=17}] {"text":" 8 ♥♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=18}] {"text":" 7 ♥♥♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=19}] {"text":" 6 ♥♥♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=20}] {"text":" 5 ♥♥♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=21}] {"text":" 4 ♥♥♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=22}] {"text":" 3 ♥♥♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=23}] {"text":" 2 ♥♥♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=24}] {"text":" 1 ♥♥♥♥♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 5 run tellraw @s[scores={dnl.max_health=25}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 5 run tellraw @s[scores={dnl.max_health=25}] {"text":"11 ♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=26}] {"text":"10 ♡♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=27}] {"text":" 9 ♥♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=28}] {"text":" 8 ♥♥♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=29}] {"text":" 7 ♥♥♥♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=30}] {"text":" 6 ♥♥♥♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=31}] {"text":" 5 ♥♥♥♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=32}] {"text":" 4 ♥♥♥♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=33}] {"text":" 3 ♥♥♥♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=34}] {"text":" 2 ♥♥♥♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=35}] {"text":" 1 ♥♥♥♥♥♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 6 run tellraw @s[scores={dnl.max_health=36}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 6 run tellraw @s[scores={dnl.max_health=36}] {"text":"13 ♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=37}] {"text":"12 ♥♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=38}] {"text":"11 ♥♥♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=39}] {"text":"10 ♡♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=40}] {"text":" 9 ♥♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=41}] {"text":" 8 ♥♥♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=42}] {"text":" 7 ♥♥♥♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=43}] {"text":" 6 ♥♥♥♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=44}] {"text":" 5 ♥♥♥♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=45}] {"text":" 4 ♥♥♥♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=46}] {"text":" 3 ♥♥♥♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=47}] {"text":" 2 ♥♥♥♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=48}] {"text":" 1 ♥♥♥♥♥♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 7 run tellraw @s[scores={dnl.max_health=49}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 7 run tellraw @s[scores={dnl.max_health=49}] {"text":"15 ♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=50}] {"text":"14 ♥♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=51}] {"text":"13 ♥♥♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=52}] {"text":"12 ♥♥♥♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=53}] {"text":"11 ♥♥♥♥♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=54}] {"text":"10 ♡♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=55}] {"text":" 9 ♥♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=56}] {"text":" 8 ♥♥♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=57}] {"text":" 7 ♥♥♥♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=58}] {"text":" 6 ♥♥♥♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=59}] {"text":" 5 ♥♥♥♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=60}] {"text":" 4 ♥♥♥♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=61}] {"text":" 3 ♥♥♥♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=62}] {"text":" 2 ♥♥♥♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=63}] {"text":" 1 ♥♥♥♥♥♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 8 run tellraw @s[scores={dnl.max_health=64}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 8 run tellraw @s[scores={dnl.max_health=64}] {"text":"17 ♡♡♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=65}] {"text":"16 ♥♡♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=66}] {"text":"15 ♥♥♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=67}] {"text":"14 ♥♥♥♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=68}] {"text":"13 ♥♥♥♥♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=69}] {"text":"12 ♥♥♥♥♥♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=70}] {"text":"11 ♥♥♥♥♥♥♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=71}] {"text":"10 ♡♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=72}] {"text":" 9 ♥♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=73}] {"text":" 8 ♥♥♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=74}] {"text":" 7 ♥♥♥♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=75}] {"text":" 6 ♥♥♥♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=76}] {"text":" 5 ♥♥♥♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=77}] {"text":" 4 ♥♥♥♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=78}] {"text":" 3 ♥♥♥♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=79}] {"text":" 2 ♥♥♥♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=80}] {"text":" 1 ♥♥♥♥♥♥♥♥♥♡","color":"light_purple"}
+    if score #dnl.world_maximum_heart dnl.int matches 9 run tellraw @s[scores={dnl.max_health=81}] {"text":"---","color":"light_purple"}
+    unless score #dnl.world_maximum_heart dnl.int matches 9 run tellraw @s[scores={dnl.max_health=81}] {"text":"19 ♡♡♡♡♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=82}] {"text":"18 ♥♡♡♡♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=83}] {"text":"17 ♥♥♡♡♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=84}] {"text":"16 ♥♥♥♡♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=85}] {"text":"15 ♥♥♥♥♡♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=86}] {"text":"14 ♥♥♥♥♥♡♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=87}] {"text":"13 ♥♥♥♥♥♥♡♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=88}] {"text":"12 ♥♥♥♥♥♥♥♡♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=89}] {"text":"11 ♥♥♥♥♥♥♥♥♡ ❤","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=90}] {"text":"10 ♡♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=91}] {"text":" 9 ♥♡♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=92}] {"text":" 8 ♥♥♡♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=93}] {"text":" 7 ♥♥♥♡♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=94}] {"text":" 6 ♥♥♥♥♡♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=95}] {"text":" 5 ♥♥♥♥♥♡♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=96}] {"text":" 4 ♥♥♥♥♥♥♡♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=97}] {"text":" 3 ♥♥♥♥♥♥♥♡♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=98}] {"text":" 2 ♥♥♥♥♥♥♥♥♡♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=99}] {"text":" 1 ♥♥♥♥♥♥♥♥♥♡","color":"light_purple"}
+    tellraw @s[scores={dnl.max_health=100..}] {"text":"---","color":"light_purple"}
+    

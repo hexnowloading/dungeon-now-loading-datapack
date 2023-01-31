@@ -1,0 +1,104 @@
+from reapermc:api import
+    listener
+    on_player_join
+
+from ../api import
+    in_world_setting
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+@listener(in_world_setting)
+def world_setting():
+    scoreboard players set #dnl.world_maximum_heart dnl.int 10
+    scoreboard players set #dnl.world_maximum_heart_piece dnl.int 100
+
+@listener(on_player_join)
+def player_join():
+    if score @s dnl.max_health > #dnl.world_maximum_heart_piece dnl.int run function ./maximum_heart/update_health
+
+function f"{cmd}:maximum_heart":
+    tag @s add dnl.player_opening_setting
+    schedule function ./maximum_heart/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+
+function ./maximum_heart/display:
+    as @a[tag=dnl.player_opening_setting] run function ./maximum_heart/options:
+        tag @s remove dnl.player_opening_setting
+        function ../util/air_text
+        tellraw @s [{"text":"                      ","strikethrough":true},{"text":" Maximum Heart Settings ","color":"gold","strikethrough":false,"bold":true},{"text":"                      ","strikethrough":true}]
+        tellraw @s {"text":"Sets the maximum number of bonus hearts players can gain!"}
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"Current Maximum","color":"gold"}]
+        tellraw @s {"text":""}
+        function ./maximum_heart/display_health
+        tellraw @s {"text":"❤❤❤❤❤❤❤❤❤❤","color":"dark_red"}
+        tellraw @s {"text":""}
+        if score #dnl.world_maximum_heart dnl.int matches ..0 run tellraw @s [{"text":"[ - ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/null"}},{"text":"[ + ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/add"}}]
+        if score #dnl.world_maximum_heart dnl.int matches 1..9 run tellraw @s [{"text":"[ - ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/sub"}},{"text":"[ + ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/add"}}]
+        if score #dnl.world_maximum_heart dnl.int matches 10.. run tellraw @s [{"text":"[ - ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/sub"}},{"text":"[ + ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/null"}}]
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"text":" Go Back","color":"white"}]
+
+function ./maximum_heart/null:
+    playsound minecraft:block.note_block.guitar master @s ~ ~ ~ 1 0.1 1
+
+function ./maximum_heart/sub:
+    scoreboard players remove #dnl.world_maximum_heart dnl.int 1
+    function ./maximum_heart/heart_piece
+    tag @s add dnl.player_opening_setting
+    schedule function ./maximum_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./maximum_heart/add:
+    scoreboard players add #dnl.world_maximum_heart dnl.int 1
+    function ./maximum_heart/heart_piece
+    tag @s add dnl.player_opening_setting
+    schedule function ./maximum_heart/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./maximum_heart/heart_piece:
+    if score #dnl.world_maximum_heart dnl.int matches ..0 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 0
+    if score #dnl.world_maximum_heart dnl.int matches 1 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 1
+    if score #dnl.world_maximum_heart dnl.int matches 2 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 4
+    if score #dnl.world_maximum_heart dnl.int matches 3 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 9
+    if score #dnl.world_maximum_heart dnl.int matches 4 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 16
+    if score #dnl.world_maximum_heart dnl.int matches 5 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 25
+    if score #dnl.world_maximum_heart dnl.int matches 6 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 36
+    if score #dnl.world_maximum_heart dnl.int matches 7 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 49
+    if score #dnl.world_maximum_heart dnl.int matches 8 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 64
+    if score #dnl.world_maximum_heart dnl.int matches 9 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 81
+    if score #dnl.world_maximum_heart dnl.int matches 10 run scoreboard players set #dnl.world_maximum_heart_piece dnl.int 100
+
+    as @a at @s if score @s dnl.max_health > #dnl.world_maximum_heart_piece dnl.int run function ./maximum_heart/update_health
+
+function ./maximum_heart/update_health:
+    scoreboard players operation @a dnl.max_health = #dnl.world_maximum_heart_piece dnl.int
+
+    attribute @s[scores={dnl.max_health=0}] minecraft:generic.max_health base set 20
+    attribute @s[scores={dnl.max_health=1..3}] minecraft:generic.max_health base set 22
+    attribute @s[scores={dnl.max_health=4..8}] minecraft:generic.max_health base set 24
+    attribute @s[scores={dnl.max_health=9..15}] minecraft:generic.max_health base set 26
+    attribute @s[scores={dnl.max_health=16..24}] minecraft:generic.max_health base set 28
+    attribute @s[scores={dnl.max_health=25..35}] minecraft:generic.max_health base set 30
+    attribute @s[scores={dnl.max_health=36..48}] minecraft:generic.max_health base set 32
+    attribute @s[scores={dnl.max_health=49..63}] minecraft:generic.max_health base set 34
+    attribute @s[scores={dnl.max_health=64..80}] minecraft:generic.max_health base set 36
+    attribute @s[scores={dnl.max_health=81..99}] minecraft:generic.max_health base set 38
+    attribute @s[scores={dnl.max_health=100..}] minecraft:generic.max_health base set 40
+
+    effect give @s minecraft:instant_health 1 100 true
+
+
+function ./maximum_heart/display_health:
+    if score #dnl.world_maximum_heart dnl.int matches ..0 run tellraw @s {"text":""}
+    if score #dnl.world_maximum_heart dnl.int matches 1 run tellraw @s {"text":"❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 2 run tellraw @s {"text":"❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 3 run tellraw @s {"text":"❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 4 run tellraw @s {"text":"❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 5 run tellraw @s {"text":"❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 6 run tellraw @s {"text":"❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 7 run tellraw @s {"text":"❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 8 run tellraw @s {"text":"❤❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 9 run tellraw @s {"text":"❤❤❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 10 run tellraw @s {"text":"❤❤❤❤❤❤❤❤❤❤","color":"red"}

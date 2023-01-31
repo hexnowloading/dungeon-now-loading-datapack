@@ -1,0 +1,17 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from reapermc:event/on_server_load import on_server_load
+
+in_world_setting = Event('in_world_setting')
+in_world_setting.set_handler_path(f"reaper_framework:__internal__/event_handler/in_world_setting")
+
+datapack_version = ctx.meta.dnl.datapack_version
+
+@in_world_setting.handler
+def handler():
+
+    @listener(on_server_load)
+    def _on_server_load():
+        execute function in_world_setting.generate_path('world_load'):
+            unless score #dnl.version dnl.version matches datapack_version:
+                in_world_setting.trigger()

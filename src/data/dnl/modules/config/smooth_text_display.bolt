@@ -1,0 +1,51 @@
+from reapermc:api import
+    sleep
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:smooth_text_display":
+    tag @s add dnl.player_opening_setting
+    schedule function ./smooth_text_display/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+function ./smooth_text_display/on_cross:
+    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/smooth_text_display/on_set"}},{"text":"On","color":"white"}]
+
+function ./smooth_text_display/off_cross:
+    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/smooth_text_display/off_set"}},{"text":"Off","color":"white"}]
+
+function ./smooth_text_display/on_check:
+    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"On","color":"white"}]
+
+function ./smooth_text_display/off_check:
+    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Off","color":"white"}]
+
+
+function ./smooth_text_display/display:
+    as @a[tag=dnl.player_opening_setting] run function ./smooth_text_display/options:
+        tag @s remove dnl.player_opening_setting
+        store result score #dnl.smooth_text_display dnl.boolean run gamerule sendCommandFeedback
+        function ../util/air_text
+        tellraw @s [{"text":"                 ","strikethrough":true},{"text":" Smooth Text Display Settings ","color":"gold","strikethrough":false,"bold":true},{"text":"                  ","strikethrough":true}]
+        tellraw @s {"text":"This option disables “sendCommandFeedback” gamerule to allow smoother option display for all settings. You won’t see the text flickering if this option is on."}
+        tellraw @s {"text":""}
+        if score #dnl.smooth_text_display dnl.boolean matches 1 run function ./smooth_text_display/off_chosen:
+            function ./smooth_text_display/on_cross
+            function ./smooth_text_display/off_check
+        if score #dnl.smooth_text_display dnl.boolean matches 0 run function ./smooth_text_display/on_chosen:
+            function ./smooth_text_display/on_check
+            function ./smooth_text_display/off_cross
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"text":" Go Back","color":"white"}]
+
+function ./smooth_text_display/on_set:
+    gamerule sendCommandFeedback false
+    tag @s add dnl.player_opening_setting
+    schedule function ./smooth_text_display/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+
+function ./smooth_text_display/off_set:
+    gamerule sendCommandFeedback true
+    tag @s add dnl.player_opening_setting
+    schedule function ./smooth_text_display/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1

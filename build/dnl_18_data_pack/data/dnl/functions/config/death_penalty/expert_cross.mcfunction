@@ -1,0 +1,1 @@
+tellraw @s [{"text": "[ \u274c ] ", "color": "red", "hoverEvent": {"action": "show_text", "contents": [{"text": "Click to Enable!", "color": "green"}]}, "clickEvent": {"action": "run_command", "value": "/function dnl:config/death_penalty/expert_set"}}, {"text": "Expert - Loses heart pieces equal to the bonus hearts", "color": "white"}]

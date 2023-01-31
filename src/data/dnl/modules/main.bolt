@@ -1,5 +1,34 @@
 from reapermc:api import
-    Flag
-
+    listener
+    on_server_load
+    on_player_join
 from ./api import
-    on_player_holding_item
+    in_player_setting
+    in_world_setting
+
+datapack_version = ctx.meta.dnl.datapack_version
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.boolean dummy
+    scoreboard objectives add dnl.int dummy
+    scoreboard objectives add dnl.percent dummy
+    scoreboard objectives add dnl.constant dummy
+    scoreboard objectives add dnl.version dummy
+
+    scoreboard objectives add dnl.max_health dummy
+    scoreboard objectives add dnl.time_since_death minecraft.custom:minecraft.time_since_death
+    scoreboard objectives add dnl.death_penalty_level dummy
+
+    scoreboard players set #dnl.1 dnl.constant 1
+    scoreboard players set #dnl.9 dnl.constant 9
+    scoreboard players set #dnl.10 dnl.constant 10
+    scoreboard players set #dnl.80 dnl.constant 80
+
+@listener(in_player_setting)
+def player_setting():
+    scoreboard players set @s dnl.version datapack_version
+
+@listener(in_world_setting)
+def world_setting():
+    scoreboard players set #dnl.version dnl.version datapack_version

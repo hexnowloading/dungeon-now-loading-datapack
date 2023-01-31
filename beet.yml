@@ -1,5 +1,5 @@
 name: dnl
-version: '0.0.1'
+version: '18'
 author: HexNowLoading
 description: A dungeon made by Hex
 
@@ -24,4 +24,6 @@ meta:
       - dnl:*
   dnl:
     namespace: 'dnl'
-    difficulty: 1
+    cmd_namespace: 'cmd'
+    datapack_version: 18
+  config:

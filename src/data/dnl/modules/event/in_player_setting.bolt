@@ -1,0 +1,25 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from reapermc:event/on_player_join import on_player_join
+from ./on_player_load import on_player_load
+
+in_player_setting = Event('in_player_setting')
+in_player_setting.set_handler_path(f"reaper_framework:__internal__/event_handler/in_player_setting")
+
+datapack_version = ctx.meta.dnl.datapack_version
+
+@in_player_setting.handler
+def handler():
+
+    @listener(on_player_load)
+    def _on_player_load():
+        execute function in_player_setting.generate_path('player_setting'):
+            unless score @s dnl.version matches datapack_version:
+                in_player_setting.trigger()
+    
+    @listener(on_player_join)
+    def _on_player_join():
+        execute function in_player_setting.generate_path('player_setting'):
+            unless score @s dnl.version matches datapack_version:
+                in_player_setting.trigger()
+                

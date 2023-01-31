@@ -1,0 +1,113 @@
+from reapermc:api import
+    listener
+
+from ../api import
+    in_player_setting
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+@listener(in_player_setting)
+def player_setting():
+    # Default Death Penalty Level
+    #  0 - peaceful
+    #  1 - casual
+    #  2 - expert
+    #  3 - hardcore
+    scoreboard players set @s dnl.death_penalty_level 1
+
+function f"{cmd}:death_penalty":
+    tag @s add dnl.player_opening_setting
+    schedule function ./death_penalty/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+function ./death_penalty/peaceful_cross:
+    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/death_penalty/peaceful_set"}},{"text":"Peaceful - No penalty","color":"white"}]
+
+function ./death_penalty/classic_cross:
+    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/death_penalty/classic_set"}},{"text":"Classic - Loses 1 heart piece","color":"white"}]
+
+function ./death_penalty/expert_cross:
+    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/death_penalty/expert_set"}},{"text":"Expert - Loses heart pieces equal to the bonus hearts","color":"white"}]
+
+function ./death_penalty/hardcore_cross:
+    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/death_penalty/hardcore_set"}},{"text":"Hardcore - Loses all bonus hearts and heart pieces","color":"white"}]
+
+function ./death_penalty/peaceful_check:
+    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Peaceful - No penalty","color":"white"}]
+
+function ./death_penalty/classic_check:
+    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Classic - Loses 1 heart piece","color":"white"}]
+
+function ./death_penalty/expert_check:
+    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Expert - Loses heart pieces equal to the bonus hearts","color":"white"}]
+
+function ./death_penalty/hardcore_check:
+    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Hardcore - Loses all bonus hearts and heart pieces","color":"white"}]
+
+function ./death_penalty/display:
+    as @a[tag=dnl.player_opening_setting] run function ./death_penalty/options:
+        tag @s remove dnl.player_opening_setting
+        function ../util/air_text
+        tellraw @s [{"text":"                     ","strikethrough":true},{"text":" Death Penalty Settings ","color":"gold","strikethrough":false,"bold":true},{"text":"                      ","strikethrough":true}]
+        tellraw @s {"text":"Sets how many hearts you will lose on death."}
+        tellraw @s {"text":""}
+        if score #dnl.world_death_penalty_level dnl.int matches 0 run function ./death_penalty/options_enabled:
+            tellraw @s [{"text":"[ Heart Piece ] ","color":"aqua"},{"text":"- Purple hearts that the player gains from consuming the forbidden fruit.","color":"white"}]
+            tellraw @s [{"text":"[ Bonus Heart ] ","color":"aqua"},{"text":"- Extra hearts that the player gains from filling all heart pieces.","color":"white"}]
+            tellraw @s {"text":""}
+            if score @s dnl.death_penalty_level matches 0 run function ./death_penalty/peaceful_chosen:
+                function ./death_penalty/peaceful_check
+                function ./death_penalty/classic_cross
+                function ./death_penalty/expert_cross
+                function ./death_penalty/hardcore_cross
+            if score @s dnl.death_penalty_level matches 1 run function ./death_penalty/classic_chosen:
+                function ./death_penalty/peaceful_cross
+                function ./death_penalty/classic_check
+                function ./death_penalty/expert_cross
+                function ./death_penalty/hardcore_cross
+            if score @s dnl.death_penalty_level matches 2 run function ./death_penalty/expert_chosen:
+                function ./death_penalty/peaceful_cross
+                function ./death_penalty/classic_cross
+                function ./death_penalty/expert_check
+                function ./death_penalty/hardcore_cross
+            if score @s dnl.death_penalty_level matches 3 run function ./death_penalty/hardcore_chosen:
+                function ./death_penalty/peaceful_cross
+                function ./death_penalty/classic_cross
+                function ./death_penalty/expert_cross
+                function ./death_penalty/hardcore_check
+        if score #dnl.world_death_penalty_level dnl.int matches 1 run function ./death_penalty/world_death_penalty_peaceful:
+            tellraw @s [{"text":"Peaceful Death Penalty is forced to all players. You cannot change your death penalty settings until","color":"red"},{"text":" [ World Death Penalty ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Go to this setting!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:world_death_penalty"}},{"text":" is off.","color":"red"}]
+        if score #dnl.world_death_penalty_level dnl.int matches 2 run function ./death_penalty/world_death_penalty_classic:
+            tellraw @s [{"text":"Classic Death Penalty is forced to all players. You cannot change your death penalty settings until","color":"red"},{"text":" [ World Death Penalty ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Go to this setting!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:world_death_penalty"}},{"text":" is off.","color":"red"}]
+        if score #dnl.world_death_penalty_level dnl.int matches 3 run function ./death_penalty/world_death_penalty_expert:
+            tellraw @s [{"text":"Expert Death Penalty is forced to all players. You cannot change your death penalty settings until","color":"red"},{"text":" [ World Death Penalty ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Go to this setting!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:world_death_penalty"}},{"text":" is off.","color":"red"}]
+        if score #dnl.world_death_penalty_level dnl.int matches 4 run function ./death_penalty/world_death_penalty_hardcore:
+            tellraw @s [{"text":"Hardcore Death Penalty is forced to all players. You cannot change your death penalty settings until","color":"red"},{"text":" [ World Death Penalty ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Go to this setting!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:world_death_penalty"}},{"text":" is off.","color":"red"}]
+        tellraw @s {"text":""}
+        tellraw @s [{"text":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"text":" Go Back","color":"white"}]
+
+
+function ./death_penalty/peaceful_set:
+    scoreboard players set @s dnl.death_penalty_level 0
+    tag @s add dnl.player_opening_setting
+    schedule function ./death_penalty/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./death_penalty/classic_set:
+    scoreboard players set @s dnl.death_penalty_level 1
+    tag @s add dnl.player_opening_setting
+    schedule function ./death_penalty/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./death_penalty/expert_set:
+    scoreboard players set @s dnl.death_penalty_level 2
+    tag @s add dnl.player_opening_setting
+    schedule function ./death_penalty/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
+function ./death_penalty/hardcore_set:
+    scoreboard players set @s dnl.death_penalty_level 3
+    tag @s add dnl.player_opening_setting
+    schedule function ./death_penalty/display 1t
+    playsound minecraft:entity.experience_orb.pickup master @s ~ ~ ~ 1 1 1
+
