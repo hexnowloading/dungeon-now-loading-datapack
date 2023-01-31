@@ -1,0 +1,62 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:potion",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl.honey_potion:1b,dnl.level:1b,display:{Name:'{\"text\":\"Honey Potion\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Cure Poison\",\"color\":\"blue\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When Applied:\",\"color\":\"dark_purple\",\"italic\":false}','{\"text\":\"+5 Full Heart Healing\",\"color\":\"blue\",\"italic\":false}']},CustomPotionEffects:[{Id:6b,Amplifier:0b,Duration:0},{Id:10b,Amplifier:0b,Duration:300}],CustomPotionColor:16763190}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:nether_star",
+          "functions": [
+            {
+              "function": "minecraft:set_attributes",
+              "modifiers": [
+                {
+                  "attribute": "minecraft:generic.luck",
+                  "name": "",
+                  "amount": {
+                    "type": "minecraft:score",
+                    "target": "this",
+                    "score": "reaper_framework.entity_nbt.user"
+                  },
+                  "operation": "addition",
+                  "slot": "feet"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{reaper_framework.entity_nbt.death_cleanup: 1b}"
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "minecraft:entity_scores",
+              "entity": "this",
+              "scores": {
+                "reaper_framework.entity_nbt.user": {
+                  "min": 0
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_boots",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{Name:'{\"text\":\"Golem Heart Boots\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Full Set Bonus:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\"Strength I\",\"color\":\"blue\",\"italic\":false}','{\"text\":\"Resistance I\",\"color\":\"blue\",\"italic\":false}']},CustomModelData:15556,dnl.item:1b,dnl.armor_item:1b,dnl.golem_heart_armor:1b,dnl.golem_heart_boots:1b,AttributeModifiers:[{AttributeName:\"generic.armor\",Name:\"generic.armor\",Amount:3,Operation:0,UUID:[I;898471069,2058832821,-1698531562,-984962025],Slot:\"feet\"},{AttributeName:\"generic.armor_toughness\",Name:\"generic.armor_toughness\",Amount:1,Operation:0,UUID:[I;-2072221910,-181515236,-1368984170,1859548987],Slot:\"feet\"},{AttributeName:\"generic.knockback_resistance\",Name:\"generic.knockback_resistance\",Amount:0.1,Operation:0,UUID:[I;1071255997,1835355139,-1874791847,327641371],Slot:\"feet\"},{AttributeName:\"generic.max_health\",Name:\"generic.max_health\",Amount:2,Operation:0,UUID:[I;-1360000700,-402501916,-2134664476,-1246929001],Slot:\"feet\"}]}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:nether_star",
+          "functions": [
+            {
+              "function": "minecraft:set_attributes",
+              "modifiers": [
+                {
+                  "attribute": "minecraft:generic.luck",
+                  "name": "",
+                  "amount": {
+                    "type": "minecraft:score",
+                    "target": "this",
+                    "score": "reaper_framework.entity_nbt.user"
+                  },
+                  "operation": "addition",
+                  "slot": "feet"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{reaper_framework.entity_nbt.death_cleanup: 1b}"
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "minecraft:entity_scores",
+              "entity": "this",
+              "scores": {
+                "reaper_framework.entity_nbt.user": {
+                  "min": 0
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

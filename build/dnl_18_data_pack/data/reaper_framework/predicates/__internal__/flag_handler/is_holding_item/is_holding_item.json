@@ -4,7 +4,11 @@
   "predicate": {
     "equipment": {
       "mainhand": {
-        "nbt": "{dnl.item:1b}"
+        "count": {
+          "min": 1,
+          "max": 64
+        },
+        "nbt": "{dnl.hold_item:1b}"
       }
     }
   }

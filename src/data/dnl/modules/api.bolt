@@ -4,6 +4,7 @@ from ./event/in_world_setting import in_world_setting
 from ./event/on_player_holding_item import on_player_holding_item
 from ./event/on_player_respawn import on_player_respawn
 from ./event/on_player_load import on_player_load
+from ./event/on_player_wearing_full_armor import on_player_wearing_full_armor
 
 # Flags
 from ./flag/is_holding_item import is_holding_item

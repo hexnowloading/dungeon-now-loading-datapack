@@ -4,6 +4,9 @@
   "predicate": {
     "equipment": {
       "mainhand": {
+        "items": [
+          "minecraft:apple"
+        ],
         "nbt": "{dnl.forbidden_apple:1b}"
       }
     }

@@ -19,13 +19,13 @@ effect give @s[scores={dnl.max_health=49}] minecraft:instant_health 1 100 true
 effect give @s[scores={dnl.max_health=64}] minecraft:instant_health 1 100 true
 effect give @s[scores={dnl.max_health=81}] minecraft:instant_health 1 100 true
 effect give @s[scores={dnl.max_health=100}] minecraft:instant_health 1 100 true
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=1, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=4, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=9, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=16, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=25, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=36, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=49, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=64, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=81, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
-playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=100, dnl.time_since_death=1..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=1, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=4, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=9, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=16, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=25, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=36, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=49, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=64, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=81, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
+playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=100, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1

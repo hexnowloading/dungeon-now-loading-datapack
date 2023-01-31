@@ -1,0 +1,48 @@
+from ../util/util_item import
+    advancement_consume_item
+    predicate_consume_item
+
+from ../api import
+    on_player_holding_item
+
+from reapermc:api import
+    listener
+    loop
+
+namespace = ctx.meta.dnl.namespace
+item_name = 'forbidden_golden_apple'
+
+advancement_consume_item namespace item_name golden_apple
+predicate_consume_item namespace item_name golden_apple
+loot_table ../item/forbidden_golden_apple {
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_apple",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{display:{Name:'{\"text\":\"Forbidden Golden Apple\",\"color\":\"light_purple\",\"italic\":false}',Lore:['{\"text\":\"+10 Vitality\",\"color\":\"blue\",\"italic\":false}']},dnl.item:1b,dnl.hold_item:1b,dnl.forbidden_fruit:1b,dnl.forbidden_golden_apple:1b,dnl.vitality:10b,Enchantments:[{}]}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+@listener(on_player_holding_item)
+def holding_item():
+    if predicate ../item/forbidden_golden_apple run function ./abstract_forbidden_fruit/display_health
+
+function ./forbidden_golden_apple/trigger:
+    advancement revoke @s only dnl:item/forbidden_golden_apple
+    unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+    with loop(10, 0):
+        unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run function ./forbidden_golden_apple/increase_heart_piece:
+            scoreboard players add @s dnl.max_health 1
+            function ./abstract_forbidden_fruit/update_health

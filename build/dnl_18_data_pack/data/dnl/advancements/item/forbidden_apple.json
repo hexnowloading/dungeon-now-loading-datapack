@@ -4,6 +4,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
+          "items": [
+            "minecraft:apple"
+          ],
           "nbt": "{dnl.forbidden_apple:1b}"
         }
       }

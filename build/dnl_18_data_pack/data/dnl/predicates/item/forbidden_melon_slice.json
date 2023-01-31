@@ -1,0 +1,14 @@
+{
+  "condition": "minecraft:entity_properties",
+  "entity": "this",
+  "predicate": {
+    "equipment": {
+      "mainhand": {
+        "items": [
+          "minecraft:melon_slice"
+        ],
+        "nbt": "{dnl.forbidden_melon_slice:1b}"
+      }
+    }
+  }
+}

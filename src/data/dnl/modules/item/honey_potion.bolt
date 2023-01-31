@@ -1,0 +1,61 @@
+from ../util/util_item import
+    advancement_consume_item
+    predicate_consume_item
+
+from ../api import
+    on_player_holding_item
+
+from reapermc:api import
+    listener
+    loop
+    on_server_load
+
+namespace = ctx.meta.dnl.namespace
+item_name = 'honey_potion'
+
+advancement_consume_item namespace item_name potion
+predicate_consume_item namespace item_name potion
+loot_table ../item/honey_potion_1 {
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:potion",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl.honey_potion:1b,dnl.level:1b,display:{Name:'{\"text\":\"Honey Potion\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Cure Poison\",\"color\":\"blue\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When Applied:\",\"color\":\"dark_purple\",\"italic\":false}','{\"text\":\"+5 Full Heart Healing\",\"color\":\"blue\",\"italic\":false}']},CustomPotionEffects:[{Id:6b,Amplifier:0b,Duration:0},{Id:10b,Amplifier:0b,Duration:300}],CustomPotionColor:16763190}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+loot_table ../item/honey_potion_2 {
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:potion",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl.honey_potion:1b,dnl.level:2b,display:{Name:'{\"text\":\"Honey Potion II\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Cure Poison\",\"color\":\"blue\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When Applied:\",\"color\":\"dark_purple\",\"italic\":false}','{\"text\":\"+7 Full Heart Healing\",\"color\":\"blue\",\"italic\":false}']},CustomPotionEffects:[{Id:6b,Amplifier:1b,Duration:0},{Id:10b,Amplifier:0b,Duration:300}],CustomPotionColor:16763190}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+function ./honey_potion/trigger:
+    advancement revoke @s only dnl:item/honey_potion
+    effect clear @s minecraft:poison

@@ -26,3 +26,5 @@ scoreboard players set #dnl.1 dnl.constant 1
 scoreboard players set #dnl.9 dnl.constant 9
 scoreboard players set #dnl.10 dnl.constant 10
 scoreboard players set #dnl.80 dnl.constant 80
+execute store result score $37 dnl.reaper_framework.var run gamerule doMobLoot
+execute if score $37 dnl.reaper_framework.var matches 0 run function dnl:reaper_framework/__internal__/mob_loot_gamerule_error

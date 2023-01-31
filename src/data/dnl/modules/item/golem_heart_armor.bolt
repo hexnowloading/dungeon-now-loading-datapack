@@ -1,0 +1,101 @@
+from ../util/util_item import
+    predicate_wearing_full_armor_item
+
+from ../api import
+    on_player_wearing_full_armor
+
+from reapermc:api import
+    listener
+    sleep
+
+namespace = ctx.meta.dnl.namespace
+item_name = 'golem_heart'
+
+predicate_wearing_full_armor_item namespace item_name iron
+loot_table ../item/golem_heart_helmet {
+    "type": "minecraft:generic",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:iron_helmet",
+                    "functions": [
+                        {
+                        "function": "minecraft:set_nbt",
+                        "tag": "{display:{Name:'{\"text\":\"Golem Heart Helmet\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Full Set Bonus:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\"Strength I\",\"color\":\"blue\",\"italic\":false}','{\"text\":\"Resistance I\",\"color\":\"blue\",\"italic\":false}']},CustomModelData:15556,dnl.item:1b,dnl.armor_item:1b,dnl.golem_heart_armor:1b,dnl.golem_heart_helmet:1b,AttributeModifiers:[{AttributeName:\"generic.armor_toughness\",Name:\"generic.armor_toughness\",Amount:1,Operation:0,UUID:[I;-249311023,-1749925565,-1704110300,808295520],Slot:\"head\"},{AttributeName:\"generic.knockback_resistance\",Name:\"generic.knockback_resistance\",Amount:0.1,Operation:0,UUID:[I;10115823,-1450096563,-1766350056,-1899304770],Slot:\"head\"},{AttributeName:\"generic.armor\",Name:\"generic.armor\",Amount:3,Operation:0,UUID:[I;-376756547,1945324862,-2093895826,134240071],Slot:\"head\"},{AttributeName:\"generic.max_health\",Name:\"generic.max_health\",Amount:2,Operation:0,UUID:[I;-1016346187,-999734534,-1298661431,508586402],Slot:\"head\"}]}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+loot_table ../item/golem_heart_chestplate {
+    "type": "minecraft:generic",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:iron_chestplate",
+                    "functions": [
+                        {
+                        "function": "minecraft:set_nbt",
+                        "tag": "{display:{Name:'{\"text\":\"Golem Heart Chestplate\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Full Set Bonus:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\"Strength I\",\"color\":\"blue\",\"italic\":false}','{\"text\":\"Resistance I\",\"color\":\"blue\",\"italic\":false}']},CustomModelData:15556,dnl.item:1b,dnl.armor_item:1b,dnl.golem_heart_armor:1b,dnl.golem_heart_chestplate:1b,AttributeModifiers:[{AttributeName:\"generic.armor\",Name:\"generic.armor\",Amount:8,Operation:0,UUID:[I;-1087776946,-759935131,-1261291535,440039544],Slot:\"chest\"},{AttributeName:\"generic.armor_toughness\",Name:\"generic.armor_toughness\",Amount:1,Operation:0,UUID:[I;-172634301,-1092792703,-1718382363,-210958762],Slot:\"chest\"},{AttributeName:\"generic.knockback_resistance\",Name:\"generic.knockback_resistance\",Amount:0.3,Operation:0,UUID:[I;-416101484,198724912,-1524354673,-1776522134],Slot:\"chest\"},{AttributeName:\"generic.max_health\",Name:\"generic.max_health\",Amount:2,Operation:0,UUID:[I;1006408798,609504560,-1161754772,-520466586],Slot:\"chest\"}]}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+loot_table ../item/golem_heart_leggings {
+    "type": "minecraft:generic",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:iron_leggings",
+                    "functions": [
+                        {
+                        "function": "minecraft:set_nbt",
+                        "tag": "{display:{Name:'{\"text\":\"Golem Heart Leggings\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Full Set Bonus:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\"Strength I\",\"color\":\"blue\",\"italic\":false}','{\"text\":\"Resistance I\",\"color\":\"blue\",\"italic\":false}']},CustomModelData:15556,dnl.item:1b,dnl.armor_item:1b,dnl.golem_heart_armor:1b,dnl.golem_heart_leggings:1b,AttributeModifiers:[{AttributeName:\"generic.armor\",Name:\"generic.armor\",Amount:6,Operation:0,UUID:[I;995505360,-472626502,-1831812914,1866495931],Slot:\"legs\"},{AttributeName:\"generic.armor_toughness\",Name:\"generic.armor_toughness\",Amount:1,Operation:0,UUID:[I;553758938,1073499315,-1267955630,649369167],Slot:\"legs\"},{AttributeName:\"generic.knockback_resistance\",Name:\"generic.knockback_resistance\",Amount:0.1,Operation:0,UUID:[I;-1209234405,124668418,-1597826952,1642454812],Slot:\"legs\"},{AttributeName:\"generic.max_health\",Name:\"generic.max_health\",Amount:2,Operation:0,UUID:[I;-1588287999,-1821489294,-1858498989,1826411242],Slot:\"legs\"}]}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+loot_table ../item/golem_heart_boots {
+    "type": "minecraft:generic",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:iron_boots",
+                    "functions": [
+                        {
+                        "function": "minecraft:set_nbt",
+                        "tag": "{display:{Name:'{\"text\":\"Golem Heart Boots\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Full Set Bonus:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\"Strength I\",\"color\":\"blue\",\"italic\":false}','{\"text\":\"Resistance I\",\"color\":\"blue\",\"italic\":false}']},CustomModelData:15556,dnl.item:1b,dnl.armor_item:1b,dnl.golem_heart_armor:1b,dnl.golem_heart_boots:1b,AttributeModifiers:[{AttributeName:\"generic.armor\",Name:\"generic.armor\",Amount:3,Operation:0,UUID:[I;898471069,2058832821,-1698531562,-984962025],Slot:\"feet\"},{AttributeName:\"generic.armor_toughness\",Name:\"generic.armor_toughness\",Amount:1,Operation:0,UUID:[I;-2072221910,-181515236,-1368984170,1859548987],Slot:\"feet\"},{AttributeName:\"generic.knockback_resistance\",Name:\"generic.knockback_resistance\",Amount:0.1,Operation:0,UUID:[I;1071255997,1835355139,-1874791847,327641371],Slot:\"feet\"},{AttributeName:\"generic.max_health\",Name:\"generic.max_health\",Amount:2,Operation:0,UUID:[I;-1360000700,-402501916,-2134664476,-1246929001],Slot:\"feet\"}]}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+@listener(on_player_wearing_full_armor)
+def wearing_full_armor():
+    with sleep(20, selector='entity', threading=True):
+        if predicate ../item/golem_heart_armor run function ./golem_heart_armor/effects:
+            effect give @s minecraft:strength 2 0 true
+            effect give @s minecraft:resistance 2 0 true
