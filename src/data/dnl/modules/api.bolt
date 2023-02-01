@@ -1,11 +1,11 @@
 # Events
 from ./event/in_player_setting import in_player_setting
 from ./event/in_world_setting import in_world_setting
-from ./event/on_entity_attacker import on_entity_attacker
-from ./event/on_entity_defender import on_entity_defender
 from ./event/on_entity_effect import on_entity_effect
-from ./event/on_entity_hit import on_entity_hit
-from ./event/on_entity_hurt import on_entity_hurt
+from ./event/on_entity_hit_attacker import on_entity_hit_attacker
+from ./event/on_entity_hit_target import on_entity_hit_target
+from ./event/on_entity_hurt_attacker import on_entity_hurt_attacker
+from ./event/on_entity_hurt_target import on_entity_hurt_target
 from ./event/on_entity_tick import on_entity_tick
 from ./event/on_player_holding_item import on_player_holding_item
 from ./event/on_player_respawn import on_player_respawn

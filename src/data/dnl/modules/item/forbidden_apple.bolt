@@ -4,7 +4,6 @@ from ../util/util_item import
 
 from ../api import
     on_player_holding_item
-    on_entity_hit
 
 from reapermc:api import
     listener

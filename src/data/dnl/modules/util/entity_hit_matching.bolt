@@ -747,8 +747,10 @@ function ./entity_hit_matching/on_hit/reward:
     function ./entity_hit_matching/on_hit/find_target_id
     advancement revoke @s only dnl:util/entity_hit_matching/on_hit
     tag @s add ehm.player
-    function ./entity_hit_matching/attacker_listener
-    execute as @e[type=#dnl:mobs_and_players] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hit_listener
+    store result score #dnl.enchantment_id dnl.int run data get entity @s SelectedItem.tag."dnl.enchantment_id"
+    function ./entity_hit_matching/on_hit_attacker_listener
+    execute as @e[type=#dnl:mobs_and_players] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hit_target_listener
+    scoreboard players reset #dnl.enchantment_id dnl.int
     tag @s remove ehm.player
 
 function ./entity_hit_matching/on_hurt/find_target_id:
@@ -780,6 +782,9 @@ function ./entity_hit_matching/on_hurt/reward:
     function ./entity_hit_matching/on_hurt/find_target_id
     advancement revoke @s only dnl:util/entity_hit_matching/on_hurt
     tag @s add ehm.player
-    execute as @e[type=#dnl:hurt_targets] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hurt_listener
-    function ./entity_hit_matching/defender_listener
+    execute as @e[type=#dnl:hurt_targets] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hurt_id_check:
+        store result score #dnl.enchantment_id dnl.int run data get entity @s HandItems[0].tag."dnl.enchantment_id"
+        function ./entity_hit_matching/on_hurt_attacker_listener
+    function ./entity_hit_matching/on_hurt_target_listener
+    scoreboard players reset #dnl.enchantment_id dnl.int
     tag @s remove ehm.player

@@ -1,29 +1,17 @@
 from ../api import
-    on_entity_hit
-    on_entity_hurt
-    on_entity_attacker
-    on_entity_defender
+    on_entity_hit_target
+    on_entity_hurt_target
 
 from reapermc:api import
     listener
 
-@listener(on_entity_hit)
-def entity_hit():
-    if score #dnl.poison_rapier dnl.boolean matches 1 run function ./poison_rapier/trigger
-    scoreboard players reset #dnl.poison_rapier dnl.boolean
+@listener(on_entity_hit_target)
+def entity_hit_target():
+    if score #dnl.enchantment_id dnl.int matches 1 run function ./poison_rapier/trigger
 
-@listener(on_entity_attacker)
-def entity_attacker():
-    store result score #dnl.poison_rapier dnl.boolean run data get entity @s SelectedItem.tag."dnl.poison_rapier"
-
-@listener(on_entity_defender)
-def entity_defender():
-    if score #dnl.poison_rapier dnl.boolean matches 1 run function ./poison_rapier/trigger
-    scoreboard players reset #dnl.poison_rapier dnl.boolean
-
-@listener(on_entity_hurt)
-def entity_hurt():
-    store result score #dnl.poison_rapier dnl.boolean run data get entity @s HandItems[0].tag."dnl.poison_rapier"
+@listener(on_entity_hurt_target)
+def entity_hurt_target():
+    if score #dnl.enchantment_id dnl.int matches 1 run function ./poison_rapier/trigger
 
 loot_table ../item/poison_rapier {
     "type": "minecraft:generic",
@@ -37,7 +25,7 @@ loot_table ../item/poison_rapier {
                     "functions": [
                         {
                         "function": "minecraft:set_nbt",
-                        "tag": "{display:{Name:'{\"text\":\"Poison Rapier\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Stinger I\",\"color\":\"dark_purple\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When in Main Hand:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\" 4 Attack Damage\",\"color\":\"dark_green\",\"italic\":false}','{\"text\":\" 2.0 Attack Speed\",\"color\":\"dark_green\",\"italic\":false}']},HideFlags:2,CustomModelData:13002,dnl.item:1b,dnl.poison_rapier:1b,AttributeModifiers:[{AttributeName:\"generic.attack_damage\",Name:\"generic.attack_damage\",Amount:4.0,Operation:0,UUID:[I;-881343799,-691188407,-1812519174,1731027234],Slot:\"mainhand\"},{AttributeName:\"generic.attack_speed\",Name:\"generic.attack_speed\",Amount:-2.0,Operation:0,UUID:[I;622434354,-165851298,-1524796298,-1928816170],Slot:\"mainhand\"}]}"
+                        "tag": "{display:{Name:'{\"text\":\"Poison Rapier\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Stinger I\",\"color\":\"dark_purple\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When in Main Hand:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\" 4 Attack Damage\",\"color\":\"dark_green\",\"italic\":false}','{\"text\":\" 2.0 Attack Speed\",\"color\":\"dark_green\",\"italic\":false}']},HideFlags:2,CustomModelData:13002,dnl.item:1b,dnl.poison_rapier:1b,dnl.enchantment_id:1b,AttributeModifiers:[{AttributeName:\"generic.attack_damage\",Name:\"generic.attack_damage\",Amount:4.0,Operation:0,UUID:[I;-881343799,-691188407,-1812519174,1731027234],Slot:\"mainhand\"},{AttributeName:\"generic.attack_speed\",Name:\"generic.attack_speed\",Amount:-2.0,Operation:0,UUID:[I;622434354,-165851298,-1524796298,-1928816170],Slot:\"mainhand\"}]}"
                         }
                     ]
                 }
