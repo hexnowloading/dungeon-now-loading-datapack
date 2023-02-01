@@ -1,1 +1,1 @@
-function dnl:reaper_framework/__internal__/sleep/0/sel
+execute if predicate dnl:item/golem_heart_armor run function dnl:item/golem_heart_armor/effects

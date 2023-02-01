@@ -2,21 +2,12 @@ from reapermc:api import
     listener
     on_server_load
     on_player_join
-    sleep
+    on_server_tick
+
 from ./api import
     in_player_setting
     in_world_setting
-
-function ./foo:
-    say Hello!
-
-    with sleep(40):
-        summon pig ~ ~ ~                    # will 'summon' the pig where sleep() was initially ran
-
-        at @s:
-            summon creeper ~ ~ ~            # will run at @s after the sleep
-
-        say Hello!... 2 seconds later!!!
+    on_entity_tick
 
 datapack_version = ctx.meta.dnl.datapack_version
 

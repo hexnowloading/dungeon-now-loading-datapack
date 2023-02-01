@@ -95,7 +95,6 @@ loot_table ../item/golem_heart_boots {
 
 @listener(on_player_wearing_full_armor)
 def wearing_full_armor():
-    with sleep(20, selector='entity', threading=True):
-        if predicate ../item/golem_heart_armor run function ./golem_heart_armor/effects:
-            effect give @s minecraft:strength 2 0 true
-            effect give @s minecraft:resistance 2 0 true
+    if predicate ../item/golem_heart_armor run function ./golem_heart_armor/effects:
+        effect give @s minecraft:strength 2 0 true
+        effect give @s minecraft:resistance 2 0 true

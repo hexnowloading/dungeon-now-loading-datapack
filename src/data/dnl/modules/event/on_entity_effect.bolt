@@ -1,0 +1,15 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ./on_entity_tick import on_entity_tick
+
+on_entity_effect = Event('on_entity_effect')
+on_entity_effect.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_effect")
+
+@on_entity_effect.handler
+def handler():
+
+    @listener(on_entity_tick)
+    def _on_entity_tick():
+        execute function on_entity_effect.generate_path('entity_effect'):
+            if entity @s[tag=dnl.entity_effect]:
+                on_entity_effect.trigger()

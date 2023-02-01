@@ -1,0 +1,11 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_entity_hit = Event('on_entity_hit')
+
+
+@on_entity_hit.handler
+def handler():
+    execute function on_entity_hit.generate_path('entity_hit'):
+        function ../util/entity_hit_matching/on_hit_listener:
+            on_entity_hit.trigger()
