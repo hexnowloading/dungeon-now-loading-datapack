@@ -1,0 +1,56 @@
+from ../api import
+    on_entity_effect
+    rng
+    outcome
+
+from reapermc:api import
+    listener
+    on_server_load
+
+@listener(on_entity_effect)
+def entity_effect():
+    if entity @s[tag=dnl.raining_fireball] run function ./raining_fireball/main
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.timer.raining_fireball dummy
+
+function ./raining_fireball/apply:
+    unless entity @s[tag=dnl.raining_fireball] scoreboard players add @s dnl.effect 1
+    tag @s add dnl.raining_fireball
+    tag @s[type=marker] add dnl.marker
+
+function ./raining_fireball/remove:
+    scoreboard players remove @s dnl.effect 1
+    tag @s remove dnl.raining_fireball
+    scoreboard players reset @s dnl.timer.raining_fireball
+
+function ./raining_fireball/main:
+    scoreboard players add @s dnl.timer.raining_fireball 1
+    if score @s dnl.timer.raining_fireball matches 5 run function ./raining_fireball/spawn_location
+    if score @s dnl.timer.raining_fireball matches 8 run function ./raining_fireball/spawn_location
+    if score @s dnl.timer.raining_fireball matches 11 run function ./raining_fireball/spawn_location
+    if score @s dnl.timer.raining_fireball matches 14 run function ./raining_fireball/spawn_location
+    if score @s dnl.timer.raining_fireball matches 17 run function ./raining_fireball/spawn_location
+    if score @s dnl.timer.raining_fireball matches 32.. run function ./raining_fireball/remove
+
+
+function ./raining_fireball/spawn_location:
+    rng 1 4
+    outcome 1:
+        positioned ~2 ~ ~ run function ./raining_fireball/summon
+    outcome 2:
+        positioned ~-2 ~ ~ run function ./raining_fireball/summon
+    outcome 3:
+        positioned ~ ~ ~2 run function ./raining_fireball/summon
+    outcome 4:
+        positioned ~ ~ ~-2 run function ./raining_fireball/summon
+
+function ./raining_fireball/summon:
+    rng 1 2
+    outcome 1:
+        summon small_fireball ~ ~10 ~ {direction:[0.0,-0.1,0.0],power:[0.0,-0.1,0.0]}
+    outcome 2:
+        summon fireball ~ ~10 ~ {ExplosionPower:3,direction:[0.0,-0.1,0.0],power:[0.0,-0.1,0.0]}
+
+        

@@ -1,0 +1,11 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_player_wearing_leggings = Event('on_player_wearing_leggings')
+on_player_wearing_leggings.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_wearing_leggings")
+
+@on_player_wearing_leggings.handler
+def handler():
+    execute function on_player_wearing_leggings.generate_path('wearing_leggings'):
+        function ../util/armor/wearing_leggings_listener:
+            on_player_wearing_leggings.trigger()

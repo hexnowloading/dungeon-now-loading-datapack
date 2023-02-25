@@ -1,0 +1,17 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ../api import on_entity_marker_tick
+
+on_marker_summon = Event('on_marker_summon')
+on_marker_summon.set_handler_path(f"reaper_framework:__internal__/event_handler/on_marker_summon")
+
+
+@on_marker_summon.handler
+def handler():
+
+    @listener(on_entity_marker_tick)
+    def _on_entity_marker_tick():
+        execute function on_marker_summon.generate_path('marker_summon'):
+            if entity @s[tag=dnl.summon]:
+                on_marker_summon.trigger()
+                kill @s

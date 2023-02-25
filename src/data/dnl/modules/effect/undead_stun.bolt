@@ -1,0 +1,35 @@
+from ../api import
+    on_entity_effect
+
+from reapermc:api import
+    listener
+    on_server_load
+
+@listener(on_entity_effect)
+def entity_effect():
+    if entity @s[tag=dnl.undead_stun] run function ./undead_stun/effect
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.timer.undead_stun dummy
+
+function ./undead_stun/apply:
+    unless entity @s[tag=dnl.undead_stun] run scoreboard players add @s dnl.effect 1
+    tag @s add dnl.undead_stun
+
+function ./undead_stun/apply_bow:
+    unless entity @s[tag=dnl.undead_stun] run scoreboard players add @s dnl.effect 1
+    tag @s add dnl.undead_stun
+    tag @s add dnl.undead_stun_bow
+
+function ./undead_stun/remove:
+    scoreboard players remove @s dnl.effect 1
+    scoreboard players reset @s dnl.timer.undead_stun
+    tag @s remove dnl.undead_stun
+    tag @s remove dnl.undead_stun_bow
+
+function ./undead_stun/effect:
+    scoreboard players add @s dnl.timer.undead_stun 1
+    execute if score @s dnl.timer.undead_stun matches 1 if entity @s[tag=!dnl.undead_stun_bow] run effect give @s minecraft:slowness 2 3 false
+    execute if score @s dnl.timer.undead_stun matches 1 if entity @s[tag=dnl.undead_stun_bow] run effect give @s minecraft:slowness 4 3 false
+    execute if score @s dnl.timer.undead_stun matches 100.. run function ./undead_stun/remove

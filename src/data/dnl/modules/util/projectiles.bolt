@@ -1,0 +1,198 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../api import
+    on_entity_technical_tick
+    on_entity_living_tick
+    on_entity_player_tick
+    on_entity_player_init
+    on_entity_marker_tick
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.uuid0 dummy
+    scoreboard objectives add dnl.uuid1 dummy
+    scoreboard objectives add dnl.uuid2 dummy
+    scoreboard objectives add dnl.uuid3 dummy
+    scoreboard objectives add dnl.pid dummy
+    scoreboard objectives add dnl.bow dummy
+    scoreboard objectives add dnl.return minecraft.custom:minecraft.leave_game
+
+@listener(on_entity_living_tick)
+def entity_living_tick():
+    if entity @s[type=#dnl:skeletons] run function ./projectiles/tick_skeleton
+    if entity @s[nbt={ActiveEffects:[{Id:26}]}] run function ./projectiles/arrow_hit_entity
+
+@listener(on_entity_technical_tick)
+def entity_technical_tick():
+    if entity @s[type=minecraft:arrow] run function ./projectiles/tick_arrow
+    if entity @s[type=minecraft:firework_rocket] run function ./projectiles/tick_firework
+
+@listener(on_entity_player_tick)
+def entity_player_tick():
+    if score @s dnl.return matches 1.. run function ./projectiles/return
+    unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run scoreboard players operation @s dnl.bow = @s dnl.offhand
+    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run scoreboard players operation @s dnl.bow = @s dnl.mainhand
+    unless score @s dnl.offhand_used matches 1.. unless score @s dnl.mainhand matches 1..127 if predicate ./projectiles/has_bow_crossbow run scoreboard players reset @s dnl.bow
+    unless score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1.. run scoreboard players reset @s dnl.bow
+    scoreboard players reset #dnl.has_bow_crossbow dnl.boolean
+
+@listener(on_entity_player_init)
+def entity_player_init():
+    function ./projectiles/entity_init
+
+@listener(on_entity_marker_tick)
+def entity_marker_tick():
+    if entity @s[tag=dnl.entity_effect] run function ./projectiles/entity_effect:
+        scoreboard players set @s dnl.effect 1
+        tag @s remove dnl.entity_effect
+
+function ./projectiles/entity_init:
+    store result score @s dnl.uuid0 run data get entity @s UUID[0]
+    store result score @s dnl.uuid1 run data get entity @s UUID[1]
+    store result score @s dnl.uuid2 run data get entity @s UUID[2]
+    store result score @s dnl.uuid3 run data get entity @s UUID[3]
+
+    function ./projectiles/pid
+
+function ./projectiles/pid:
+    scoreboard players add #dnl.system dnl.pid 1
+    scoreboard players operation @s dnl.pid = #dnl.system dnl.pid
+    scoreboard players operation #dnl.previous dnl.pid = #dnl.system dnl.pid
+
+    if score #dnl.system dnl.pid matches 127.. run scoreboard players set #dnl.system dnl.pid 0
+
+    tag @s add dnl.this
+    scoreboard players set #dnl.repeat dnl.pid 0
+    execute as @e[tag=!dnl.this,scores={dnl.pid=1..}] if score @s dnl.pid = #dnl.previous dnl.pid run scoreboard players set #dnl.repeat dnl.pid 1
+    tag @s remove dnl.this
+
+    if score #dnl.repeat dnl.pid matches 1 run function ./projectiles/pid
+
+function ./projectiles/return:
+    scoreboard players reset @s dnl.return
+    function ./projectiles/pid
+
+function ./projectiles/tick_arrow:
+    if entity @s[tag=!dnl.init] run function ./projectiles/arrow_init:
+        tag @s add dnl.init
+
+        store result score #dnl.search dnl.uuid0 run data get entity @s Owner[0]
+        store result score #dnl.search dnl.uuid1 run data get entity @s Owner[1]
+        store result score #dnl.search dnl.uuid2 run data get entity @s Owner[2]
+        store result score #dnl.search dnl.uuid3 run data get entity @s Owner[3]
+
+        scoreboard players set #dnl.type dnl.bow 0
+        scoreboard players set #dnl.remove_unluck dnl.boolean 0
+        as @e[type=#dnl:arrow_shooters] if score @s dnl.uuid0 = #dnl.search dnl.uuid0 if score @s dnl.uuid1 = #dnl.search dnl.uuid1 if score @s dnl.uuid2 = #dnl.search dnl.uuid2 if score @s dnl.uuid3 = #dnl.search dnl.uuid3 run function ./projectiles/owner:
+            scoreboard players operation #dnl.type dnl.bow = @s dnl.bow
+            scoreboard players operation #dnl.pid dnl.bow = @s dnl.pid
+            
+            function ./projectiles/ammo/directory
+        
+        if score #dnl.type dnl.bow matches 1.. run function ./projectiles/load/directory
+    
+    if predicate ./projectiles/has_custom_potion run function ./projectiles/mid_air:
+        if entity @s[tag=dnl.arrow_trail] positioned ~ ~-0.75 ~ run function ./projectiles/trail
+        if predicate ./projectiles/in_ground run function ./projectiles/landed:
+            store result score #dnl.pid dnl.bow run data get entity @s CustomPotionEffects[{Id:27}].Amplifier
+            as @e[scores={dnl.pid=1..}] if score @s dnl.pid = #dnl.pid dnl.bow run tag @s add dnl.this
+
+            store result score #dnl.type dnl.bow run data get entity @s CustomPotionEffects[{Id:26}].Amplifier
+            function ./projectiles/land/directory
+            tag @e remove dnl.this
+
+function ./projectiles/tick_firework:
+    if entity @s[tag=!dnl.init] run function ./projectiles/firework_init:
+        tag @s add dnl.init
+        if predicate ./projectiles/firework_shot_from_crossbow run function ./projectiles/firework_set_data:
+            store result score #dnl.search dnl.uuid0 run data get entity @s Owner[0]
+            store result score #dnl.search dnl.uuid1 run data get entity @s Owner[1]
+            store result score #dnl.search dnl.uuid2 run data get entity @s Owner[2]
+            store result score #dnl.search dnl.uuid3 run data get entity @s Owner[3]
+
+            scoreboard players set #dnl.type dnl.bow 0
+
+            as @e[type=#dnl:firework_shooters] if score @s dnl.uuid0 = #dnl.search dnl.uuid0 if score @s dnl.uuid1 = #dnl.search dnl.uuid1 if score @s dnl.uuid2 = #dnl.search dnl.uuid2 if score @s dnl.uuid3 = #dnl.search dnl.uuid3 run function ./projectiles/firework_owner:
+                scoreboard players operation #dnl.type dnl.bow = @s dnl.bow
+            
+            if score #dnl.type dnl.bow matches 1.. run function ./projectiles/save_firework:
+                function ./projectiles/load_firework/directory
+                tag @s add dnl.firework
+                scoreboard players operation @s dnl.bow = #dnl.type dnl.bow
+    
+    if entity @s[tag=dnl.firework] run function ./projectiles/firework_mid_air:
+        if entity @s[tag=dnl.firework_trail] run function ./projectiles/trail_firework
+        if predicate ./projectiles/firework_explode run function ./projectiles/firework_explode:
+            scoreboard players operation #dnl.type dnl.bow = @s dnl.bow
+            function ./projectiles/explode_firework/directory
+
+function ./projectiles/tick_skeleton:
+    if entity @s[tag=!dnl.init] run function ./projectiles/init_skeleton:
+        tag @s add dnl.init
+        function ./projectiles/entity_init
+    store result score @s dnl.bow run data get entity @s HandItems[0].tag.dnl.id
+
+function ./projectiles/arrow_hit_entity:
+    store result score #dnl.pid dnl.bow run data get entity @s ActiveEffects[{Id:27}].Amplifier
+    as @e[scores={dnl.pid=1..}] if score @s dnl.pid = #dnl.pid dnl.bow run tag @s add dnl.this
+
+    store result score #dnl.type dnl.bow run data get entity @s ActiveEffects[{Id:26}].Amplifier
+    function ./projectiles/unload/directory
+    tag @e remove dnl.this
+    effect clear @s minecraft:luck
+    effect clear @s minecraft:unluck
+
+predicate ./projectiles/has_custom_potion {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type": "#minecraft:arrows",
+        "nbt": "{CustomPotionEffects:[{Id:26}]}"
+    }
+}
+
+predicate ./projectiles/in_ground {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type": "#minecraft:arrows",
+        "nbt": "{inGround:1b}"
+    }
+}
+
+
+predicate ./projectiles/has_bow_crossbow {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "equipment": {
+            "mainhand": {
+                "items": [
+                    "minecraft:bow",
+                    "minecraft:crossbow"
+                ]
+            }
+        }
+    }
+}
+
+predicate ./projectiles/firework_shot_from_crossbow {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type": "minecraft:firework_rocket",
+        "nbt": "{ShotAtAngle:1b}"
+    }
+}
+
+
+predicate ./projectiles/firework_explode {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type": "minecraft:firework_rocket",
+        "nbt": "{Life:9}"
+    }
+}

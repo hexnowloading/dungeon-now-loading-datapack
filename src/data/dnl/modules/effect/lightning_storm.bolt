@@ -1,0 +1,50 @@
+from ../api import
+    on_entity_effect
+    on_entity_snowball_tick
+    rng
+    outcome
+
+from reapermc:api import
+    listener
+    on_server_load
+
+@listener(on_entity_effect)
+def entity_effect():
+    if entity @s[tag=dnl.lightning_storm] run function ./lightning_storm/main
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.timer.lightning_storm dummy
+
+function ./lightning_storm/apply:
+    unless entity @s[tag=dnl.lightning_storm] run scoreboard players add @s dnl.effect 1
+    tag @s add dnl.lightning_storm
+    tag @s[type=marker] add dnl.marker
+
+function ./lightning_storm/remove:
+    scoreboard players remove @s dnl.effect 1
+    tag @s remove dnl.lightning_storm
+    scoreboard players reset @s dnl.timer.lightning_storm
+
+function ./lightning_storm/main:
+    scoreboard players add @s dnl.timer.lightning_storm 1
+    if score @s dnl.timer.lightning_storm matches 5 run function ./lightning_storm/spawn_location
+    if score @s dnl.timer.lightning_storm matches 8 run function ./lightning_storm/spawn_location
+    if score @s dnl.timer.lightning_storm matches 11 run function ./lightning_storm/spawn_location
+    if score @s dnl.timer.lightning_storm matches 14 run function ./lightning_storm/spawn_location
+    if score @s dnl.timer.lightning_storm matches 17 run function ./lightning_storm/spawn_location
+    if score @s dnl.timer.lightning_storm matches 32.. run function ./lightning_storm/remove
+
+function ./lightning_storm/spawn_location:
+    rng 1 4
+    outcome 1:
+        positioned ~2 ~ ~ run function ./lightning_storm/summon
+    outcome 2:
+        positioned ~-2 ~ ~ run function ./lightning_storm/summon
+    outcome 3:
+        positioned ~ ~ ~2 run function ./lightning_storm/summon
+    outcome 4:
+        positioned ~ ~ ~-2 run function ./lightning_storm/summon
+
+function ./lightning_storm/summon:
+    summon lightning_bolt ~ ~ ~

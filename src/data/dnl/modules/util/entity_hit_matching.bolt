@@ -3,608 +3,644 @@ from reapermc:api import
     on_server_load
 
 from ../api import
-    on_entity_tick
+    on_entity_living_tick
+    on_entity_player_tick
 
 @listener(on_server_load)
 def load():
+    data modify storage dnl:temp ItemName set value []
+    scoreboard objectives add dnl.timer.shield dummy
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
     scoreboard objectives add ehm._ dummy
     execute unless score #loaded ehm._ = #loaded ehm._ run function ./entity_hit_matching/set_defaults
 
-@listener(on_entity_tick)
-def entity_tick():
+@listener(on_entity_living_tick)
+def entity_living_tick():
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
     execute if score #loaded ehm._ matches 1 unless score @s ehm._ = @s ehm._ run function ./entity_hit_matching/id/assign
 
 advancement ./entity_hit_matching/on_hit {
     "criteria": {
         "bit_0_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.0_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.0_0\"]}"
+                }
             }
-        }
         },
         "bit_1_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.1_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.1_0\"]}"
+                }
             }
-        }
         },
         "bit_2_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.2_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.2_0\"]}"
+                }
             }
-        }
         },
         "bit_3_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.3_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.3_0\"]}"
+                }
             }
-        }
         },
         "bit_4_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.4_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.4_0\"]}"
+                }
             }
-        }
         },
         "bit_5_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.5_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.5_0\"]}"
+                }
             }
-        }
         },
         "bit_6_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.6_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.6_0\"]}"
+                }
             }
-        }
         },
         "bit_7_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.7_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.7_0\"]}"
+                }
             }
-        }
         },
         "bit_8_0": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.8_0\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.8_0\"]}"
+                }
             }
-        }
         },
         "bit_0_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.0_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.0_1\"]}"
+                }
             }
-        }
         },
         "bit_1_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.1_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.1_1\"]}"
+                }
             }
-        }
         },
         "bit_2_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.2_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.2_1\"]}"
+                }
             }
-        }
         },
         "bit_3_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.3_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.3_1\"]}"
+                }
             }
-        }
         },
         "bit_4_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.4_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.4_1\"]}"
+                }
             }
-        }
         },
         "bit_5_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.5_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.5_1\"]}"
+                }
             }
-        }
         },
         "bit_6_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.6_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.6_1\"]}"
+                }
             }
-        }
         },
         "bit_7_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.7_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.7_1\"]}"
+                }
             }
-        }
         },
         "bit_8_1": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.8_1\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.8_1\"]}"
+                }
             }
-        }
         },
         "bit_0_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.0_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.0_2\"]}"
+                }
             }
-        }
         },
         "bit_1_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.1_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.1_2\"]}"
+                }
             }
-        }
         },
         "bit_2_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.2_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.2_2\"]}"
+                }
             }
-        }
         },
         "bit_3_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.3_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.3_2\"]}"
+                }
             }
-        }
         },
         "bit_4_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.4_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.4_2\"]}"
+                }
             }
-        }
         },
         "bit_5_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.5_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.5_2\"]}"
+                }
             }
-        }
         },
         "bit_6_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.6_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.6_2\"]}"
+                }
             }
-        }
         },
         "bit_7_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.7_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.7_2\"]}"
+                }
             }
-        }
         },
         "bit_8_2": {
-        "trigger": "minecraft:player_hurt_entity",
-        "conditions": {
-            "entity": {
-            "nbt": "{Tags:[\"ehm.8_2\"]}"
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "entity": {
+                    "nbt": "{Tags:[\"ehm.8_2\"]}"
+                }
             }
-        }
+        },
+        "not_projectile": {
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "is_magic": false,
+                        "is_projectile": false
+                    }
+                }
+            }
         }
     },
     "requirements": [
         [
-        "bit_0_0",
-        "bit_0_1",
-        "bit_0_2"
+            "not_projectile"
         ],
         [
-        "bit_1_0",
-        "bit_1_1",
-        "bit_1_2"
+            "bit_0_0",
+            "bit_0_1",
+            "bit_0_2"
         ],
         [
-        "bit_2_0",
-        "bit_2_1",
-        "bit_2_2"
+            "bit_1_0",
+            "bit_1_1",
+            "bit_1_2"
         ],
         [
-        "bit_3_0",
-        "bit_3_1",
-        "bit_3_2"
+            "bit_2_0",
+            "bit_2_1",
+            "bit_2_2"
         ],
         [
-        "bit_4_0",
-        "bit_4_1",
-        "bit_4_2"
+            "bit_3_0",
+            "bit_3_1",
+            "bit_3_2"
         ],
         [
-        "bit_5_0",
-        "bit_5_1",
-        "bit_5_2"
+            "bit_4_0",
+            "bit_4_1",
+            "bit_4_2"
         ],
         [
-        "bit_6_0",
-        "bit_6_1",
-        "bit_6_2"
+            "bit_5_0",
+            "bit_5_1",
+            "bit_5_2"
         ],
         [
-        "bit_7_0",
-        "bit_7_1",
-        "bit_7_2"
+            "bit_6_0",
+            "bit_6_1",
+            "bit_6_2"
         ],
         [
-        "bit_8_0",
-        "bit_8_1",
-        "bit_8_2"
+            "bit_7_0",
+            "bit_7_1",
+            "bit_7_2"
+        ],
+        [
+            "bit_8_0",
+            "bit_8_1",
+            "bit_8_2"
         ]
     ],
     "rewards": {
         "function": "dnl:util/entity_hit_matching/on_hit/reward"
     }
 }
-
 advancement ./entity_hit_matching/on_hurt {
     "criteria": {
         "bit_0_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.0_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.0_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_1_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.1_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.1_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_2_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.2_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.2_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_3_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.3_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.3_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_4_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.4_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.4_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_5_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.5_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.5_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_6_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.6_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.6_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_7_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.7_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.7_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_8_0": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.8_0\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.8_0\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_0_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.0_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.0_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_1_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.1_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.1_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_2_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.2_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.2_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_3_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.3_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.3_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_4_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.4_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.4_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_5_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.5_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.5_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_6_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.6_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.6_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_7_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.7_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.7_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_8_1": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.8_1\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.8_1\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_0_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.0_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.0_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_1_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.1_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.1_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_2_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.2_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.2_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_3_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.3_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.3_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_4_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.4_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.4_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_5_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.5_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.5_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_6_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.6_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.6_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_7_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.7_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.7_2\"]}"
+                    }
+                }
             }
-            }
-        }
         },
         "bit_8_2": {
-        "trigger": "minecraft:entity_hurt_player",
+            "trigger": "minecraft:entity_hurt_player",
             "conditions": {
-            "damage": {
-                "source_entity": {
-                "nbt": "{Tags:[\"ehm.8_2\"]}"
+                "damage": {
+                    "source_entity": {
+                        "nbt": "{Tags:[\"ehm.8_2\"]}"
+                    }
+                }
             }
+        },
+        "blocked_true": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "blocked": true
+                }
             }
-        }
+        },
+        "blocked_false": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "blocked": false
+                }
+            }
         }
     },
     "requirements": [
         [
-        "bit_0_0",
-        "bit_0_1",
-        "bit_0_2"
+            "bit_0_0",
+            "bit_0_1",
+            "bit_0_2"
         ],
         [
-        "bit_1_0",
-        "bit_1_1",
-        "bit_1_2"
+            "bit_1_0",
+            "bit_1_1",
+            "bit_1_2"
         ],
         [
-        "bit_2_0",
-        "bit_2_1",
-        "bit_2_2"
+            "bit_2_0",
+            "bit_2_1",
+            "bit_2_2"
         ],
         [
-        "bit_3_0",
-        "bit_3_1",
-        "bit_3_2"
+            "bit_3_0",
+            "bit_3_1",
+            "bit_3_2"
         ],
         [
-        "bit_4_0",
-        "bit_4_1",
-        "bit_4_2"
+            "bit_4_0",
+            "bit_4_1",
+            "bit_4_2"
         ],
         [
-        "bit_5_0",
-        "bit_5_1",
-        "bit_5_2"
+            "bit_5_0",
+            "bit_5_1",
+            "bit_5_2"
         ],
         [
-        "bit_6_0",
-        "bit_6_1",
-        "bit_6_2"
+            "bit_6_0",
+            "bit_6_1",
+            "bit_6_2"
         ],
         [
-        "bit_7_0",
-        "bit_7_1",
-        "bit_7_2"
+            "bit_7_0",
+            "bit_7_1",
+            "bit_7_2"
         ],
         [
-        "bit_8_0",
-        "bit_8_1",
-        "bit_8_2"
+            "bit_8_0",
+            "bit_8_1",
+            "bit_8_2"
+        ],
+        [
+            "blocked_true",
+            "blocked_false"
         ]
     ],
     "rewards": {
@@ -747,10 +783,12 @@ function ./entity_hit_matching/on_hit/reward:
     function ./entity_hit_matching/on_hit/find_target_id
     advancement revoke @s only dnl:util/entity_hit_matching/on_hit
     tag @s add ehm.player
-    store result score #dnl.enchantment_id dnl.int run data get entity @s SelectedItem.tag."dnl.enchantment_id"
-    function ./entity_hit_matching/on_hit_attacker_listener
+    scoreboard players operation #dnl.weapon_id.attacker dnl.int = @s dnl.mainhand
+    # store result score #dnl.weapon_id.attacker dnl.int run data get entity @s SelectedItem.tag.dnl.weapon_id
+    function ./entity_hit_matching/on_pre_hit_attacker_listener
     execute as @e[type=#dnl:mobs_and_players] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hit_target_listener
-    scoreboard players reset #dnl.enchantment_id dnl.int
+    function ./entity_hit_matching/on_hit_attacker_listener
+    scoreboard players reset #dnl.weapon_id.attacker dnl.int
     tag @s remove ehm.player
 
 function ./entity_hit_matching/on_hurt/find_target_id:
@@ -775,16 +813,59 @@ function ./entity_hit_matching/on_hurt/find_target_id:
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_2=true}}] run scoreboard players add #target_id ehm._ 4374
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_1=true}}] run scoreboard players add #target_id ehm._ 6561
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_2=true}}] run scoreboard players add #target_id ehm._ 13122
+    
+    scoreboard players set #dnl.blocked dnl.boolean 0
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked_true=true}}] run scoreboard players set #dnl.blocked dnl.boolean 1
 
 function ./entity_hit_matching/on_hurt/reward:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
-
     function ./entity_hit_matching/on_hurt/find_target_id
     advancement revoke @s only dnl:util/entity_hit_matching/on_hurt
     tag @s add ehm.player
+    if score #dnl.blocked dnl.boolean matches 1 run function ./entity_hit_matching/get_shield:
+        if score @s dnl.offhand matches 6001..7000 run scoreboard players operation #dnl.shield_id dnl.int = @s dnl.offhand
+        unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 6001..7000 run scoreboard players operation #dnl.shield_id dnl.int = @s dnl.mainhand
+        scoreboard players operation #dnl.shield_timer dnl.int = @s dnl.timer.shield
+    if score @s dnl.head matches 1.. run scoreboard players operation #dnl.helmet_id dnl.int = @s dnl.head
+    if score @s dnl.chest matches 1.. run scoreboard players operation #dnl.chestplate_id dnl.int = @s dnl.chest
+    if score @s dnl.leg matches 1.. run scoreboard players operation #dnl.leggings_id dnl.int = @s dnl.leg
+    if score @s dnl.feet matches 1.. run scoreboard players operation #dnl.boots_id dnl.int = @s dnl.feet
+    if score @s dnl.head = @s dnl.chest if score @s dnl.head = @s dnl.leg if score @s dnl.head = @s dnl.feet run scoreboard players operation #dnl.full_armor_id dnl.int = @s dnl.head
+    scoreboard players operation #dnl.weapon_id.target dnl.int = @s dnl.mainhand
     execute as @e[type=#dnl:hurt_targets] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hurt_id_check:
-        store result score #dnl.enchantment_id dnl.int run data get entity @s HandItems[0].tag."dnl.enchantment_id"
+        store result score #dnl.weapon_id.attacker dnl.int run data get entity @s HandItems[0].tag.dnl.id
         function ./entity_hit_matching/on_hurt_attacker_listener
     function ./entity_hit_matching/on_hurt_target_listener
-    scoreboard players reset #dnl.enchantment_id dnl.int
+    scoreboard players reset #dnl.weapon_id.target dnl.int
+    scoreboard players reset #dnl.weapon_id.attacker dnl.int
+    scoreboard players reset #dnl.shield_id dnl.int
     tag @s remove ehm.player
+
+advancement ./entity_hit_matching/using_shield {
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "item": {
+                    "items": [
+                        "minecraft:shield"
+                    ]
+                }
+            }
+        }
+    }
+}
+
+@listener(on_entity_player_tick)
+def entity_player_tick():
+    if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=false}] run function ./entity_hit_matching/using_shield/false:
+        scoreboard players reset @s dnl.timer.shield
+    if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=true}] run function ./entity_hit_matching/using_shield/true:
+        scoreboard players add @s dnl.timer.shield 1
+        advancement revoke @s only dnl:util/entity_hit_matching/using_shield
+
+# function ./entity_hit_matching/on_hurt/shield_timer:
+#     scoreboard players add @s dnl.timer.shield 1
+#     advancement 
+
+

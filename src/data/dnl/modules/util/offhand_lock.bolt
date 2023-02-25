@@ -1,0 +1,64 @@
+from ../api import
+    on_entity_player_tick
+    on_player_consume_item
+
+from reapermc:api import
+    listener
+
+@listener(on_entity_player_tick)
+def entity_player_tick():
+    if score @s dnl.offhand_delay matches 1.. run scoreboard players remove @s dnl.offhand_delay 1
+    unless score @s dnl.offhand_delay matches 1.. run scoreboard players reset @s dnl.offhand_used
+
+@listener(on_player_consume_item)
+def on_player_consume_item():
+    scoreboard players reset @s dnl.offhand_used
+
+resource_location = ./offhand_lock/offhand_used
+
+advancement ./offhand_lock/offhand_used {
+    "criteria": {
+        "offhand": {
+            "trigger": "minecraft:using_item",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {}
+                    }
+                ],
+                "item": {
+                    "tag": "dnl:using_item"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": resource_location
+    }
+}
+
+
+function ./offhand_lock/offhand_used:
+    advancement revoke @s only resource_location
+    unless score @s dnl.offhand_delay matches 1.. run function ./offhand_lock/save_hands:
+        if predicate ./offhand_lock/using_item run scoreboard players set @s dnl.offhand_used 1
+    scoreboard players set @s dnl.offhand_delay 2
+
+predicate ./offhand_lock/using_item {
+    "condition": "minecraft:inverted",
+    "term": {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "equipment": {
+                "mainhand": {
+                    "tag": "dnl:using_item"
+                }
+            }
+        }
+    }
+}
+
+

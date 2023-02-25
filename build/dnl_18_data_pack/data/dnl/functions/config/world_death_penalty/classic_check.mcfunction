@@ -1,1 +1,1 @@
-tellraw @s [{"text": "[ \u2714 ] ", "color": "green"}, {"text": "Classic - Loses 1 heart piece", "color": "white"}]
+tellraw @s [{"translate": "[ \u2714 ] ", "color": "green"}, {"translate": "Classic - Loses 1 heart piece", "color": "white"}]

@@ -1,48 +1,72 @@
-from ../util/util_item import
-    advancement_consume_item
-    predicate_consume_item
-
 from ../api import
-    on_player_holding_item
+    on_player_hold_item
+    on_player_consume_item
+    get_nbt
 
 from reapermc:api import
     listener
     loop
 
-namespace = ctx.meta.dnl.namespace
-item_name = 'forbidden_melon_slice'
+id = ctx.meta.item.forbidden_melon
+nbt = get_nbt("forbidden_melon", id, "true")
 
-advancement_consume_item namespace item_name melon_slice
-predicate_consume_item namespace item_name melon_slice
-loot_table ../item/forbidden_melon_slice {
-  "type": "minecraft:generic",
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
+loot_table ../item/forbidden_melon {
+    "type": "minecraft:generic",
+    "pools": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:melon_slice",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{display:{Name:'{\"text\":\"Forbidden Melon\",\"color\":\"light_purple\",\"italic\":false}',Lore:['{\"text\":\"+5 Vitality\",\"color\":\"blue\",\"italic\":false}']},dnl.item:1b,dnl.hold_item:1b,dnl.forbidden_fruit:1b,dnl.forbidden_melon_slice:1b,dnl.vitality:5b,Enchantments:[{}]}"
-            }
-          ]
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:melon_slice",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Forbidden Melon",
+                                "color": "#FF55FF",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "When Consumed:",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "+5 Heart Piece",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 
-@listener(on_player_holding_item)
-def holding_item():
-    if predicate ../item/forbidden_melon_slice run function ./abstract_forbidden_fruit/display_health
+@listener(on_player_consume_item)
+def consume_item():
+    if score #dnl.consumed_item_id dnl.int matches id run function ./forbidden_melon/trigger
 
-function ./forbidden_melon_slice/trigger:
-    advancement revoke @s only dnl:item/forbidden_melon_slice
-    unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+@listener(on_player_hold_item)
+def hold_item():
+    if score #dnl.hold_item_id dnl.int matches id run function ./abstract_forbidden_fruit/display_health
+
+function ./forbidden_melon/trigger:
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
     with loop(5, 0):
-        unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run function ./forbidden_melon_slice/increase_heart_piece:
+        unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run function ./forbidden_melon/increase_heart_piece:
             scoreboard players add @s dnl.max_health 1
             function ./abstract_forbidden_fruit/update_health

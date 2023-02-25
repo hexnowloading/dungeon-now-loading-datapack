@@ -1,0 +1,47 @@
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:developer_mode":
+    tag @s add dnl.player_opening_setting
+    schedule function ./developer_mode/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+function ./developer_mode/display:
+    as @a[tag=dnl.player_opening_setting] run function ./developer_mode/options:
+        tag @s remove dnl.player_opening_setting
+        function ../util/air_text
+        tellraw @s [{"translate":"                           ","strikethrough":true},{"translate":" Developer Mode ","color":"gold","strikethrough":false,"bold":true},{"translate":"                           ","strikethrough":true}]
+        tellraw @s {"translate":""}
+        tellraw @s {"translate":"Enables Developer Mode."}
+        tellraw @s {"translate":""}
+        unless score #dnl.developer_mode dnl.boolean matches 1 run function ./developer_mode/off_chosen:
+            function ./developer_mode/on_cross
+            function ./developer_mode/off_check
+        if score #dnl.developer_mode dnl.boolean matches 1 run function ./developer_mode/on_chosen:
+            function ./developer_mode/on_check
+            function ./developer_mode/off_cross
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"translate":" Go Back","color":"white"}]
+
+function ./developer_mode/on_cross:
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/developer_mode/on_set"}},{"translate":"On","color":"white"}]
+
+function ./developer_mode/off_cross:
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/developer_mode/off_set"}},{"translate":"Off","color":"white"}]
+
+function ./developer_mode/on_check:
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"On","color":"white"}]
+
+function ./developer_mode/off_check:
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Off","color":"white"}]
+
+function ./developer_mode/on_set:
+    scoreboard players set #dnl.developer_mode dnl.boolean 1
+    tag @s add dnl.player_opening_setting
+    schedule function ./developer_mode/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+
+function ./developer_mode/off_set:
+    scoreboard players set #dnl.developer_mode dnl.boolean 0
+    tag @s add dnl.player_opening_setting
+    schedule function ./developer_mode/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1

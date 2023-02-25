@@ -1,1 +1,1 @@
-tellraw @s [{"text": "[ \u2714 ] ", "color": "green"}, {"text": "Peaceful - No penalty", "color": "white"}]
+tellraw @s [{"translate": "[ \u2714 ] ", "color": "green"}, {"translate": "Peaceful - No penalty", "color": "white"}]

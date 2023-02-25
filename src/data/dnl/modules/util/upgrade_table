@@ -1,0 +1,108 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../api import
+    on_entity_item_frame_tick
+    on_entity_marker_tick
+    on_item_frame_has_item
+
+@listener(on_item_frame_has_item)
+def item_frame_has_item():
+    if entity @s[tag=dnl.diamond_upgrade_table] run function ./diamond_upgrade_table/state:
+        if entity @s[tag=!dnl.active] run function ./diamond_upgrade_table/deactive:
+            data remove storage dnl:item_frame/container Item
+            data modify storage dnl:item_frame/container Item.id set from entity @s Item.id
+            store success score #dnl.item_frame.diamond dnl.boolean run data modify storage dnl:item_frame/container Item.id set from storage dnl:item_frame/diamond Item.id
+            if score #dnl.item_frame.diamond dnl.boolean matches 0 run function ./diamond_upgrade_table/matched:
+                scoreboard players add @s dnl.int 1
+                playsound minecraft:entity.experience_orb.pickup block @a[distance=..6] ~ ~ ~ 1 1 1
+                particle minecraft:totem_of_undying ~ ~0.5 ~ 0.3 0.3 0.3 0.001 5 normal
+                data remove entity @s Item.Count
+            unless score #dnl.item_frame.diamond dnl.boolean matches 0 run function ./diamond_upgrade_table/unmatched:
+                data modify entity @s Invulnerable set value 0
+                tag @s add dnl.unmatched
+            if score @s dnl.int matches 5.. run function ./diamond_upgrade_table/activate:
+                tag @s add dnl.active
+                scoreboard players reset @s dnl.int
+        if entity @s[tag=dnl.active] run function ./diamond_upgrade_table/active:
+            data remove storage dnl:item_frame/container Item
+            data modify storage dnl:item_frame/container Item.tag.dnl set from entity @s Item.tag.dnl
+            store result score #dnl.item_frame.tier dnl.boolean run data get entity @s Item.tag.dnl.basic
+            # store success score #dnl.item_frame.diamond_tier dnl.boolean run data modify storage dnl:item_frame/container Item.tag.dnl.tier set from storage dnl:item_frame/diamond_tier Item.tag.dnl.tier
+            if score #dnl.item_frame.tier dnl.boolean matches 1 run function ./diamond_upgrade_table/upgradable:
+                say yes
+                store result score #dnl.weapon_id.attacker dnl.int run data get storage dnl:item_frame/container Item.tag.dnl.id
+                function ./diamond_upgrade_table/listener
+                data remove entity @s Item.Count
+            unless score #dnl.item_frame.tier dnl.boolean matches 1 run function ./diamond_upgrade_table/unmatched:
+                data modify entity @s Invulnerable set value 0
+                tag @s add dnl.unmatched
+
+loot_table ../item/diamond_upgrade_table {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:allay_spawn_egg",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Diamond Upgrade Table",
+                                "color": "#FF55FF",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.spawn\",\"dnl.item_frame\",\"dnl.diamond_upgrade_table\"]}}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+@listener(on_entity_marker_tick)
+def marker_tick():
+    if entity @s[tag=dnl.diamond_upgrade_table] run function ./diamond_upgrade_table/spawn:
+        if entity @s[tag=!dnl.setup] run function ./diamond_upgrade_table/setup:
+            setblock ~ ~ ~ minecraft:smithing_table
+            summon item_frame ~ ~1 ~ {Facing:1b,Invulnerable:1b,Tags:["dnl.item_frame","dnl.diamond_upgrade_table"]}
+            summon glow_item_frame ~ ~ ~1 {Facing:3b,Invulnerable:1b,Invisible:1b,Fixed:1b,Tags:["dnl.display_frame","dnl.diamond_upgrade_table"],Item:{id:"minecraft:diamond",Count:1b}}
+            summon glow_item_frame ~1 ~ ~ {Facing:5b,Invulnerable:1b,Invisible:1b,Fixed:1b,Tags:["dnl.display_frame","dnl.diamond_upgrade_table"],Item:{id:"minecraft:diamond",Count:1b}}
+            summon glow_item_frame ~ ~ ~-1 {Facing:2b,Invulnerable:1b,Invisible:1b,Fixed:1b,Tags:["dnl.display_frame","dnl.diamond_upgrade_table"],Item:{id:"minecraft:diamond",Count:1b}}
+            summon glow_item_frame ~-1 ~ ~ {Facing:4b,Invulnerable:1b,Invisible:1b,Fixed:1b,Tags:["dnl.display_frame","dnl.diamond_upgrade_table"],Item:{id:"minecraft:diamond",Count:1b}}
+            tag @s add dnl.setup
+        if block ~ ~ ~ minecraft:air run function ./diamond_upgrade_table/break:
+            if entity @p[gamemode=creative] run function ./diamond_upgrade_table/kill:
+                kill @e[type=#dnl:item_frames,tag=dnl.diamond_upgrade_table,distance=..1.1]
+                kill @s
+            if entity @p[gamemode=!creative] run function ./diamond_upgrade_table/reset:
+                setblock ~ ~ ~ minecraft:smithing_table
+                tellraw @p {"text":"● You cannot mine this block! Fix the upgrade table by feeding 5 diamonds!","color":"red","italic":false}
+
+
+
+
+
+
+            
+
+
+    # if entity @s[tag=dnl.upgrade_table,tag=dnl.netherite] run function ./upgrade_table_netherite/check:
+    #     store success score #dnl.item_frame.netherite_ingot dnl.boolean run data modify storage dnl:item_frame/container Item.id set from storage dnl:item_frame/netherite_ingot Item.id
+    #     if score #dnl.item_frame.netherite_ingot dnl.boolean matches 0 run scoreboard players add @s dnl.int 1
+    #     if score @s dnl.int matches 5.. run function ./upgrade_table/activate:
+    #         say crafted
+    #         scoreboard players reset @s dnl.int
+    #         data remove entity @s Item.Count
+
+
+

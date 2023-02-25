@@ -269,6 +269,22 @@
           }
         }
       }
+    },
+    "blocked_true": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "blocked": true
+        }
+      }
+    },
+    "blocked_false": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "blocked": false
+        }
+      }
     }
   },
   "requirements": [
@@ -316,6 +332,10 @@
       "bit_8_0",
       "bit_8_1",
       "bit_8_2"
+    ],
+    [
+      "blocked_true",
+      "blocked_false"
     ]
   ],
   "rewards": {

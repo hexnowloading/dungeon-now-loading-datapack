@@ -1,0 +1,35 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../api import
+    on_entity_technical_tick
+    on_entity_player_tick
+    on_entity_player_init
+    on_entity_marker_tick
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.item_entity dummy
+    scoreboard objectives add dnl.item_entity_tier dummy
+
+@listener(on_entity_technical_tick)
+def entity_technical_tick():
+    if entity @s[type=item] run function ./item_entity/tick:
+        if entity @s[tag=!dnl.init.item_entity] run function ./item_entity/init:
+            tag @s add dnl.init.item_entity
+            if predicate ./item_entity run function ./item_entity/save_data: 
+                store result score @s dnl.item_entity run data get entity @s Item.tag.dnl.id
+                store result score @s dnl.item_entity_tier run data get entity @s Item.tag.dnl.tier
+        if score @s dnl.item_entity matches 1.. run function ./item_entity/id:
+            scoreboard players operation #dnl.item_entity_id dnl.int = @s dnl.item_entity
+            function ./item_entity/listener
+
+predicate ./item_entity {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "type": "minecraft:item",
+        "nbt": "{Item:{tag:{dnl:{item:1}}}}"
+    }
+}

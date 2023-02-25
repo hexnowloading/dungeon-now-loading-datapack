@@ -1,0 +1,1 @@
+function #reaper_framework:__internal__/event_handler/on_item_upgrade_diamond

@@ -1,13 +1,12 @@
 from reapermc:api import
     listener
     on_server_load
-    on_player_join
     on_server_tick
 
 from ./api import
     in_player_setting
     in_world_setting
-    on_entity_tick
+    on_entity_player_tick
 
 datapack_version = ctx.meta.dnl.datapack_version
 
@@ -18,15 +17,35 @@ def load():
     scoreboard objectives add dnl.percent dummy
     scoreboard objectives add dnl.constant dummy
     scoreboard objectives add dnl.version dummy
+    scoreboard objectives add dnl.effect dummy
+    scoreboard objectives add dnl.timer dummy
+    scoreboard objectives add dnl.tick dummy
 
     scoreboard objectives add dnl.max_health dummy
     scoreboard objectives add dnl.time_since_death minecraft.custom:minecraft.time_since_death
     scoreboard objectives add dnl.death_penalty_level dummy
+    scoreboard objectives add dnl.mainhand dummy
+    scoreboard objectives add dnl.offhand dummy
+    scoreboard objectives add dnl.head dummy
+    scoreboard objectives add dnl.chest dummy
+    scoreboard objectives add dnl.leg dummy
+    scoreboard objectives add dnl.feet dummy
+    scoreboard objectives add dnl.offhand_used dummy
+    scoreboard objectives add dnl.offhand_delay dummy
 
     scoreboard players set #dnl.1 dnl.constant 1
     scoreboard players set #dnl.9 dnl.constant 9
     scoreboard players set #dnl.10 dnl.constant 10
     scoreboard players set #dnl.80 dnl.constant 80
+
+@listener(on_server_tick)
+def tick():
+    if score #dnl.1s dnl.tick matches 20.. run scoreboard players reset #dnl.1s dnl.tick
+    if score #dnl.5t dnl.tick matches 5.. run scoreboard players reset #dnl.5t dnl.tick
+    scoreboard players add #dnl.1s dnl.tick 1
+    scoreboard players add #dnl.5t dnl.tick 1
+    as @e[type=#dnl:mobs_and_players] at @s run function ./tick/living
+    as @e[type=#dnl:others] at @s run function ./tick/technical
 
 @listener(in_player_setting)
 def player_setting():
@@ -35,3 +54,17 @@ def player_setting():
 @listener(in_world_setting)
 def world_setting():
     scoreboard players set #dnl.version dnl.version datapack_version
+
+@listener(on_entity_player_tick)
+def entity_player_tick():
+    store result score @s dnl.offhand run data get entity @s Inventory[{Slot:-106b}].tag.dnl.id
+    store result score @s dnl.mainhand run data get entity @s SelectedItem.tag.dnl.id
+    store result score @s dnl.head run data get entity @s Inventory[{Slot:103b}].tag.dnl.id
+    store result score @s dnl.chest run data get entity @s Inventory[{Slot:102b}].tag.dnl.id
+    store result score @s dnl.leg run data get entity @s Inventory[{Slot:101b}].tag.dnl.id
+    store result score @s dnl.feet run data get entity @s Inventory[{Slot:100b}].tag.dnl.id
+
+
+function ./test:
+    for i in range(99):
+        summon skeleton ~ ~ ~ 

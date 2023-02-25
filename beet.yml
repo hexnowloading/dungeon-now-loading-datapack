@@ -6,6 +6,12 @@ description: A dungeon made by Hex
 data_pack:
   load: [src]
   zipped: false
+  pack_format: 10
+
+resource_pack:
+  load: [src]
+  zipped: false
+  pack_format: 12
 
 output: 'build'
 
@@ -26,4 +32,77 @@ meta:
     namespace: 'dnl'
     cmd_namespace: 'cmd'
     datapack_version: 18
-  config:
+  item:
+    ancient_bow: 1
+    ancient_bow_red: 2
+    ancient_bow_blue: 3
+    ancient_bow_yellow: 4
+    fleshbone_bow: 5
+    ominous_crossbow: 6
+    royal_ominous_crossbow: 7
+    
+    ancient_axe: 1001
+    ancient_sword: 1002
+    fleshbone_sword: 1003
+    knightly_sword: 1004
+    ominous_axe: 1005
+    royal_ominous_axe: 1006
+    poison_rapier: 1007
+
+    ancient_pickaxe: 2001
+    spawner_breaker: 2002
+    
+    crown_of_olympus: 3001
+    golem_heart_armor: 3002
+    
+    player_head: 4001
+    diamond_upgrade: 4002
+    dungeon_clock: 4003
+    olympus_key: 4004
+    ominous_horn: 4005
+    plains_castle_key: 4006
+    spell_breaker: 4007
+    golem_gift: 4008
+
+    forbidden_apple: 5001
+    forbidden_berries: 5002
+    forbidden_melon: 5003
+    forbidden_golden_apple: 5004
+    honey_potion: 5005
+    royal_honey_potion: 5006
+
+    ancient_shield: 6001
+
+    hivenest: 7001
+    sinkhole: 7002
+    hunter_grave: 7003
+    deep_oasis: 7004
+    cleric_hideout: 7005
+    railway_outpost: 7006
+    watcher_camp: 7007
+    crawler_lair: 7008
+    gallery_of_illusion: 7009
+    forgotten_field: 7010
+    temple_of_tears: 7012
+    olympus: 7015
+    plains_castle: 7016
+    plains_labyrinth: 7017
+    plains_pillager_camp: 7018
+    hivenest_boss: 7101
+
+    golems_gift: 8001
+    honeycomb_ingot: 8002
+    knightly_sword_fragment: 8003
+    old_letter: 8004
+    memento_poppy: 8005
+    ominous_emerald: 8006
+    sharpened_bone: 8007
+    spawner_fragment: 8008
+    staring_flesh: 8009
+    nobility: 8010
+
+    music_disc_alpha: 9001
+    music_disc_meirah: 9002
+    music_disc_bees: 9003
+    music_disc_woodland_fountain: 9004
+    music_disc_welcome_to_hell: 9005

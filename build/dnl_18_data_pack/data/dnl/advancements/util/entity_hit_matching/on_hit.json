@@ -215,9 +215,23 @@
           "nbt": "{Tags:[\"ehm.8_2\"]}"
         }
       }
+    },
+    "not_projectile": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "damage": {
+          "type": {
+            "is_magic": false,
+            "is_projectile": false
+          }
+        }
+      }
     }
   },
   "requirements": [
+    [
+      "not_projectile"
+    ],
     [
       "bit_0_0",
       "bit_0_1",

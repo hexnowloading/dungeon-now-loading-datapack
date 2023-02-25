@@ -1,0 +1,16 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ../api import on_entity_marker_tick
+
+on_marker_jigsaw = Event('on_marker_jigsaw')
+on_marker_jigsaw.set_handler_path(f"reaper_framework:__internal__/event_handler/on_marker_jigsaw")
+
+
+@on_marker_jigsaw.handler
+def handler():
+
+    @listener(on_entity_marker_tick)
+    def _on_entity_marker_tick():
+        execute function on_marker_jigsaw.generate_path('marker_jigsaw'):
+            if entity @s[tag=dnl.jigsaw]:
+                on_marker_jigsaw.trigger()

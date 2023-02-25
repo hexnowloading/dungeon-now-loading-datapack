@@ -1,0 +1,27 @@
+from reapermc:event_handler import Event, listener
+from ./on_entity_item_frame_tick import on_entity_item_frame_tick
+
+on_item_frame_has_item = Event('on_item_frame_has_item')
+on_item_frame_has_item.set_handler_path(f"reaper_framework:__internal__/event_handler/on_item_frame_has_item")
+
+
+@on_item_frame_has_item.handler
+def handler():
+
+    @listener(on_entity_item_frame_tick)
+    def _on_entity_item_frame_tick():
+        if entity @s[tag=!dnl.unmatched] if predicate ../util/on_item_frame_has_item:
+            on_item_frame_has_item.trigger()
+        if entity @s[tag=dnl.unmatched] unless predicate ../util/on_item_frame_has_item:
+            tag @s remove dnl.unmatched
+            data modify entity @s Invulnerable set value 1
+
+predicate ../util/on_item_frame_has_item {
+    "condition": "minecraft:entity_properties",
+    "entity": "this",
+    "predicate": {
+        "nbt": "{Item:{Count:1b}}"
+    }
+}
+
+

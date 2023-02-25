@@ -1,0 +1,11 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_player_wearing_chestplate = Event('on_player_wearing_chestplate')
+on_player_wearing_chestplate.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_wearing_chestplate")
+
+@on_player_wearing_chestplate.handler
+def handler():
+    execute function on_player_wearing_chestplate.generate_path('wearing_chestplate'):
+        function ../util/armor/wearing_chestplate_listener:
+            on_player_wearing_chestplate.trigger()

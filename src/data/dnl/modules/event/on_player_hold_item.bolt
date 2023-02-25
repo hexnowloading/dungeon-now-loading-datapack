@@ -1,0 +1,19 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ./on_entity_player_tick import on_entity_player_tick
+
+on_player_hold_item = Event('on_player_hold_item')
+on_player_hold_item.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_hold_item")
+
+
+@on_player_hold_item.handler
+def handler():
+
+    @listener(on_entity_player_tick)
+    def _on_entity_player_tick():
+        execute function on_player_hold_item.generate_path('hold_item'):
+            scoreboard players reset #dnl.hold_item_id dnl.int
+            if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.hold_item_id dnl.int = @s dnl.offhand
+            if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.hold_item_id dnl.int = @s dnl.mainhand
+            if score #dnl.hold_item_id dnl.int matches 1..:
+                on_player_hold_item.trigger()

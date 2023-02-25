@@ -1,0 +1,11 @@
+{
+  "description": "In use non living entities in 1.19.3",
+  "values": [
+    "#minecraft:arrows",
+    "minecraft:firework_rocket",
+    "minecraft:marker",
+    "minecraft:snowball",
+    "minecraft:item",
+    "minecraft:item_frame"
+  ]
+}

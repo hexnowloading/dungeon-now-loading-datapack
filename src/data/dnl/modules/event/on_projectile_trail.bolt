@@ -1,0 +1,12 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_projectile_trail = Event('on_projectile_trail')
+on_projectile_trail.set_handler_path(f"reaper_framework:__internal__/event_handler/on_projectile_trail")
+
+@on_projectile_trail.handler
+def handler():
+    execute function on_projectile_trail.generate_path('projectile_trail'):
+        function ../util/projectiles/trail:
+            store result score #dnl.type dnl.bow run data get entity @s CustomPotionEffects[{Id:26}].Amplifier
+            on_projectile_trail.trigger()

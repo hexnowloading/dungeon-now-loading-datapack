@@ -1,0 +1,11 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_player_wearing_helmet = Event('on_player_wearing_helmet')
+on_player_wearing_helmet.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_wearing_helmet")
+
+@on_player_wearing_helmet.handler
+def handler():
+    execute function on_player_wearing_helmet.generate_path('wearing_helmet'):
+        function ../util/armor/wearing_helmet_listener:
+            on_player_wearing_helmet.trigger()

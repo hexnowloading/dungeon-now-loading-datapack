@@ -1,0 +1,96 @@
+from reapermc:api import
+    listener
+
+from ../api import
+    get_nbt
+    add_custom_model_data
+    custom_damage
+    on_entity_hurt_attacker
+    on_entity_hurt_target
+    rng
+    outcome
+
+id = ctx.meta.item.ancient_shield
+
+nbt = get_nbt("ancient_shield", id)
+
+# add_custom_model_data("ancient_shield", id, "shield")
+
+loot_table ../item/ancient_shield {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:shield",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Ancient Shield",
+                                "color": "#FFAA00",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Parry Frame",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "0.25s-0.5s",
+                                    "color": "#555555",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Counter Stun",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Deals Slowness V and Weakness V for",
+                                    "color": "#555555",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "3s on parry.",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{HideFlags:32,BlockEntityTag:{Base:0,Patterns:[{Color:8,Pattern:\"cbo\"},{Color:7,Pattern:\"bo\"},{Color:15,Pattern:\"gra\"},{Color:15,Pattern:\"gru\"},{Color:15,Pattern:\"mr\"},{Color:7,Pattern:\"flo\"}]}}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+@listener(on_entity_hurt_target)
+def entity_hurt_target():
+    if score #dnl.shield_id dnl.int matches id if score #dnl.shield_timer dnl.int matches ..10 run function ./ancient_shield/target:
+        playsound minecraft:entity.player.attack.knockback master @s ~ ~ ~ 1 0.1 1
+
+@listener(on_entity_hurt_attacker)
+def entity_hurt_attacker():
+    if score #dnl.shield_id dnl.int matches id if score #dnl.shield_timer dnl.int matches ..10 run function ./ancient_shield/attacker:
+        function ./ancient_shield/apply_effect
+
+function ./ancient_shield/apply_effect:
+    effect give @s minecraft:weakness 3 4 false
+    effect give @s minecraft:slowness 3 4 false
+    at @s run particle block netherite_block ~ ~ ~ 0.5 1 0.5 0.01 20 normal

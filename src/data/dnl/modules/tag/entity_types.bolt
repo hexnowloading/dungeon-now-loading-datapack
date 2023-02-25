@@ -75,10 +75,30 @@ entity_type_tag ../mobs {
 }
 
 entity_type_tag ../mobs_and_players {
-    "description": "All mob entities in 1.19.3",
+    "description": "All mob entities and players in 1.19.3",
     "values": [
         "minecraft:player",
         "#dnl:mobs"
+    ]
+}
+
+entity_type_tag ../others {
+    "description": "In use non living entities in 1.19.3",
+    "values": [
+        "#minecraft:arrows",
+        "minecraft:firework_rocket",
+        "minecraft:marker",
+        "minecraft:snowball",
+        "minecraft:item",
+        "minecraft:item_frame"
+    ]
+}
+
+entity_type_tag ../ticking_entities {
+    "description": "All mob entities in 1.19.3",
+    "values": [
+        "#dnl:mobs_and_players",
+        "#dnl:others"
     ]
 }
 
@@ -127,5 +147,66 @@ entity_type_tag ../hurt_targets {
         "minecraft:zoglin",
         "minecraft:zombie",
         "minecraft:zombie_villager"
+    ]
+}
+
+entity_type_tag ../undeads {
+    "values": [
+        "minecraft:skeleton",
+        "minecraft:stray",
+        "minecraft:wither_skeleton",
+        "minecraft:zombie",
+        "minecraft:drowned",
+        "minecraft:husk",
+        "minecraft:zombified_piglin",
+        "minecraft:zoglin",
+        "minecraft:zombie_villager",
+        "minecraft:phantom",
+        "minecraft:wither",
+        "minecraft:skeleton_horse",
+        "minecraft:zombie_horse"
+    ]
+}
+
+entity_type_tag ../illagers {
+    "description": "All mob entities in 1.19.3",
+    "values": [
+        "minecraft:pillager",
+        "minecraft:vindicator",
+        "minecraft:evoker",
+        "minecraft:illusioner"
+    ]
+}
+
+entity_type_tag ../skeletons {
+    "description": "All bow skeletons in 1.19.3",
+    "values": [
+        "minecraft:skeleton",
+        "minecraft:stray",
+        "minecraft:wither_skeleton"
+    ]
+}
+
+entity_type_tag ../arrow_shooters {
+    "description": "All mob and player entities that shoot arrows in 1.19.3",
+    "values": [
+        "#dnl:skeletons",
+        "minecraft:player"
+    ]
+}
+
+entity_type_tag ../firework_shooters {
+    "description": "All mob and player entities that shoot firework in 1.19.3",
+    "values": [
+        "minecraft:pillager",
+        "minecraft:player"
+    ]
+}
+
+entity_type_tag ../item_frames {
+    "description": "All item frames in 1.19.3",
+    "values": [
+        "minecraft:item_frame",
+        "minecraft:glow_item_frame"
     ]
 }

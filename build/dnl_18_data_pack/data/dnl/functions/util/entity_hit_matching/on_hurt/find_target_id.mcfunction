@@ -17,3 +17,5 @@ execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_1
 execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_2=true}}] run scoreboard players add #target_id ehm._ 4374
 execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_1=true}}] run scoreboard players add #target_id ehm._ 6561
 execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_2=true}}] run scoreboard players add #target_id ehm._ 13122
+scoreboard players set #dnl.blocked dnl.boolean 0
+execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked_true=true}}] run scoreboard players set #dnl.blocked dnl.boolean 1

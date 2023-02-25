@@ -1,0 +1,45 @@
+from ../api import
+    on_entity_item_tick
+
+from reapermc:api import
+    listener
+
+reward_function = ./music/directory
+
+advancement ./music/on_player_play_music {
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:item_used_on_block",
+            "conditions": {
+                "item": {
+                    "tag": "minecraft:music_discs",
+                    "nbt": "{dnl:{music:1}}"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": reward_function
+    }
+}
+
+@listener(on_entity_item_tick)
+def entity_item_tick():
+    if score #dnl.item_entity_id dnl.int matches 9001..10000 if entity @s[tag=!dnl.music_stop] run function ..util/music/stop_music:
+        stopsound @a[distance=..16] record
+        tag @s add dnl.music_stop
+
+function ./music/directory:
+    advancement revoke @s only ./music/on_player_play_music
+    if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.music_id dnl.int = @s dnl.offhand
+    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.music_id dnl.int = @s dnl.mainhand
+    if score #dnl.music_id dnl.int matches 1.. run function ./music/start:
+        tag @s add dnl.music_start
+        schedule function ./music/schedule 1t
+        
+
+function ./music/schedule:
+    as @a[tag=dnl.music_start] at @s run function ./music/play:
+        stopsound @s record
+        tag @s remove dnl.music_start
+        function ./music/listener

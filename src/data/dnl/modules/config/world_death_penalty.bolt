@@ -21,45 +21,45 @@ function f"{cmd}:world_death_penalty":
     playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
 
 function ./world_death_penalty/off_cross:
-    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/off_set"}},{"text":"Off - Everyone can set their own death penalty level","color":"white"}]
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/off_set"}},{"translate":"Off - Everyone can set their own death penalty level","color":"white"}]
 
 function ./world_death_penalty/peaceful_cross:
-    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/peaceful_set"}},{"text":"Peaceful - No penalty","color":"white"}]
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/peaceful_set"}},{"translate":"Peaceful - No penalty","color":"white"}]
 
 function ./world_death_penalty/classic_cross:
-    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/classic_set"}},{"text":"Classic - Loses 1 heart piece","color":"white"}]
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/classic_set"}},{"translate":"Classic - Loses 1 heart piece","color":"white"}]
 
 function ./world_death_penalty/expert_cross:
-    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/expert_set"}},{"text":"Expert - Loses heart pieces equal to the bonus hearts","color":"white"}]
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/expert_set"}},{"translate":"Expert - Loses heart pieces equal to the bonus hearts","color":"white"}]
 
 function ./world_death_penalty/hardcore_cross:
-    tellraw @s [{"text":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/hardcore_set"}},{"text":"Hardcore - Loses all bonus hearts and heart pieces","color":"white"}]
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/world_death_penalty/hardcore_set"}},{"translate":"Hardcore - Loses all bonus hearts and heart pieces","color":"white"}]
 
 function ./world_death_penalty/off_check:
-    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Off - Everyone can set their own death penalty level","color":"white"}]
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Off - Everyone can set their own death penalty level","color":"white"}]
 
 function ./world_death_penalty/peaceful_check:
-    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Peaceful - No penalty","color":"white"}]
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Peaceful - No penalty","color":"white"}]
 
 function ./world_death_penalty/classic_check:
-    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Classic - Loses 1 heart piece","color":"white"}]
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Classic - Loses 1 heart piece","color":"white"}]
 
 function ./world_death_penalty/expert_check:
-    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Expert - Loses heart pieces equal to the bonus hearts","color":"white"}]
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Expert - Loses heart pieces equal to the bonus hearts","color":"white"}]
 
 function ./world_death_penalty/hardcore_check:
-    tellraw @s [{"text":"[ ✔ ] ","color":"green"},{"text":"Hardcore - Loses all bonus hearts and heart pieces","color":"white"}]
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Hardcore - Loses all bonus hearts and heart pieces","color":"white"}]
 
 function ./world_death_penalty/display:
     as @a[tag=dnl.player_opening_setting] run function ./world_death_penalty/options:
         tag @s remove dnl.player_opening_setting
         function ../util/air_text
-        tellraw @s [{"text":"                ","strikethrough":true},{"text":" Forced Death Penalty Settings ","color":"gold","strikethrough":false,"bold":true},{"text":"                 ","strikethrough":true}]
-        tellraw @s {"text":"Sets how many hearts you will lose on death. Forces all players in the world to have the same death penalty level."}
-        tellraw @s {"text":""}
-        tellraw @s [{"text":"[ Heart Piece ] ","color":"aqua"},{"text":"- Purple hearts that the player gains from consuming the forbidden fruit.","color":"white"}]
-        tellraw @s [{"text":"[ Bonus Heart ] ","color":"aqua"},{"text":"- Extra hearts that the player gains from filling all heart pieces.","color":"white"}]
-        tellraw @s {"text":""}
+        tellraw @s [{"translate":"                ","strikethrough":true},{"translate":" Forced Death Penalty Settings ","color":"gold","strikethrough":false,"bold":true},{"translate":"                 ","strikethrough":true}]
+        tellraw @s {"translate":"Sets how many hearts you will lose on death. Forces all players in the world to have the same death penalty level."}
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"[ Heart Piece ] ","color":"aqua"},{"translate":"- Purple hearts that the player gains from consuming the forbidden fruit.","color":"white"}]
+        tellraw @s [{"translate":"[ Bonus Heart ] ","color":"aqua"},{"translate":"- Extra hearts that the player gains from filling all heart pieces.","color":"white"}]
+        tellraw @s {"translate":""}
         if score #dnl.world_death_penalty_level dnl.int matches 0 run function ./world_death_penalty/off_chosen:
             function ./world_death_penalty/off_check
             function ./world_death_penalty/peaceful_cross
@@ -90,8 +90,8 @@ function ./world_death_penalty/display:
             function ./world_death_penalty/classic_cross
             function ./world_death_penalty/expert_cross
             function ./world_death_penalty/hardcore_check
-        tellraw @s {"text":""}
-        tellraw @s [{"text":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"text":" Go Back","color":"white"}]
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"translate":" Go Back","color":"white"}]
 
 function ./world_death_penalty/off_set:
     scoreboard players set #dnl.world_death_penalty_level dnl.int 0

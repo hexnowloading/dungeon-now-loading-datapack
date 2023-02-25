@@ -1,48 +1,73 @@
-from ../util/util_item import
-    advancement_consume_item
-    predicate_consume_item
-
 from ../api import
-    on_player_holding_item
+    on_player_hold_item
+    on_player_consume_item
+    get_nbt
 
 from reapermc:api import
     listener
     loop
 
-namespace = ctx.meta.dnl.namespace
-item_name = 'forbidden_sweet_berries'
+id = ctx.meta.item.forbidden_berries
+nbt = get_nbt("forbidden_berries", id, "true")
 
-advancement_consume_item namespace item_name sweet_berries
-predicate_consume_item namespace item_name sweet_berries
-loot_table ../item/forbidden_sweet_berries {
-  "type": "minecraft:generic",
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
+loot_table ../item/forbidden_berries {
+    "type": "minecraft:generic",
+    "pools": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:sweet_berries",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{display:{Name:'{\"text\":\"Forbidden Berries\",\"color\":\"light_purple\",\"italic\":false}',Lore:['{\"text\":\"+3 Vitality\",\"color\":\"blue\",\"italic\":false}']},dnl.item:1b,dnl.hold_item:1b,dnl.forbidden_fruit:1b,dnl.forbidden_sweet_berries:1b,dnl.vitality:3b,Enchantments:[{}]}"
-            }
-          ]
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:sweet_berries",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Forbidden Berries",
+                                "color": "#FF55FF",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "When Consumed:",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "+3 Heart Piece",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
 
-@listener(on_player_holding_item)
-def holding_item():
-    if predicate ../item/forbidden_sweet_berries run function ./abstract_forbidden_fruit/display_health
 
-function ./forbidden_sweet_berries/trigger:
-    advancement revoke @s only dnl:item/forbidden_sweet_berries
-    unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+@listener(on_player_consume_item)
+def consume_item():
+    if score #dnl.consumed_item_id dnl.int matches id run function ./forbidden_berries/trigger
+
+@listener(on_player_hold_item)
+def hold_item():
+    if score #dnl.hold_item_id dnl.int matches id run function ./abstract_forbidden_fruit/display_health
+
+function ./forbidden_berries/trigger:
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
     with loop(3, 0):
-        unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run function ./forbidden_sweet_berries/increase_heart_piece:
+        unless score @s dnl.max_health matches 100.. if score @s dnl.max_health < #dnl.world_maximum_heart_piece dnl.int run function ./forbidden_berries/increase_heart_piece:
             scoreboard players add @s dnl.max_health 1
             function ./abstract_forbidden_fruit/update_health

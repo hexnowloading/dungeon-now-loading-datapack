@@ -1,0 +1,98 @@
+from reapermc:api import
+    listener
+    on_server_load
+from mecha import AstCommand, AstChildren
+
+@listener(on_server_load)
+def load():
+    ## AUTHOR: CloudWolf
+    scoreboard objectives add dnl.math dummy
+    scoreboard objectives add constant dummy
+    scoreboard players set #lcg constant 1103515245
+
+    execute unless score #lcg dnl.math matches ..0 unless score #lcg dnl.math matches 1.. run function ./rng/zprivate/uuid_reset
+
+function ./rng/zprivate/uuid_reset:
+    ## AUTHOR: CloudWolf
+    summon minecraft:area_effect_cloud ~ ~ ~ {Tags:["uuid"]}
+    execute store result score #lcg dnl.math run data get entity @e[tag=uuid,limit=1] UUID[0]
+    execute store result score #temp dnl.math run data get entity @e[tag=uuid,limit=1] UUID[1]
+    execute store result score #temp1 dnl.math run data get entity @e[tag=uuid,limit=1] UUID[2]
+    execute store result score #temp2 dnl.math run data get entity @e[tag=uuid,limit=1] UUID[3]
+    scoreboard players operation #lcg dnl.math += #temp dnl.math
+    scoreboard players operation #lcg dnl.math += #temp1 dnl.math
+    scoreboard players operation #lcg dnl.math += #temp2 dnl.math
+    kill @e[tag=dnl.uuid]
+
+function ./rng/zprivate/next_int:
+    ## AUTHOR: CloudWolf
+
+    ###
+    #    public int nextInt(int bound) {
+    #        if (bound <= 0)
+    #            throw new IllegalArgumentException(BadBound);
+    #
+    #        int r = next(31);
+    #        int m = bound - 1;
+    #        if ((bound & m) == 0)  // i.e., bound is a power of 2
+    #            r = (int)((bound * (long)r) >> 31);
+    #        else {
+    #            for (int u = r; u - (r = u % bound) + m < 0; u = next(31));
+    #        }
+    #        return r;
+    #    }
+
+    function ./rng/lcg
+
+    scoreboard players operation #temp dnl.math = #dnl.out dnl.math
+    scoreboard players operation #dnl.out dnl.math %= #dnl.range dnl.math
+    scoreboard players operation #temp dnl.math -= #dnl.out dnl.math
+    scoreboard players operation #temp dnl.math += #m1 dnl.math
+    execute if score #temp dnl.math matches ..-1 run function ./rng/zprivate/next_int
+
+function ./rng/lcg:
+    ## AUTHOR: CloudWolf
+    # LCG Seed implementation
+    #
+    # x_(n+1) = x_(n)*a + c
+    #
+    # a = 1103515245, c = 12345
+
+    scoreboard players operation #lcg dnl.math *= #lcg constant
+    scoreboard players add #lcg dnl.math 12345
+    scoreboard players operation #dnl.out dnl.math = #lcg dnl.math
+
+function ./rng/range:
+    ## AUTHOR: CloudWolf
+    # Newton-Raphson, 4 iterations approach
+    #
+    # #dnl.lower_bound = lower range
+    # #dnl.upper_bound = upper range
+    # #dnl.out = random number between range
+
+
+    scoreboard players add #dnl.upper_bound dnl.math 1
+    scoreboard players operation #dnl.range dnl.math = #dnl.upper_bound dnl.math
+    scoreboard players operation #dnl.range dnl.math -= #dnl.lower_bound dnl.math
+
+    scoreboard players operation #m1 dnl.math = #dnl.range dnl.math
+    scoreboard players remove #m1 dnl.math 1
+    function ./rng/zprivate/next_int
+    scoreboard players operation #dnl.out dnl.math += #dnl.lower_bound dnl.math
+
+    scoreboard players reset #m1 dnl.math
+    scoreboard players remove #dnl.upper_bound dnl.math 1
+
+macro rng
+    lower_bound=brigadier:integer
+    upper_bound=brigadier:integer:
+    scoreboard players set #dnl.lower_bound dnl.math lower_bound.value
+    scoreboard players set #dnl.upper_bound dnl.math upper_bound.value
+    function ./rng/range
+
+macro outcome
+    rng_val=brigadier:string{"type": "word"}
+    body=mecha:nested_root:
+
+    if score #dnl.out dnl.math matches rng_val.value:
+        yield body

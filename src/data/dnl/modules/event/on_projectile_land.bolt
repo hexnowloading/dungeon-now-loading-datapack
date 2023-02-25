@@ -1,0 +1,11 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_projectile_land = Event('on_projectile_land')
+on_projectile_land.set_handler_path(f"reaper_framework:__internal__/event_handler/on_projectile_land")
+
+@on_projectile_land.handler
+def handler():
+    execute function on_projectile_land.generate_path('projectile_land'):
+        function ../util/projectiles/land/directory:
+            on_projectile_land.trigger()

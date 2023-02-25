@@ -1,0 +1,14 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../api import
+    on_entity_player_tick
+    on_entity_player_init
+    on_entity_marker_tick
+
+@listener(on_entity_player_tick)
+def entity_player_tick():
+    if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.horn_id dnl.int = @s dnl.offhand
+    if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.horn_id dnl.int = @s dnl.mainhand
+    

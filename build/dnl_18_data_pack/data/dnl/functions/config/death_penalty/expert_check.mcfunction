@@ -1,1 +1,1 @@
-tellraw @s [{"text": "[ \u2714 ] ", "color": "green"}, {"text": "Expert - Loses heart pieces equal to the bonus hearts", "color": "white"}]
+tellraw @s [{"translate": "[ \u2714 ] ", "color": "green"}, {"translate": "Expert - Loses heart pieces equal to the bonus hearts", "color": "white"}]

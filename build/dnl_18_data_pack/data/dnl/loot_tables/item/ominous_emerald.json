@@ -1,0 +1,39 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:emerald",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "entity": "this",
+              "name": {
+                "translate": "Ominous Emerald",
+                "color": "#FFAA00",
+                "italic": false
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "entity": "this",
+              "lore": [
+                {
+                  "translate": "Enhanced Emerald",
+                  "color": "#AAAAAA",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{CustomModelData: 4048006, dnl: {name: 'ominous_emerald', item: 1, id: 8006, true: 1}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

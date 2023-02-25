@@ -1,0 +1,13 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_projectile_load = Event('on_projectile_load')
+on_projectile_load.set_handler_path(f"reaper_framework:__internal__/event_handler/on_projectile_load")
+
+@on_projectile_load.handler
+def handler():
+    execute function on_projectile_load.generate_path('projectile_load'):
+        function ../util/projectiles/load/directory:
+            on_projectile_load.trigger()
+            unless score #dnl.remove_unluck dnl.boolean matches 1 store result entity @s CustomPotionEffects[{Id:27,Duration:10000}].Amplifier byte 1 run scoreboard players get #dnl.pid dnl.bow
+            

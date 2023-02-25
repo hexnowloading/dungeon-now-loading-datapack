@@ -1,8 +1,8 @@
 from reapermc:api import
     listener
-    on_player_join
 
 from ../api import
+    on_entity_player_join
     in_world_setting
 
 cmd = ctx.meta.dnl.cmd_namespace
@@ -12,7 +12,7 @@ def world_setting():
     scoreboard players set #dnl.world_maximum_heart dnl.int 10
     scoreboard players set #dnl.world_maximum_heart_piece dnl.int 100
 
-@listener(on_player_join)
+@listener(on_entity_player_join)
 def player_join():
     if score @s dnl.max_health > #dnl.world_maximum_heart_piece dnl.int run function ./maximum_heart/update_health
 
@@ -26,19 +26,19 @@ function ./maximum_heart/display:
     as @a[tag=dnl.player_opening_setting] run function ./maximum_heart/options:
         tag @s remove dnl.player_opening_setting
         function ../util/air_text
-        tellraw @s [{"text":"                      ","strikethrough":true},{"text":" Maximum Heart Settings ","color":"gold","strikethrough":false,"bold":true},{"text":"                      ","strikethrough":true}]
-        tellraw @s {"text":"Sets the maximum number of bonus hearts players can gain!"}
-        tellraw @s {"text":""}
-        tellraw @s [{"text":"Current Maximum","color":"gold"}]
-        tellraw @s {"text":""}
+        tellraw @s [{"translate":"                      ","strikethrough":true},{"translate":" Maximum Heart Settings ","color":"gold","strikethrough":false,"bold":true},{"translate":"                      ","strikethrough":true}]
+        tellraw @s {"translate":"Sets the maximum number of bonus hearts players can get!"}
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"Current Maximum","color":"gold"}]
+        tellraw @s {"translate":""}
         function ./maximum_heart/display_health
-        tellraw @s {"text":"❤❤❤❤❤❤❤❤❤❤","color":"dark_red"}
-        tellraw @s {"text":""}
-        if score #dnl.world_maximum_heart dnl.int matches ..0 run tellraw @s [{"text":"[ - ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/null"}},{"text":"[ + ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/add"}}]
-        if score #dnl.world_maximum_heart dnl.int matches 1..9 run tellraw @s [{"text":"[ - ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/sub"}},{"text":"[ + ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/add"}}]
-        if score #dnl.world_maximum_heart dnl.int matches 10.. run tellraw @s [{"text":"[ - ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/sub"}},{"text":"[ + ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/null"}}]
-        tellraw @s {"text":""}
-        tellraw @s [{"text":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"text":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"text":" Go Back","color":"white"}]
+        tellraw @s {"translate":"❤❤❤❤❤❤❤❤❤❤","color":"dark_red"}
+        tellraw @s {"translate":""}
+        if score #dnl.world_maximum_heart dnl.int matches ..0 run tellraw @s [{"translate":"[ - ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/null"}},{"translate":"[ + ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/add"}}]
+        if score #dnl.world_maximum_heart dnl.int matches 1..9 run tellraw @s [{"translate":"[ - ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/sub"}},{"translate":"[ + ]","color":"green","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/add"}}]
+        if score #dnl.world_maximum_heart dnl.int matches 10.. run tellraw @s [{"translate":"[ - ] ","color":"green","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/sub"}},{"translate":"[ + ]","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/maximum_heart/null"}}]
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"translate":" Go Back","color":"white"}]
 
 function ./maximum_heart/null:
     playsound minecraft:block.note_block.guitar master @s ~ ~ ~ 1 0.1 1
@@ -91,14 +91,14 @@ function ./maximum_heart/update_health:
 
 
 function ./maximum_heart/display_health:
-    if score #dnl.world_maximum_heart dnl.int matches ..0 run tellraw @s {"text":""}
-    if score #dnl.world_maximum_heart dnl.int matches 1 run tellraw @s {"text":"❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 2 run tellraw @s {"text":"❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 3 run tellraw @s {"text":"❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 4 run tellraw @s {"text":"❤❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 5 run tellraw @s {"text":"❤❤❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 6 run tellraw @s {"text":"❤❤❤❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 7 run tellraw @s {"text":"❤❤❤❤❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 8 run tellraw @s {"text":"❤❤❤❤❤❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 9 run tellraw @s {"text":"❤❤❤❤❤❤❤❤❤","color":"red"}
-    if score #dnl.world_maximum_heart dnl.int matches 10 run tellraw @s {"text":"❤❤❤❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches ..0 run tellraw @s {"translate":""}
+    if score #dnl.world_maximum_heart dnl.int matches 1 run tellraw @s {"translate":"❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 2 run tellraw @s {"translate":"❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 3 run tellraw @s {"translate":"❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 4 run tellraw @s {"translate":"❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 5 run tellraw @s {"translate":"❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 6 run tellraw @s {"translate":"❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 7 run tellraw @s {"translate":"❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 8 run tellraw @s {"translate":"❤❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 9 run tellraw @s {"translate":"❤❤❤❤❤❤❤❤❤","color":"red"}
+    if score #dnl.world_maximum_heart dnl.int matches 10 run tellraw @s {"translate":"❤❤❤❤❤❤❤❤❤❤","color":"red"}

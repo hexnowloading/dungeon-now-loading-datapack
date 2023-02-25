@@ -1,61 +1,71 @@
-from ../util/util_item import
-    advancement_consume_item
-    predicate_consume_item
-
 from ../api import
-    on_player_holding_item
+    on_player_hold_item
+    on_player_consume_item
+    get_nbt
 
 from reapermc:api import
     listener
-    loop
-    on_server_load
 
-namespace = ctx.meta.dnl.namespace
-item_name = 'honey_potion'
+id = ctx.meta.item.honey_potion
+nbt = get_nbt("honey_potion", id, "true")
 
-advancement_consume_item namespace item_name potion
-predicate_consume_item namespace item_name potion
-loot_table ../item/honey_potion_1 {
-  "type": "minecraft:generic",
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
+loot_table ../item/honey_potion {
+    "type": "minecraft:generic",
+    "pools": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{dnl.honey_potion:1b,dnl.level:1b,display:{Name:'{\"text\":\"Honey Potion\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Cure Poison\",\"color\":\"blue\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When Applied:\",\"color\":\"dark_purple\",\"italic\":false}','{\"text\":\"+5 Full Heart Healing\",\"color\":\"blue\",\"italic\":false}']},CustomPotionEffects:[{Id:6b,Amplifier:0b,Duration:0},{Id:10b,Amplifier:0b,Duration:300}],CustomPotionColor:16763190}"
-            }
-          ]
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:honey_bottle",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Honey Potion",
+                                "color": "#FF55FF",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "When Consumed:",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Instant Health II",
+                                    "color": "#555555",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Cure Poison",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{CustomPotionColor:16763190}"
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    }
-  ]
-}
-loot_table ../item/honey_potion_2 {
-  "type": "minecraft:generic",
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:potion",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{dnl.honey_potion:1b,dnl.level:2b,display:{Name:'{\"text\":\"Honey Potion II\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Cure Poison\",\"color\":\"blue\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When Applied:\",\"color\":\"dark_purple\",\"italic\":false}','{\"text\":\"+7 Full Heart Healing\",\"color\":\"blue\",\"italic\":false}']},CustomPotionEffects:[{Id:6b,Amplifier:1b,Duration:0},{Id:10b,Amplifier:0b,Duration:300}],CustomPotionColor:16763190}"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+    ]
 }
 
-function ./honey_potion/trigger:
-    advancement revoke @s only dnl:item/honey_potion
-    effect clear @s minecraft:poison
+@listener(on_player_consume_item)
+def consume_item():
+    if score #dnl.consumed_item_id dnl.int matches id run function ./honey_potion/trigger:
+        effect clear @s minecraft:poison
+        effect give @s minecraft:instant_health 1 1

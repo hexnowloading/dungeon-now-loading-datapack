@@ -1,0 +1,12 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_firework_load = Event('on_firework_load')
+on_firework_load.set_handler_path(f"reaper_framework:__internal__/event_handler/on_firework_load")
+
+@on_firework_load.handler
+def handler():
+    execute function on_firework_load.generate_path('firework_load'):
+        function ../util/projectiles/load_firework/directory:
+            on_firework_load.trigger()
+            

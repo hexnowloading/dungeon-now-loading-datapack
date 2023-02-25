@@ -1,5 +1,4 @@
 {
-  "type": "minecraft:generic",
   "pools": [
     {
       "rolls": 1,
@@ -9,8 +8,67 @@
           "name": "minecraft:golden_sword",
           "functions": [
             {
+              "function": "minecraft:set_name",
+              "entity": "this",
+              "name": {
+                "translate": "Poison Rapier",
+                "color": "#FFAA00",
+                "italic": false
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "entity": "this",
+              "lore": [
+                {
+                  "translate": "Stinger",
+                  "color": "#AAAAAA",
+                  "italic": false
+                },
+                {
+                  "translate": "Deals Poison. Attacking a mob that",
+                  "color": "#555555",
+                  "italic": false
+                },
+                {
+                  "translate": "already has the Poison effect will",
+                  "color": "#555555",
+                  "italic": false
+                },
+                {
+                  "translate": "stack the effect level (max 4).",
+                  "color": "#555555",
+                  "italic": false
+                },
+                {
+                  "translate": "Overdose",
+                  "color": "#AAAAAA",
+                  "italic": false
+                },
+                {
+                  "translate": "When the effect level exceeds the",
+                  "color": "#555555",
+                  "italic": false
+                },
+                {
+                  "translate": "maximum, it will deal instant damage II",
+                  "color": "#555555",
+                  "italic": false
+                },
+                {
+                  "translate": "and resets the effect level to poison I.",
+                  "color": "#555555",
+                  "italic": false
+                }
+              ]
+            },
+            {
               "function": "minecraft:set_nbt",
-              "tag": "{display:{Name:'{\"text\":\"Poison Rapier\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Stinger I\",\"color\":\"dark_purple\",\"italic\":false}','{\"translate\":\"\"}','{\"text\":\"When in Main Hand:\",\"color\":\"gray\",\"italic\":false}','{\"text\":\" 4 Attack Damage\",\"color\":\"dark_green\",\"italic\":false}','{\"text\":\" 2.0 Attack Speed\",\"color\":\"dark_green\",\"italic\":false}']},HideFlags:2,CustomModelData:13002,dnl.item:1b,dnl.poison_rapier:1b,dnl.enchantment_id:1b,AttributeModifiers:[{AttributeName:\"generic.attack_damage\",Name:\"generic.attack_damage\",Amount:4.0,Operation:0,UUID:[I;-881343799,-691188407,-1812519174,1731027234],Slot:\"mainhand\"},{AttributeName:\"generic.attack_speed\",Name:\"generic.attack_speed\",Amount:-2.0,Operation:0,UUID:[I;622434354,-165851298,-1524796298,-1928816170],Slot:\"mainhand\"}]}"
+              "tag": "{CustomModelData: 4041007, dnl: {name: 'poison_rapier', item: 1, id: 1007, weapon: 1}}"
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl:{tier:1}}"
             }
           ]
         }

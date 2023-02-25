@@ -1,0 +1,66 @@
+from ../api import
+    on_entity_effect
+    on_entity_snowball_tick
+    rng
+    outcome
+
+from reapermc:api import
+    listener
+    on_server_load
+
+@listener(on_entity_effect)
+def entity_effect():
+    if entity @s[tag=dnl.raining_soul] run function ./raining_soul/main
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.timer.raining_soul dummy
+
+@listener(on_entity_snowball_tick)
+def entity_snowball_tick():
+    if entity @s[tag=dnl.raining_soul] run function ./raining_soul/projectile
+
+function ./raining_soul/apply:
+    unless entity @s[tag=dnl.raining_soul] run scoreboard players add @s dnl.effect 1
+    tag @s add dnl.raining_soul
+    tag @s[type=marker] add dnl.marker
+
+function ./raining_soul/remove:
+    scoreboard players remove @s dnl.effect 1
+    tag @s remove dnl.raining_soul
+    scoreboard players reset @s dnl.timer.raining_soul
+function ./raining_soul/main:
+    scoreboard players add @s dnl.timer.raining_soul 1
+    if score @s dnl.timer.raining_soul matches 5 run function ./raining_soul/spawn_location
+    if score @s dnl.timer.raining_soul matches 8 run function ./raining_soul/spawn_location
+    if score @s dnl.timer.raining_soul matches 11 run function ./raining_soul/spawn_location
+    if score @s dnl.timer.raining_soul matches 14 run function ./raining_soul/spawn_location
+    if score @s dnl.timer.raining_soul matches 17 run function ./raining_soul/spawn_location
+    if score @s dnl.timer.raining_soul matches 32.. run function ./raining_soul/remove
+
+function ./raining_soul/spawn_location:
+    rng 1 4
+    outcome 1:
+        positioned ~2 ~ ~ run function ./raining_soul/summon
+    outcome 2:
+        positioned ~-2 ~ ~ run function ./raining_soul/summon
+    outcome 3:
+        positioned ~ ~ ~2 run function ./raining_soul/summon
+    outcome 4:
+        positioned ~ ~ ~-2 run function ./raining_soul/summon
+
+function ./raining_soul/summon:
+    summon snowball ~ ~10 ~ {Tags:["dnl.raining_soul"],Item:{id:"minecraft:blue_ice",Count:1b}}
+
+function ./raining_soul/projectile:
+    unless block ~ ~-1 ~ air run function ./raining_soul/hit_ground:
+        summon area_effect_cloud ~ ~ ~ {Particle:"soul_fire_flame",Radius:2f,Duration:100,Effects:[{Id:2b,Amplifier:3b,Duration:100},{Id:4b,Amplifier:3b,Duration:100},{Id:7b,Amplifier:0b,Duration:100},{Id:18b,Amplifier:3b,Duration:100}]}
+        playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1.5 1
+        kill @s
+    if entity @e[type=#dnl:mobs_and_players,dx=0] run function ./raining_soul/hit_entity:
+        as @e[type=#dnl:mobs_and_players,dx=0] run function ./raining_soul/hit_entity_effects:
+            effect give @s minecraft:mining_fatigue 5 4
+            effect give @s minecraft:slowness 5 4
+            effect give @s minecraft:instant_damage 5 1
+            effect give @s minecraft:weakness 5 4
+        kill @s

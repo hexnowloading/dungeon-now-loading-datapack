@@ -1,0 +1,16 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ../api import on_entity_marker_tick
+
+on_marker_spawner = Event('on_marker_spawner')
+on_marker_spawner.set_handler_path(f"reaper_framework:__internal__/event_handler/on_marker_spawner")
+
+
+@on_marker_spawner.handler
+def handler():
+
+    @listener(on_entity_marker_tick)
+    def _on_entity_marker_tick():
+        execute function on_marker_spawner.generate_path('marker_spawner'):
+            unless score #dnl.developer_mode dnl.boolean matches 1 if score #dnl.1s dnl.tick matches 1 if entity @s[tag=dnl.spawner]:
+                on_marker_spawner.trigger()

@@ -1,0 +1,55 @@
+from reapermc:api import
+    listener
+
+from ../api import
+    get_nbt
+    add_custom_model_data
+
+id = ctx.meta.item.golem_gift
+
+nbt = get_nbt("golem_gift", id, "true")
+
+loot_table ../item/golem_gift {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:poppy",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Golem's Gift",
+                                "color": "#FFAA00",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "A poppy recieved from the iron",
+                                    "color": "#555555",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "golem in the forgotten field.",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

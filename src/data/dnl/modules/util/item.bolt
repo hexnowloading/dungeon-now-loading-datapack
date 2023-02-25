@@ -1,0 +1,397 @@
+from bolt_expressions import Scoreboard, Data
+from nbtlib import Float, Byte, String
+from beet.contrib.vanilla import Vanilla
+from bolt.contrib.defer import Defer
+
+macro custom_damage
+    amount=brigadier:integer:
+        effect give @s[type=#dnl:undeads] minecraft:instant_health 1 amount.value true
+        effect give @s[type=!#dnl:undeads] minecraft:instant_damage 1 amount.value true
+
+macro arrow_load_data
+    amplifier=brigadier:integer
+    life=brigadier:integer:
+        data merge entity @s {life:life.value,Color:-1,CustomPotionEffects:[{Id:26b,Amplifier:Byte(amplifier.value),Duration:10000,ShowParticles:0b}]}
+
+macro arrow_load_remove_unluck:
+    scoreboard players set #dnl.remove_unluck dnl.boolean 1
+
+macro arrow_land_break:
+    particle crit ~ ~ ~ 0 0 0 1 10 normal
+    particle item arrow ~ ~ ~ 0.1 0.1 0.1 0.2 10 normal
+    particle ash ~ ~ ~ 0 0 0 1 10 normal
+
+macro arrow_land_remain:
+    data remove entity @s {CustomPotionEffects:[{Id:26b}]}
+    data remove entity @s {CustomPotionEffects:[{Id:27b}]}
+
+# macro arrow_land
+#     type=brigadier:string{"type": "word"}:
+#         if type.value == "remain":
+#             data remove entity @s {CustomPotionEffects:[{Id:26b}]}
+#             data remove entity @s {CustomPotionEffects:[{Id:27b}]}
+#         elif type.value == "break":
+#             particle crit ~ ~ ~ 0 0 0 1 10 normal
+#             particle item arrow ~ ~ ~ 0.1 0.1 0.1 0.2 10 normal
+#             particle ash ~ ~ ~ 0 0 0 1 10 normal
+
+macro advancement_consume_item
+        namespace=brigadier:string{"type": "word"}
+        name=brigadier:string{"type": "word"}
+        base=brigadier:string{"type": "word"}:
+    advancement f"{namespace.value}:item/{name.value}" {
+        "criteria": {
+            "requirement": {
+                "trigger": "minecraft:consume_item",
+                "conditions": {
+                    "item": {
+                        "items": [
+                            f"minecraft:{base.value}"
+                        ],
+                        "nbt": f"{{{namespace.value}.{name.value}:1b}}"
+                    }
+                }
+            }
+        },
+        "rewards": {
+            "function": f"{namespace.value}:item/{name.value}/trigger"
+        }
+    }
+
+macro predicate_consume_item
+        namespace=brigadier:string{"type": "word"}
+        name=brigadier:string{"type": "word"}
+        base=brigadier:string{"type": "word"}:
+    predicate f"{namespace.value}:item/{name.value}" {
+        "condition": "minecraft:entity_properties",
+        "entity": "this",
+        "predicate": {
+            "equipment": {
+                "mainhand": {
+                    "items": [
+                        f"minecraft:{base.value}"
+                    ],
+                    "nbt": f"{{{namespace.value}.{name.value}:1b}}"
+                }
+            }
+        }
+    }
+
+def add_armor_predicate(item, id, material):
+    nbt = "{dnl:{id:" + str(id) + "}}" 
+    predicate f"dnl:item/{item}" {
+    "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+            "equipment": {
+                "head": {
+                    "items": [
+                        f"minecraft:{material}_helmet"
+                    ],
+                    "nbt": nbt
+                },
+                "chest": {
+                    "items": [
+                        f"minecraft:{material}_chestplate"
+                    ],
+                    "nbt": nbt
+                },
+                "legs": {
+                    "items": [
+                        f"minecraft:{material}_leggings"
+                    ],
+                    "nbt": nbt
+                },
+                "feet": {
+                    "items": [
+                        f"minecraft:{material}_boots"
+                    ],
+                    "nbt": nbt
+                }
+            }
+        }
+    }
+
+def get_cmd(id):
+    abs_id = abs(id)
+
+    if abs_id < 10000:
+        num = str(4040000 + abs_id)
+    elif abs_id < 100000:
+        num = str ("40") + str(abs_id)
+    elif abs_id < 1000000:
+        num = str ("4") + str(abs_id)
+    elif abs_id < 10000000:
+        num = str(abs_id)
+
+    if id < 0:
+        cmd = "-" + num
+    else:
+        cmd = num
+
+    return cmd
+
+def get_nbt(item, id, type="none", subtype="none"):
+    cmd = get_cmd(id)
+    unconvertable = ", unconvertable: 1"
+    name = "name: '" + str(item) + "'"
+    is_item = ", item: 1"
+    item_id = ", id: " + str(id)
+    nbt_tag1 = ""
+    if type != "none":
+        nbt_tag1 = ", " + str(type) + ": 1"
+    nbt_tag2 = ""
+    if subtype != "none":
+        nbt_tag2 = ", " + str(subtype) + ": 1"
+         
+    nbt = "{CustomModelData: " + cmd + ", dnl: {" + name + is_item + item_id + nbt_tag1 + nbt_tag2 + "}}"
+    return nbt
+
+# ---- #
+# Add Item
+
+defer = ctx.inject(Defer)
+
+all_items = set()
+
+def add_item(item_name, order_id):
+    all_items.add((order_id, item_name))
+
+@defer
+def _create_all_loot_tables():
+    pools = []
+    
+    for id, item_name in sorted(all_items):
+        pools.append(
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:loot_table",
+                        "name": f"dnl:item/{item_name}"
+                    }
+                ]
+            }
+        )
+    
+    loot_table dnl:item/all {"pools":pools}
+
+# ---- #
+vanilla = ctx.inject(Vanilla)
+models_jar = vanilla.mount("assets/minecraft/models/item")
+
+def add_custom_model_data(custom_item_name, id, base_item):
+    model_path = f"dnl:item/{custom_item_name}"
+
+    base_item_location = f"minecraft:item/{base_item}"
+    
+    models = ctx.assets.models
+
+    existing_model = models.get(base_item_location, None)
+
+    if not existing_model:
+        existing_model = models_jar.assets.models[base_item_location].copy()
+        models[base_item_location] = existing_model
+
+    cmd_id = int(get_cmd(id))
+
+    if base_item == "bow":
+        pulling_0_path = f"dnl:item/{custom_item_name}/pulling_0"
+        pulling_1_path = f"dnl:item/{custom_item_name}/pulling_1"
+        pulling_2_path = f"dnl:item/{custom_item_name}/pulling_2"
+
+        merge model base_item_location {
+            # **existing_model.data,
+            "overrides": [
+                {"predicate": {"custom_model_data": cmd_id}, "model": model_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1}, "model": pulling_0_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 0.65}, "model": pulling_1_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 0.9}, "model": pulling_2_path}
+            ]
+        }
+    elif base_item == "crossbow":
+        pulling_0_path = f"dnl:item/{custom_item_name}/pulling_0"
+        pulling_1_path = f"dnl:item/{custom_item_name}/pulling_1"
+        pulling_2_path = f"dnl:item/{custom_item_name}/pulling_2"
+        load_arrow = f"dnl:item/{custom_item_name}/arrow"
+        load_firework = f"dnl:item/{custom_item_name}/firework"
+
+        merge model base_item_location {
+            # **existing_model.data,
+            "overrides": [
+                {"predicate": {"custom_model_data": cmd_id}, "model": model_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1}, "model": pulling_0_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 0.58}, "model": pulling_1_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 1.0}, "model": pulling_2_path},
+                {"predicate": {"custom_model_data": cmd_id, "charged": 1}, "model": load_arrow},
+                {"predicate": {"custom_model_data": cmd_id, "charged": 1, "firework": 1}, "model": load_firework}
+            ]
+        }
+    else:
+        merge model base_item_location {
+            # **existing_model.data,
+            "overrides": [
+                {"predicate": {"custom_model_data": cmd_id}, "model": model_path},
+            ]
+        }
+
+    if base_item == "bow":
+        model model_path {
+            "parent": "minecraft:item/bow",
+            "textures": {
+                "layer0": model_path
+            },
+            "display": {
+                "thirdperson_righthand": {
+                    "rotation": [ -80, 260, -40 ],
+                    "translation": [ -1, -2, 2.5 ],
+                    "scale": [ 0.9, 0.9, 0.9 ]
+                },
+                "thirdperson_lefthand": {
+                    "rotation": [ -80, -280, 40 ],
+                    "translation": [ -1, -2, 2.5 ],
+                    "scale": [ 0.9, 0.9, 0.9 ]
+                },
+                "firstperson_righthand": {
+                    "rotation": [ 0, -90, 25 ],
+                    "translation": [ 1.13, 3.2, 1.13],
+                    "scale": [ 0.68, 0.68, 0.68 ]
+                },
+                "firstperson_lefthand": {
+                    "rotation": [ 0, 90, -25 ],
+                    "translation": [ 1.13, 3.2, 1.13],
+                    "scale": [ 0.68, 0.68, 0.68 ]
+                }
+            },
+            "overrides": [
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1}, "model": pulling_0_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 0.65}, "model": pulling_1_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 0.9}, "model": pulling_2_path}
+            ]
+        }
+        model pulling_0_path {
+            "parent": model_path,
+            "textures": {
+                "layer0": pulling_0_path
+            }
+        }
+        model pulling_1_path {
+            "parent": model_path,
+            "textures": {
+                "layer0": pulling_1_path
+            }
+        }
+        model pulling_2_path {
+            "parent": model_path,
+            "textures": {
+                "layer0": pulling_2_path
+            }
+        }
+    elif base_item == "crossbow":
+        model model_path {
+            "parent": "item/generated",
+            "textures": {
+                "layer0": model_path
+            },
+            "display": {
+                "thirdperson_righthand": {
+                    "rotation": [ -90, 0, -60 ],
+                    "translation": [ 2, 0.1, -3 ],
+                    "scale": [ 0.9, 0.9, 0.9 ]
+                },
+                "thirdperson_lefthand": {
+                    "rotation": [ -90, 0, 30 ],
+                    "translation": [ 2, 0.1, -3 ],
+                    "scale": [ 0.9, 0.9, 0.9 ]
+                },
+                "firstperson_righthand": {
+                    "rotation": [ -90, 0, -55 ],
+                    "translation": [ 1.13, 3.2, 1.13],
+                    "scale": [ 0.68, 0.68, 0.68 ]
+                },
+                "firstperson_lefthand": {
+                    "rotation": [ -90, 0, 35 ],
+                    "translation": [ 1.13, 3.2, 1.13],
+                    "scale": [ 0.68, 0.68, 0.68 ]
+                }
+            },
+            "overrides": [
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1}, "model": pulling_0_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 0.58}, "model": pulling_1_path},
+                {"predicate": {"custom_model_data": cmd_id, "pulling": 1, "pull": 1.0}, "model": pulling_2_path},
+                {"predicate": {"custom_model_data": cmd_id, "charged": 1}, "model": load_arrow},
+                {"predicate": {"custom_model_data": cmd_id, "charged": 1, "firework": 1}, "model": load_firework}
+            ]
+        }
+        model pulling_0_path {
+            "parent": model_path,
+            "textures": {
+                "layer0": pulling_0_path
+            }
+        }
+        model pulling_1_path {
+            "parent": model_path,
+            "textures": {
+                "layer0": pulling_1_path
+            }
+        }
+        model pulling_2_path {
+            "parent": model_path,
+            "textures": {
+                "layer0": pulling_2_path
+            }
+        }
+        model load_arrow {
+            "parent": model_path,
+            "textures": {
+                "layer0": load_arrow
+            }
+        }
+        model load_firework {
+            "parent": model_path,
+            "textures": {
+                "layer0": load_firework
+            }
+        }
+    else:
+        model model_path {
+            **existing_model.data,
+            "textures": {
+                "layer0": model_path
+            }
+        }
+        
+
+# def rp_create_models(item_name, id, type):
+#     cmd = get_cmd(id)
+#     item_resource_location = minecraft:item/ + item_name
+#     item_path = "item/" + item_name
+#     base_resource_location = minecraft:item/ + type
+#     if 
+#         type == "wooden_sword" or 
+#         type == "stone_sword" or 
+#         type == "iron_sword" or 
+#         type == "diamond_sword" or 
+#         type == "netherite_sword":
+#             model item_resource_location {
+#                 "parent": "minecraft:item/handheld",
+#                 "textures": {
+#                     "layer0": item_resource_location
+#                 }
+#             }
+#             merge model base_resource_location {
+#                 "parent": "minecraft:item/handheld",
+#                 "textures": {
+#                     "layer0": base_resource_location
+#                 },
+#                 "overrides": [
+#                     {"predicate": {"custom_model_data": cmd}, "model": item_path},
+#                 ]
+#             }
+#     if type == "bow":
+#         model item_resource_location {
+#             "parent": "minecraft:item/handheld",
+#             "textures": {
+#                 "layer0": item_resource_location
+#             }
+#         }
