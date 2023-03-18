@@ -131,8 +131,13 @@ def get_cmd(id):
 
     return cmd
 
-def get_nbt(item, id, type="none", subtype="none"):
-    cmd = get_cmd(id)
+def get_nbt(item, id, has_cmd="true", type="none", subtype="none"):
+    cmd_tag = ""
+    if has_cmd == "true":
+        cmd = get_cmd(id)
+        cmd_tag = "CustomModelData: " + cmd + ", "
+    else:
+        cmd_tag = ""
     unconvertable = ", unconvertable: 1"
     name = "name: '" + str(item) + "'"
     is_item = ", item: 1"
@@ -144,37 +149,8 @@ def get_nbt(item, id, type="none", subtype="none"):
     if subtype != "none":
         nbt_tag2 = ", " + str(subtype) + ": 1"
          
-    nbt = "{CustomModelData: " + cmd + ", dnl: {" + name + is_item + item_id + nbt_tag1 + nbt_tag2 + "}}"
+    nbt = "{" + cmd_tag + "dnl: {" + name + is_item + item_id + nbt_tag1 + nbt_tag2 + "}}"
     return nbt
-
-# ---- #
-# Add Item
-
-defer = ctx.inject(Defer)
-
-all_items = set()
-
-def add_item(item_name, order_id):
-    all_items.add((order_id, item_name))
-
-@defer
-def _create_all_loot_tables():
-    pools = []
-    
-    for id, item_name in sorted(all_items):
-        pools.append(
-            {
-                "rolls": 1,
-                "entries": [
-                    {
-                        "type": "minecraft:loot_table",
-                        "name": f"dnl:item/{item_name}"
-                    }
-                ]
-            }
-        )
-    
-    loot_table dnl:item/all {"pools":pools}
 
 # ---- #
 vanilla = ctx.inject(Vanilla)

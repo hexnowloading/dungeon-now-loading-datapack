@@ -64,7 +64,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4043001, dnl: {name: 'crown_of_olympus', item: 1, id: 3001}}"
+              "tag": "{dnl: {name: 'crown_of_olympus', item: 1, id: 3001}}"
             }
           ]
         }

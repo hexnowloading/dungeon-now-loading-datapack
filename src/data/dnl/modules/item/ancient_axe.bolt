@@ -9,10 +9,11 @@ from ../api import
     custom_damage
     on_entity_pre_hit_attacker
     on_entity_hit_target
+    on_entity_mob_tick
 
 id = ctx.meta.item.ancient_axe
 
-nbt = get_nbt("ancient_axe", id)
+nbt = get_nbt("ancient_axe", id, "false")
 
 # add_custom_model_data("ancient_axe", id, "netherite_axe")
 
@@ -65,6 +66,22 @@ loot_table ../item/ancient_axe {
         }
     ]
 }
+
+@listener(on_entity_mob_tick)
+def entity_mob_tick():
+    if score @s dnl.mainhand matches id run function ./olympus_charger/mob_tick:
+        scoreboard players add @s dnl.mainhand.timer 1
+
+        if score @s dnl.mainhand.timer matches 1 run effect give @s minecraft:slowness 2 3 true
+        if score @s dnl.mainhand.timer matches 1 run attribute @s minecraft:generic.knockback_resistance base set 1
+        if score @s dnl.mainhand.timer matches 1..40 run particle block dirt ~ ~ ~ 0.2 0 0.2 0.1 10 normal
+        if score @s dnl.mainhand.timer matches 40 run effect give @s minecraft:speed 3 2 true
+        if score @s dnl.mainhand.timer matches 40 run attribute @s minecraft:generic.knockback_resistance base set 0
+        if score @s dnl.mainhand.timer matches 100 run effect clear @s minecraft:speed
+        if score #dnl.1s dnl.tick matches 1 if score @s dnl.mainhand.timer matches 200.. if entity @a[distance=..5] run scoreboard players reset @s dnl.mainhand.timer
+
+        if entity @s[tag=dnl.the_champion] if score @s dnl.phase matches 3 if score @s dnl.mainhand.timer matches 40..100 run setblock ~ ~ ~ minecraft:fire keep
+
 
 @listener(on_entity_pre_hit_attacker)
 def entity_pre_hit_attacker():

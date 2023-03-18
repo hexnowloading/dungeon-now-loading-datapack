@@ -8,7 +8,7 @@ from reapermc:api import
     loop
 
 id = ctx.meta.item.forbidden_melon
-nbt = get_nbt("forbidden_melon", id, "true")
+nbt = get_nbt("forbidden_melon", id, "false")
 
 loot_table ../item/forbidden_melon {
     "type": "minecraft:generic",

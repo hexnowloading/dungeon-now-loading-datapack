@@ -50,7 +50,7 @@ function ./raining_soul/spawn_location:
         positioned ~ ~ ~-2 run function ./raining_soul/summon
 
 function ./raining_soul/summon:
-    summon snowball ~ ~10 ~ {Tags:["dnl.raining_soul"],Item:{id:"minecraft:blue_ice",Count:1b}}
+    summon snowball ~ ~10 ~ {Tags:["dnl.snowball","dnl.raining_soul"],Item:{id:"minecraft:blue_ice",Count:1b}}
 
 function ./raining_soul/projectile:
     unless block ~ ~-1 ~ air run function ./raining_soul/hit_ground:

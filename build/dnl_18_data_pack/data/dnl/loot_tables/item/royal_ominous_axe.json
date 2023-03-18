@@ -44,7 +44,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4041006, dnl: {name: 'royal_ominous_axe', item: 1, id: 1006, weapon: 1}}"
+              "tag": "{CustomModelData: 4041006, dnl: {name: 'royal_ominous_axe', item: 1, id: 1006}}"
             }
           ]
         }

@@ -11,13 +11,8 @@ def load():
     data modify storage dnl:temp ItemName set value []
     scoreboard objectives add dnl.timer.shield dummy
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
-    scoreboard objectives add ehm._ dummy
-    execute unless score #loaded ehm._ = #loaded ehm._ run function ./entity_hit_matching/set_defaults
-
-@listener(on_entity_living_tick)
-def entity_living_tick():
-    ## AUTHOR: Picarrow, CloudWolf, nphhpn
-    execute if score #loaded ehm._ matches 1 unless score @s ehm._ = @s ehm._ run function ./entity_hit_matching/id/assign
+    scoreboard objectives add dnl.eid dummy
+    execute unless score #loaded dnl.eid = #loaded dnl.eid run function ./entity_hit_matching/set_defaults
 
 advancement ./entity_hit_matching/on_hit {
     "criteria": {
@@ -25,7 +20,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.0_0\"]}"
+                    "nbt": "{Tags:[\"dnl.0_0\"]}"
                 }
             }
         },
@@ -33,7 +28,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.1_0\"]}"
+                    "nbt": "{Tags:[\"dnl.1_0\"]}"
                 }
             }
         },
@@ -41,7 +36,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.2_0\"]}"
+                    "nbt": "{Tags:[\"dnl.2_0\"]}"
                 }
             }
         },
@@ -49,7 +44,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.3_0\"]}"
+                    "nbt": "{Tags:[\"dnl.3_0\"]}"
                 }
             }
         },
@@ -57,7 +52,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.4_0\"]}"
+                    "nbt": "{Tags:[\"dnl.4_0\"]}"
                 }
             }
         },
@@ -65,7 +60,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.5_0\"]}"
+                    "nbt": "{Tags:[\"dnl.5_0\"]}"
                 }
             }
         },
@@ -73,7 +68,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.6_0\"]}"
+                    "nbt": "{Tags:[\"dnl.6_0\"]}"
                 }
             }
         },
@@ -81,7 +76,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.7_0\"]}"
+                    "nbt": "{Tags:[\"dnl.7_0\"]}"
                 }
             }
         },
@@ -89,7 +84,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.8_0\"]}"
+                    "nbt": "{Tags:[\"dnl.8_0\"]}"
                 }
             }
         },
@@ -97,7 +92,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.0_1\"]}"
+                    "nbt": "{Tags:[\"dnl.0_1\"]}"
                 }
             }
         },
@@ -105,7 +100,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.1_1\"]}"
+                    "nbt": "{Tags:[\"dnl.1_1\"]}"
                 }
             }
         },
@@ -113,7 +108,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.2_1\"]}"
+                    "nbt": "{Tags:[\"dnl.2_1\"]}"
                 }
             }
         },
@@ -121,7 +116,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.3_1\"]}"
+                    "nbt": "{Tags:[\"dnl.3_1\"]}"
                 }
             }
         },
@@ -129,7 +124,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.4_1\"]}"
+                    "nbt": "{Tags:[\"dnl.4_1\"]}"
                 }
             }
         },
@@ -137,7 +132,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.5_1\"]}"
+                    "nbt": "{Tags:[\"dnl.5_1\"]}"
                 }
             }
         },
@@ -145,7 +140,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.6_1\"]}"
+                    "nbt": "{Tags:[\"dnl.6_1\"]}"
                 }
             }
         },
@@ -153,7 +148,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.7_1\"]}"
+                    "nbt": "{Tags:[\"dnl.7_1\"]}"
                 }
             }
         },
@@ -161,7 +156,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.8_1\"]}"
+                    "nbt": "{Tags:[\"dnl.8_1\"]}"
                 }
             }
         },
@@ -169,7 +164,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.0_2\"]}"
+                    "nbt": "{Tags:[\"dnl.0_2\"]}"
                 }
             }
         },
@@ -177,7 +172,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.1_2\"]}"
+                    "nbt": "{Tags:[\"dnl.1_2\"]}"
                 }
             }
         },
@@ -185,7 +180,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.2_2\"]}"
+                    "nbt": "{Tags:[\"dnl.2_2\"]}"
                 }
             }
         },
@@ -193,7 +188,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.3_2\"]}"
+                    "nbt": "{Tags:[\"dnl.3_2\"]}"
                 }
             }
         },
@@ -201,7 +196,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.4_2\"]}"
+                    "nbt": "{Tags:[\"dnl.4_2\"]}"
                 }
             }
         },
@@ -209,7 +204,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.5_2\"]}"
+                    "nbt": "{Tags:[\"dnl.5_2\"]}"
                 }
             }
         },
@@ -217,7 +212,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.6_2\"]}"
+                    "nbt": "{Tags:[\"dnl.6_2\"]}"
                 }
             }
         },
@@ -225,7 +220,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.7_2\"]}"
+                    "nbt": "{Tags:[\"dnl.7_2\"]}"
                 }
             }
         },
@@ -233,7 +228,7 @@ advancement ./entity_hit_matching/on_hit {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "entity": {
-                    "nbt": "{Tags:[\"ehm.8_2\"]}"
+                    "nbt": "{Tags:[\"dnl.8_2\"]}"
                 }
             }
         },
@@ -251,7 +246,7 @@ advancement ./entity_hit_matching/on_hit {
     },
     "requirements": [
         [
-            "not_projectile"
+            "not_projectile" 
         ],
         [
             "bit_0_0",
@@ -310,7 +305,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.0_0\"]}"
+                        "nbt": "{Tags:[\"dnl.0_0\"]}"
                     }
                 }
             }
@@ -320,7 +315,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.1_0\"]}"
+                        "nbt": "{Tags:[\"dnl.1_0\"]}"
                     }
                 }
             }
@@ -330,7 +325,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.2_0\"]}"
+                        "nbt": "{Tags:[\"dnl.2_0\"]}"
                     }
                 }
             }
@@ -340,7 +335,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.3_0\"]}"
+                        "nbt": "{Tags:[\"dnl.3_0\"]}"
                     }
                 }
             }
@@ -350,7 +345,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.4_0\"]}"
+                        "nbt": "{Tags:[\"dnl.4_0\"]}"
                     }
                 }
             }
@@ -360,7 +355,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.5_0\"]}"
+                        "nbt": "{Tags:[\"dnl.5_0\"]}"
                     }
                 }
             }
@@ -370,7 +365,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.6_0\"]}"
+                        "nbt": "{Tags:[\"dnl.6_0\"]}"
                     }
                 }
             }
@@ -380,7 +375,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.7_0\"]}"
+                        "nbt": "{Tags:[\"dnl.7_0\"]}"
                     }
                 }
             }
@@ -390,7 +385,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.8_0\"]}"
+                        "nbt": "{Tags:[\"dnl.8_0\"]}"
                     }
                 }
             }
@@ -400,7 +395,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.0_1\"]}"
+                        "nbt": "{Tags:[\"dnl.0_1\"]}"
                     }
                 }
             }
@@ -410,7 +405,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.1_1\"]}"
+                        "nbt": "{Tags:[\"dnl.1_1\"]}"
                     }
                 }
             }
@@ -420,7 +415,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.2_1\"]}"
+                        "nbt": "{Tags:[\"dnl.2_1\"]}"
                     }
                 }
             }
@@ -430,7 +425,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.3_1\"]}"
+                        "nbt": "{Tags:[\"dnl.3_1\"]}"
                     }
                 }
             }
@@ -440,7 +435,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.4_1\"]}"
+                        "nbt": "{Tags:[\"dnl.4_1\"]}"
                     }
                 }
             }
@@ -450,7 +445,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.5_1\"]}"
+                        "nbt": "{Tags:[\"dnl.5_1\"]}"
                     }
                 }
             }
@@ -460,7 +455,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.6_1\"]}"
+                        "nbt": "{Tags:[\"dnl.6_1\"]}"
                     }
                 }
             }
@@ -470,7 +465,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.7_1\"]}"
+                        "nbt": "{Tags:[\"dnl.7_1\"]}"
                     }
                 }
             }
@@ -480,7 +475,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.8_1\"]}"
+                        "nbt": "{Tags:[\"dnl.8_1\"]}"
                     }
                 }
             }
@@ -490,7 +485,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.0_2\"]}"
+                        "nbt": "{Tags:[\"dnl.0_2\"]}"
                     }
                 }
             }
@@ -500,7 +495,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.1_2\"]}"
+                        "nbt": "{Tags:[\"dnl.1_2\"]}"
                     }
                 }
             }
@@ -510,7 +505,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.2_2\"]}"
+                        "nbt": "{Tags:[\"dnl.2_2\"]}"
                     }
                 }
             }
@@ -520,7 +515,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.3_2\"]}"
+                        "nbt": "{Tags:[\"dnl.3_2\"]}"
                     }
                 }
             }
@@ -530,7 +525,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.4_2\"]}"
+                        "nbt": "{Tags:[\"dnl.4_2\"]}"
                     }
                 }
             }
@@ -540,7 +535,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.5_2\"]}"
+                        "nbt": "{Tags:[\"dnl.5_2\"]}"
                     }
                 }
             }
@@ -550,7 +545,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.6_2\"]}"
+                        "nbt": "{Tags:[\"dnl.6_2\"]}"
                     }
                 }
             }
@@ -560,7 +555,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.7_2\"]}"
+                        "nbt": "{Tags:[\"dnl.7_2\"]}"
                     }
                 }
             }
@@ -570,7 +565,7 @@ advancement ./entity_hit_matching/on_hurt {
             "conditions": {
                 "damage": {
                     "source_entity": {
-                        "nbt": "{Tags:[\"ehm.8_2\"]}"
+                        "nbt": "{Tags:[\"dnl.8_2\"]}"
                     }
                 }
             }
@@ -651,9 +646,9 @@ advancement ./entity_hit_matching/on_hurt {
 function ./entity_hit_matching/set_defaults:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
-    scoreboard players reset * ehm._
-    scoreboard players set #3 ehm._ 3
-    scoreboard players set #loaded ehm._ 1
+    scoreboard players reset * dnl.eid
+    scoreboard players set #3 dnl.eid 3
+    scoreboard players set #loaded dnl.eid 1
 
 
 function ./entity_hit_matching/id/assign:
@@ -663,156 +658,159 @@ function ./entity_hit_matching/id/assign:
     function ./entity_hit_matching/id/remove_tags
 
     # Assigns an id to the executor
-    execute if score #next_id ehm._ matches 19683.. run function ./entity_hit_matching/set_defaults
-    scoreboard players operation @s ehm._ = #next_id ehm._
-    scoreboard players add #next_id ehm._ 1
+    execute if score #next_id dnl.eid matches 19683.. run function ./entity_hit_matching/set_defaults
+    scoreboard players operation @s dnl.eid = #next_id dnl.eid
+    scoreboard players add #next_id dnl.eid 1
 
     # Appends tags to the executor
     # Tags represent the id's ternary representation
-    scoreboard players operation #temp_id ehm._ = @s ehm._
+    scoreboard players operation #temp_id dnl.eid = @s dnl.eid
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.0_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.0_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.0_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.0_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.0_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.0_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.1_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.1_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.1_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.1_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.1_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.1_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.2_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.2_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.2_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.2_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.2_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.2_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.3_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.3_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.3_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.3_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.3_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.3_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.4_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.4_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.4_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.4_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.4_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.4_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.5_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.5_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.5_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.5_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.5_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.5_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.6_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.6_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.6_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.6_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.6_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.6_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.7_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.7_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.7_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.7_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.7_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.7_2
 
     function ./entity_hit_matching/id/next_bit
-    execute if score #bit ehm._ matches 0 run tag @s add ehm.8_0
-    execute if score #bit ehm._ matches 1 run tag @s add ehm.8_1
-    execute if score #bit ehm._ matches 2 run tag @s add ehm.8_2
+    execute if score #bit dnl.eid matches 0 run tag @s add dnl.8_0
+    execute if score #bit dnl.eid matches 1 run tag @s add dnl.8_1
+    execute if score #bit dnl.eid matches 2 run tag @s add dnl.8_2
 
 function ./entity_hit_matching/id/next_bit:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
-    scoreboard players operation #bit ehm._ = #temp_id ehm._
-    scoreboard players operation #bit ehm._ %= #3 ehm._
-    scoreboard players operation #temp_id ehm._ /= #3 ehm._
+    scoreboard players operation #bit dnl.eid = #temp_id dnl.eid
+    scoreboard players operation #bit dnl.eid %= #3 dnl.eid
+    scoreboard players operation #temp_id dnl.eid /= #3 dnl.eid
 
 function ./entity_hit_matching/id/remove_tags:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
-    tag @s remove ehm.0_0
-    tag @s remove ehm.0_1
-    tag @s remove ehm.0_2
-    tag @s remove ehm.1_0
-    tag @s remove ehm.1_1
-    tag @s remove ehm.1_2
-    tag @s remove ehm.2_0
-    tag @s remove ehm.2_1
-    tag @s remove ehm.2_2
-    tag @s remove ehm.3_0
-    tag @s remove ehm.3_1
-    tag @s remove ehm.3_2
-    tag @s remove ehm.4_0
-    tag @s remove ehm.4_1
-    tag @s remove ehm.4_2
-    tag @s remove ehm.5_0
-    tag @s remove ehm.5_1
-    tag @s remove ehm.5_2
-    tag @s remove ehm.6_0
-    tag @s remove ehm.6_1
-    tag @s remove ehm.6_2
-    tag @s remove ehm.7_0
-    tag @s remove ehm.7_1
-    tag @s remove ehm.7_2
-    tag @s remove ehm.8_0
-    tag @s remove ehm.8_1
-    tag @s remove ehm.8_2
+    tag @s remove dnl.0_0
+    tag @s remove dnl.0_1
+    tag @s remove dnl.0_2
+    tag @s remove dnl.1_0
+    tag @s remove dnl.1_1
+    tag @s remove dnl.1_2
+    tag @s remove dnl.2_0
+    tag @s remove dnl.2_1
+    tag @s remove dnl.2_2
+    tag @s remove dnl.3_0
+    tag @s remove dnl.3_1
+    tag @s remove dnl.3_2
+    tag @s remove dnl.4_0
+    tag @s remove dnl.4_1
+    tag @s remove dnl.4_2
+    tag @s remove dnl.5_0
+    tag @s remove dnl.5_1
+    tag @s remove dnl.5_2
+    tag @s remove dnl.6_0
+    tag @s remove dnl.6_1
+    tag @s remove dnl.6_2
+    tag @s remove dnl.7_0
+    tag @s remove dnl.7_1
+    tag @s remove dnl.7_2
+    tag @s remove dnl.8_0
+    tag @s remove dnl.8_1
+    tag @s remove dnl.8_2
 
 function ./entity_hit_matching/on_hit/find_target_id:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
-    scoreboard players set #target_id ehm._ 0
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_1=true}}] run scoreboard players add #target_id ehm._ 1
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_2=true}}] run scoreboard players add #target_id ehm._ 2
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_1=true}}] run scoreboard players add #target_id ehm._ 3
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_2=true}}] run scoreboard players add #target_id ehm._ 6
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_2_1=true}}] run scoreboard players add #target_id ehm._ 9
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_2_2=true}}] run scoreboard players add #target_id ehm._ 18
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_3_1=true}}] run scoreboard players add #target_id ehm._ 27
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_3_2=true}}] run scoreboard players add #target_id ehm._ 54
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_4_1=true}}] run scoreboard players add #target_id ehm._ 81
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_4_2=true}}] run scoreboard players add #target_id ehm._ 162
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_5_1=true}}] run scoreboard players add #target_id ehm._ 243
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_5_2=true}}] run scoreboard players add #target_id ehm._ 486
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_6_1=true}}] run scoreboard players add #target_id ehm._ 729
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_6_2=true}}] run scoreboard players add #target_id ehm._ 1458
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_1=true}}] run scoreboard players add #target_id ehm._ 2187
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_2=true}}] run scoreboard players add #target_id ehm._ 4374
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_1=true}}] run scoreboard players add #target_id ehm._ 6561
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_2=true}}] run scoreboard players add #target_id ehm._ 13122
+    scoreboard players set #target_id dnl.eid 0
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_1=true}}] run scoreboard players add #target_id dnl.eid 1
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_2=true}}] run scoreboard players add #target_id dnl.eid 2
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_1=true}}] run scoreboard players add #target_id dnl.eid 3
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_2=true}}] run scoreboard players add #target_id dnl.eid 6
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_2_1=true}}] run scoreboard players add #target_id dnl.eid 9
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_2_2=true}}] run scoreboard players add #target_id dnl.eid 18
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_3_1=true}}] run scoreboard players add #target_id dnl.eid 27
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_3_2=true}}] run scoreboard players add #target_id dnl.eid 54
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_4_1=true}}] run scoreboard players add #target_id dnl.eid 81
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_4_2=true}}] run scoreboard players add #target_id dnl.eid 162
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_5_1=true}}] run scoreboard players add #target_id dnl.eid 243
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_5_2=true}}] run scoreboard players add #target_id dnl.eid 486
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_6_1=true}}] run scoreboard players add #target_id dnl.eid 729
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_6_2=true}}] run scoreboard players add #target_id dnl.eid 1458
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_1=true}}] run scoreboard players add #target_id dnl.eid 2187
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_2=true}}] run scoreboard players add #target_id dnl.eid 4374
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_1=true}}] run scoreboard players add #target_id dnl.eid 6561
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_2=true}}] run scoreboard players add #target_id dnl.eid 13122
 
 function ./entity_hit_matching/on_hit/reward:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
     function ./entity_hit_matching/on_hit/find_target_id
     advancement revoke @s only dnl:util/entity_hit_matching/on_hit
-    tag @s add ehm.player
+    tag @s add dnl.this
     scoreboard players operation #dnl.weapon_id.attacker dnl.int = @s dnl.mainhand
-    # store result score #dnl.weapon_id.attacker dnl.int run data get entity @s SelectedItem.tag.dnl.weapon_id
     function ./entity_hit_matching/on_pre_hit_attacker_listener
-    execute as @e[type=#dnl:mobs_and_players] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hit_target_listener
+    execute as @e[type=#dnl:mobs_and_players] if score @s dnl.eid = #target_id dnl.eid run function ./entity_hit_matching/on_hit_target_data:
+        # store result score #dnl.weapon_id.target dnl.int run data get entity @s HandItems[0].tag.dnl.id (Uncomment this when it needs to detect the weapon id when hurt for mobs.)
+        scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
+        function ./entity_hit_matching/on_hit_target_listener
     function ./entity_hit_matching/on_hit_attacker_listener
     scoreboard players reset #dnl.weapon_id.attacker dnl.int
-    tag @s remove ehm.player
+    scoreboard players reset #dnl.shield_id.target dnl.int
+    tag @s remove dnl.this
 
 function ./entity_hit_matching/on_hurt/find_target_id:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
-    scoreboard players set #target_id ehm._ 0
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_1=true}}] run scoreboard players add #target_id ehm._ 1
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_2=true}}] run scoreboard players add #target_id ehm._ 2
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_1=true}}] run scoreboard players add #target_id ehm._ 3
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_2=true}}] run scoreboard players add #target_id ehm._ 6
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_2_1=true}}] run scoreboard players add #target_id ehm._ 9
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_2_2=true}}] run scoreboard players add #target_id ehm._ 18
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_3_1=true}}] run scoreboard players add #target_id ehm._ 27
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_3_2=true}}] run scoreboard players add #target_id ehm._ 54
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_4_1=true}}] run scoreboard players add #target_id ehm._ 81
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_4_2=true}}] run scoreboard players add #target_id ehm._ 162
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_5_1=true}}] run scoreboard players add #target_id ehm._ 243
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_5_2=true}}] run scoreboard players add #target_id ehm._ 486
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_6_1=true}}] run scoreboard players add #target_id ehm._ 729
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_6_2=true}}] run scoreboard players add #target_id ehm._ 1458
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_1=true}}] run scoreboard players add #target_id ehm._ 2187
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_2=true}}] run scoreboard players add #target_id ehm._ 4374
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_1=true}}] run scoreboard players add #target_id ehm._ 6561
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_2=true}}] run scoreboard players add #target_id ehm._ 13122
+    scoreboard players set #target_id dnl.eid 0
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_1=true}}] run scoreboard players add #target_id dnl.eid 1
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_2=true}}] run scoreboard players add #target_id dnl.eid 2
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_1=true}}] run scoreboard players add #target_id dnl.eid 3
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_2=true}}] run scoreboard players add #target_id dnl.eid 6
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_2_1=true}}] run scoreboard players add #target_id dnl.eid 9
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_2_2=true}}] run scoreboard players add #target_id dnl.eid 18
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_3_1=true}}] run scoreboard players add #target_id dnl.eid 27
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_3_2=true}}] run scoreboard players add #target_id dnl.eid 54
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_4_1=true}}] run scoreboard players add #target_id dnl.eid 81
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_4_2=true}}] run scoreboard players add #target_id dnl.eid 162
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_5_1=true}}] run scoreboard players add #target_id dnl.eid 243
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_5_2=true}}] run scoreboard players add #target_id dnl.eid 486
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_6_1=true}}] run scoreboard players add #target_id dnl.eid 729
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_6_2=true}}] run scoreboard players add #target_id dnl.eid 1458
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_1=true}}] run scoreboard players add #target_id dnl.eid 2187
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_2=true}}] run scoreboard players add #target_id dnl.eid 4374
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_1=true}}] run scoreboard players add #target_id dnl.eid 6561
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_2=true}}] run scoreboard players add #target_id dnl.eid 13122
     
     scoreboard players set #dnl.blocked dnl.boolean 0
     if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked_true=true}}] run scoreboard players set #dnl.blocked dnl.boolean 1
@@ -821,10 +819,10 @@ function ./entity_hit_matching/on_hurt/reward:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
     function ./entity_hit_matching/on_hurt/find_target_id
     advancement revoke @s only dnl:util/entity_hit_matching/on_hurt
-    tag @s add ehm.player
+    tag @s add dnl.player
     if score #dnl.blocked dnl.boolean matches 1 run function ./entity_hit_matching/get_shield:
-        if score @s dnl.offhand matches 6001..7000 run scoreboard players operation #dnl.shield_id dnl.int = @s dnl.offhand
-        unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 6001..7000 run scoreboard players operation #dnl.shield_id dnl.int = @s dnl.mainhand
+        if score @s dnl.offhand matches 6001..7000 run scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
+        unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 6001..7000 run scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.mainhand
         scoreboard players operation #dnl.shield_timer dnl.int = @s dnl.timer.shield
     if score @s dnl.head matches 1.. run scoreboard players operation #dnl.helmet_id dnl.int = @s dnl.head
     if score @s dnl.chest matches 1.. run scoreboard players operation #dnl.chestplate_id dnl.int = @s dnl.chest
@@ -832,14 +830,14 @@ function ./entity_hit_matching/on_hurt/reward:
     if score @s dnl.feet matches 1.. run scoreboard players operation #dnl.boots_id dnl.int = @s dnl.feet
     if score @s dnl.head = @s dnl.chest if score @s dnl.head = @s dnl.leg if score @s dnl.head = @s dnl.feet run scoreboard players operation #dnl.full_armor_id dnl.int = @s dnl.head
     scoreboard players operation #dnl.weapon_id.target dnl.int = @s dnl.mainhand
-    execute as @e[type=#dnl:hurt_targets] if score @s ehm._ = #target_id ehm._ run function ./entity_hit_matching/on_hurt_id_check:
+    execute as @e[type=#dnl:hurt_targets] if score @s dnl.eid = #target_id dnl.eid run function ./entity_hit_matching/on_hurt_id_check:
         store result score #dnl.weapon_id.attacker dnl.int run data get entity @s HandItems[0].tag.dnl.id
         function ./entity_hit_matching/on_hurt_attacker_listener
     function ./entity_hit_matching/on_hurt_target_listener
     scoreboard players reset #dnl.weapon_id.target dnl.int
     scoreboard players reset #dnl.weapon_id.attacker dnl.int
-    scoreboard players reset #dnl.shield_id dnl.int
-    tag @s remove ehm.player
+    scoreboard players reset #dnl.shield_id.target dnl.int
+    tag @s remove dnl.player
 
 advancement ./entity_hit_matching/using_shield {
     "criteria": {

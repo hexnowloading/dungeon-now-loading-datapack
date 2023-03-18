@@ -7,7 +7,7 @@ from ../api import
 
 id = ctx.meta.item.spawner_fragment
 
-nbt = get_nbt("spawner_fragment", id, "true")
+nbt = get_nbt("spawner_fragment", id)
 
 add_custom_model_data("spawner_fragment", id, "iron_nugget")
 

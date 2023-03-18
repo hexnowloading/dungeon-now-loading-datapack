@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4044007, dnl: {name: 'spell_breaker', item: 1, id: 4007, true: 1}}"
+              "tag": "{CustomModelData: 4044007, dnl: {name: 'spell_breaker', item: 1, id: 4007}}"
             }
           ]
         }

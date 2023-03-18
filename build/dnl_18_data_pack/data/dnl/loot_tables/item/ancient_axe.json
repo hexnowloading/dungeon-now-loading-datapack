@@ -39,7 +39,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4041001, dnl: {name: 'ancient_axe', item: 1, id: 1001}}"
+              "tag": "{dnl: {name: 'ancient_axe', item: 1, id: 1001}}"
             }
           ]
         }

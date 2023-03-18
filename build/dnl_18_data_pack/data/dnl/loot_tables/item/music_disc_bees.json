@@ -30,7 +30,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4049003, dnl: {name: 'music_disc_bees', item: 1, id: 9003, true: 1, music: 1}}"
+              "tag": "{dnl: {name: 'music_disc_bees', item: 1, id: 9003, music: 1}}"
             },
             {
               "function": "minecraft:set_nbt",

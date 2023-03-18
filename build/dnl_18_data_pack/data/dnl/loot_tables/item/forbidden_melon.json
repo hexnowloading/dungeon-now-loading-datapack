@@ -35,7 +35,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4045003, dnl: {name: 'forbidden_melon', item: 1, id: 5003, true: 1}}"
+              "tag": "{dnl: {name: 'forbidden_melon', item: 1, id: 5003}}"
             }
           ]
         }

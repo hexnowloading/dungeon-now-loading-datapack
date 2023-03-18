@@ -30,7 +30,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4049004, dnl: {name: 'music_disc_woodland_fountain', item: 1, id: 9004, true: 1, music: 1}}"
+              "tag": "{dnl: {name: 'music_disc_woodland_fountain', item: 1, id: 9004, music: 1}}"
             },
             {
               "function": "minecraft:set_nbt",

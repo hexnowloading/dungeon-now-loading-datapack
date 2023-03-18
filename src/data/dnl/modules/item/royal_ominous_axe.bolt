@@ -12,7 +12,7 @@ from reapermc:api import
 
 id = ctx.meta.item.royal_ominous_axe
 
-nbt = get_nbt("royal_ominous_axe", id, "weapon")
+nbt = get_nbt("royal_ominous_axe", id)
 
 add_custom_model_data("royal_ominous_axe", id, "diamond_axe")
 add_custom_model_data("royal_ominous_axe", id, "netherite_axe")

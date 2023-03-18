@@ -31,8 +31,8 @@ execute if score @s dnl.mined_block matches 1.. if score @s dnl.mainhand matches
 scoreboard players reset @s dnl.mined_spawner
 scoreboard players reset @s dnl.mined_block
 execute if score @s dnl.return matches 1.. run function dnl:util/projectiles/return
-execute unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run scoreboard players operation @s dnl.bow = @s dnl.offhand
-execute unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run scoreboard players operation @s dnl.bow = @s dnl.mainhand
+execute unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run function dnl:util/projectiles/player_offhand
+execute unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run function dnl:util/projectiles/player_mainhand
 execute unless score @s dnl.offhand_used matches 1.. unless score @s dnl.mainhand matches 1..127 if predicate dnl:util/projectiles/has_bow_crossbow run scoreboard players reset @s dnl.bow
 execute unless score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1.. run scoreboard players reset @s dnl.bow
 scoreboard players reset #dnl.has_bow_crossbow dnl.boolean

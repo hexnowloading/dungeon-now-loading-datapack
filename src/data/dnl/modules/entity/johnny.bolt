@@ -9,7 +9,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon johnny vindicator 8 7 0 flame {DeathLootTable:"minecraft:empty",Johnny:1b,Tags:["dnl.mob","dnl.johnny"],HandItems:[{id:"minecraft:iron_axe",Count:1b},{}]}
+add_summon johnny vindicator none 8 7 0 flame {DeathLootTable:"minecraft:empty",Johnny:1b,Tags:["dnl.mob","dnl.tick","dnl.johnny"],HandItems:[{id:"minecraft:iron_axe",Count:1b},{}]}
 
 @listener(on_entity_mob_tick)
 def entity_mob_tick():

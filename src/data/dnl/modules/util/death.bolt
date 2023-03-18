@@ -1,0 +1,206 @@
+from reapermc:api import
+    listener
+
+from ../api import
+    get_nbt
+    on_entity_item_tick
+    on_entity_death
+
+id = ctx.meta.item.death_star
+
+nbt = get_nbt("death_star", id)
+
+@listener(on_entity_item_tick)
+def entity_item_tick():
+    if score #dnl.item_entity_id dnl.int matches id run function ./death/listener
+
+death_id = 0
+
+def add_death_event(name):
+    global death_id
+    death_id += 1
+    nbt2 = "{dnl:{death:" + str(death_id) + "}}"
+    loot_table f"dnl:entity/{name}/death" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": "minecraft:nether_star",
+                        "functions": [
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": nbt
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": nbt2
+                            },
+                            {
+                                "function": "minecraft:set_attributes",
+                                "modifiers": [
+                                    {
+                                        "attribute": "minecraft:generic.luck",
+                                        "name": "",
+                                        "amount": {
+                                            "type": "minecraft:score",
+                                            "target": "this",
+                                            "score": "dnl.eid"
+                                        },
+                                        "operation": "addition",
+                                        "slot": "feet"
+                                    },
+                                    {
+                                        "attribute": "minecraft:generic.attack_speed",
+                                        "name": "",
+                                        "amount": {
+                                            "type": "minecraft:score",
+                                            "target": "this",
+                                            "score": "dnl.lid"
+                                        },
+                                        "operation": "addition",
+                                        "slot": "feet"
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:0}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 0
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:1}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:2}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 2
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:3}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 3
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:4}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 4
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:5}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 5
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:6}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 6
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:7}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 7
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:8}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 8
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": "{dnl:{bossbar_id:9}}",
+                                "conditions": [
+                                    {
+                                        "condition": "minecraft:entity_scores",
+                                        "entity": "this",
+                                        "scores": {
+                                            "dnl.bossbar_id": 9
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    @listener(on_entity_death)
+    def death_event():
+        if score #dnl.death_id dnl.int matches death_id run function f"dnl:entity/{name}/death"

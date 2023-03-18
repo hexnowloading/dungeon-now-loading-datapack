@@ -1,21 +1,32 @@
 from reapermc:api import
     listener
+    on_server_load
 
 from ../api import
     on_marker_summon
     on_marker_spawner
     on_marker_jigsaw
+    on_marker_core
+    on_marker_skill
 
 macro add_summon
     name=brigadier:string{"type": "word"}
     mob_type=brigadier:string{"type": "word"}
+    sub_type=brigadier:string{"type": "word"}
     range=brigadier:float
     height=brigadier:float
     depth=brigadier:float
     par=brigadier:string{"type": "word"}
     nbt=minecraft:nbt_compound_tag:
+
         function f"dnl:summon/{name.value}":  
             summon mob_type.value ~ ~ ~ nbt
+        
+        function f"dnl:spawner/{name.value}":
+            if sub_type.value == "boss":
+                summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.spawner","dnl.boss",f"dnl.{name.value}"]}
+            else:
+                summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.spawner",f"dnl.{name.value}"]}
         
         @listener(on_marker_summon)
         def marker_summon():
@@ -25,6 +36,7 @@ macro add_summon
 
         @listener(on_marker_spawner)
         def marker_spawner():
+            if entity @s[tag=dnl.boss] at @s run particle minecraft:portal ~ ~ ~ 0.3 1 0.3 0.01 10 normal
             if entity @s[tag=f"dnl.{name.value}"] positioned ~-range.value ~-depth.value ~-range.value if entity @p[dx=width,dy=height.value,dz=width] at @s run function f"dnl:util/mob/spawner/{name.value}":
                 particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
                 particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal
@@ -44,11 +56,14 @@ macro add_summon
                 setblock ~ ~2 ~-1 glass replace
                 kill @s
 
-        entity_type = "minecraft:" + str(mob_type.value) + "_spawn_egg"
+        if mob_type.value == "marker" or mob_type.value == "armor_stand" or mob_type.value == "illusioner":
+            entity_type = "minecraft:polar_bear_spawn_egg"
+        else:
+            entity_type = "minecraft:" + str(mob_type.value) + "_spawn_egg"
         entity_name = str(name.value).title().replace("_", " ") + " Spawn Egg"
         entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.summon\",\"dnl." + str(name.value) + "\"]}}"
 
-        loot_table f"dnl:item/{name.value}_spawn_egg" {
+        loot_table f"dnl:spawnegg/{name.value}" {
             "pools": [
                 {
                     "rolls": 1,
@@ -80,7 +95,7 @@ macro add_summon
         entity_name2 = str(name.value).title().replace("_", " ") + " Spawner"
         entity_nbt2 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.spawner\",\"dnl." + str(name.value) + "\"]}}"
 
-        loot_table f"dnl:item/{name.value}_spawner" {
+        loot_table f"dnl:spawner/{name.value}" {
             "pools": [
                 {
                     "rolls": 1,
@@ -113,7 +128,7 @@ macro add_summon
         entity_nbt3 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.jigsaw\",\"dnl." + str(name.value) + "\"]}}"
 
 
-        loot_table f"dnl:item/{name.value}_jigsaw" {
+        loot_table f"dnl:jigsaw/{name.value}" {
             "pools": [
                 {
                     "rolls": 1,
@@ -141,3 +156,234 @@ macro add_summon
                 }
             ]
         }
+
+### Boss Bar ###
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.bossbar_id dummy
+    for i in range(10):
+        bossbar add f"dnl:bossbar{i}" {"text":"Reserved","color":"aqua"}
+
+macro set_bossbar
+    name=brigadier:string{"type": "word"}
+    bar_color=brigadier:string{"type": "word"}
+    bar_style=brigadier:string{"type": "word"}
+    max_health=brigadier:float
+    range_type=brigadier:string{"type": "word"}
+    dist=brigadier:float
+    height=brigadier:float
+    depth=brigadier:float:
+        if range_type.value == "sphere":
+            if entity @p[distance=f"..{dist.value}"] if entity @s[tag=!dnl.bossbar] run function f"dnl:entity/{name.value}/set_bossbar":
+                function dnl:util/mob/bossbar/assign
+                for i in range(10):
+                    if score @s dnl.bossbar_id matches i run function f"dnl:entity/{name.value}/bossbar_set/{i}":
+                        bossbar set f"dnl:bossbar{i}" name {"translate":"▪ ☠ ","color":"#FFAA00","bold":false,"italic":false,"extra":[{"translate":f"{str(name.value).title().replace("_", " ")}","extra":[{"translate":" ☠ ▪","color":"#FFAA00"}]}]}
+                        # {"translate":f"{str(name.value).title().replace("_", " ")}","color":"#FFFF55","bold":true,"italic":false}
+                        # str(name.value).title().replace("_", " ")
+                        if bar_color.value == "blue":
+                            bossbar set f"dnl:bossbar{i}" color blue
+                        elif bar_color.value == "green":
+                            bossbar set f"dnl:bossbar{i}" color green
+                        elif bar_color.value == "pink":
+                            bossbar set f"dnl:bossbar{i}" color pink
+                        elif bar_color.value == "purple":
+                            bossbar set f"dnl:bossbar{i}" color purple
+                        elif bar_color.value == "red":
+                            bossbar set f"dnl:bossbar{i}" color red
+                        elif bar_color.value == "yellow":
+                            bossbar set f"dnl:bossbar{i}" color yellow
+                        else:
+                            bossbar set f"dnl:bossbar{i}" color white
+                        bossbar set f"dnl:bossbar{i}" max max_health.value
+                        bossbar set f"dnl:bossbar{i}" value max_health.value
+                        bossbar set f"dnl:bossbar{i}" players @a
+                        if bar_style.value == "notched_6":
+                            bossbar set f"dnl:bossbar{i}" style notched_6
+                        elif bar_style.value == "notched_10":
+                            bossbar set f"dnl:bossbar{i}" style notched_10
+                        elif bar_style.value == "notched_12":
+                            bossbar set f"dnl:bossbar{i}" style notched_12
+                        elif bar_style.value == "notched_20":
+                            bossbar set f"dnl:bossbar{i}" style notched_20
+                        else:
+                            bossbar set f"dnl:bossbar{i}" style progress
+            for i in range(10):
+                if score @s dnl.bossbar_id matches i run function f"dnl:entity/{name.value}/bossbar_visibility/{i}":
+                    if score #dnl.1s dnl.tick matches 1 run function f"dnl:entity/{name.value}/bossbar_player_tick/{i}":
+                        as @a[distance=f"{dist.value}.."] run bossbar set f"dnl:bossbar{i}" visible false
+                        as @a[distance=f"..{dist.value}"] run bossbar set f"dnl:bossbar{i}" visible true
+                        unless entity @a[distance=f"..{dist.value}"] run function ./mob/bossbar/remove_by_range
+                    store result bossbar f"dnl:bossbar{i}" value run scoreboard players get @s dnl.health
+        elif range_type.value == "cube":
+            diameter = dist.value * 2 - 1
+            positioned ~-dist.value ~-depth.value ~-dist.value if entity @p[dx=diameter,dy=height.value,dz=diameter] if entity @s[tag=!dnl.bossbar] run function f"dnl:entity/{name.value}/set_bossbar":
+                function dnl:util/mob/bossbar/assign
+                for i in range(10):
+                    if score @s dnl.bossbar_id matches i run function f"dnl:entity/{name.value}/bossbar_set/{i}":
+                        bossbar set f"dnl:bossbar{i}" name {"translate":"▪ ☠ ","color":"#FFAA00","bold":false,"italic":false,"extra":[{"translate":f"{str(name.value).title().replace("_", " ")}","extra":[{"translate":" ☠ ▪","color":"#FFAA00"}]}]}
+                        # {"translate":f"{str(name.value).title().replace("_", " ")}","color":"#FFFF55","bold":true,"italic":false}
+                        # str(name.value).title().replace("_", " ")
+                        if bar_color.value == "blue":
+                            bossbar set f"dnl:bossbar{i}" color blue
+                        elif bar_color.value == "green":
+                            bossbar set f"dnl:bossbar{i}" color green
+                        elif bar_color.value == "pink":
+                            bossbar set f"dnl:bossbar{i}" color pink
+                        elif bar_color.value == "purple":
+                            bossbar set f"dnl:bossbar{i}" color purple
+                        elif bar_color.value == "red":
+                            bossbar set f"dnl:bossbar{i}" color red
+                        elif bar_color.value == "yellow":
+                            bossbar set f"dnl:bossbar{i}" color yellow
+                        else:
+                            bossbar set f"dnl:bossbar{i}" color white
+                        bossbar set f"dnl:bossbar{i}" max max_health.value
+                        bossbar set f"dnl:bossbar{i}" value max_health.value
+                        bossbar set f"dnl:bossbar{i}" players @a
+                        if bar_style.value == "notched_6":
+                            bossbar set f"dnl:bossbar{i}" style notched_6
+                        elif bar_style.value == "notched_10":
+                            bossbar set f"dnl:bossbar{i}" style notched_10
+                        elif bar_style.value == "notched_12":
+                            bossbar set f"dnl:bossbar{i}" style notched_12
+                        elif bar_style.value == "notched_20":
+                            bossbar set f"dnl:bossbar{i}" style notched_20
+                        else:
+                            bossbar set f"dnl:bossbar{i}" style progress
+            for i in range(10):
+                if score @s dnl.bossbar_id matches i positioned ~-dist.value ~-depth.value ~-dist.value run function f"dnl:entity/{name.value}/bossbar_visibility/{i}":
+                    if score #dnl.1s dnl.tick matches 1 run function f"dnl:entity/{name.value}/bossbar_player_tick/{i}":
+                        as @a[dx=diameter,dy=height.value,dz=diameter] run function f"dnl:entity/{name.value}/bossbar_cube/{i}":
+                            bossbar set f"dnl:bossbar{i}" visible true
+                            tag @s add f"dnl.{name.value}.in_cube_{i}"
+                        as @a[tag=!f"dnl.{name.value}.in_cube_{i}"] run bossbar set f"dnl:bossbar{i}" visible false
+                        tag @a remove f"dnl.{name.value}.in_cube_{i}"
+                        unless entity @a[dx=diameter,dy=height.value,dz=diameter] run function ./mob/bossbar/remove_by_range
+                    store result bossbar f"dnl:bossbar{i}" value run scoreboard players get @s dnl.health
+            
+function ./mob/bossbar/assign:
+    scoreboard players set #dnl.bossbar_assigned dnl.boolean 0
+    for i in range(10):
+        unless score #dnl.bossbar_assigned dnl.boolean matches 1 unless score f"#dnl.bossbar{i}" dnl.boolean matches 1 run function f"dnl:util/mob/bossbar/assign_{i}":
+            scoreboard players set f"#dnl.bossbar{i}" dnl.boolean 1
+            scoreboard players set #dnl.bossbar_assigned dnl.boolean 1
+            scoreboard players set @s dnl.bossbar_id i
+            tag @s add dnl.bossbar
+    # unless score #dnl.bossbar_assigned dnl.boolean matches 1 run function ./mob/bossbar/all_used:
+    #     tellraw @a[distance=..50] {"translate":"[Warning] ","color":"#AA0000","italic":false,"extra":[{"translate":"There can only be 10 bosses in the world at the same time","color":"#FFFFFF","italic":false}]}
+    #     data modify entity @s DeathLootTable set value "minecraft:empty"
+    #     kill @s
+
+function ./mob/bossbar/remove_by_range:
+    for i in range(10):
+        if score @s dnl.bossbar_id matches i run function f"dnl:util/mob/bossbar/remove_{i}"
+    scoreboard players reset @s dnl.bossbar_id
+    tag @s remove dnl.bossbar
+
+macro remove_bossbar
+    type=brigadier:string{"type": "word"}:
+    if type.value == "item":
+        store result score #dnl.death_bossbar_id dnl.int run data get entity @s Item.tag.dnl.bossbar_id
+        for i in range(10):
+            if score #dnl.death_bossbar_id dnl.int matches i run function f"dnl:util/mob/bossbar/remove_{i}":
+                scoreboard players set f"#dnl.bossbar{i}" dnl.boolean 0
+                as @a run bossbar set f"dnl:bossbar{i}" visible false
+    elif type.value == "this":
+        function ./mob/bossbar/remove_by_range
+
+macro assign_lid:
+    if score #dnl.global_lid dnl.lid matches 19683.. run scoreboard players set #dnl.global_lid dnl.lid 0
+    scoreboard players operation @s dnl.lid = #dnl.global_lid dnl.lid
+    scoreboard players add #dnl.global_lid dnl.lid 1
+
+macro assign_sid:
+    if score #dnl.global_sid dnl.sid matches 19683.. run scoreboard players set #dnl.global_sid dnl.sid 0
+    scoreboard players operation @s dnl.sid = #dnl.global_sid dnl.sid
+    scoreboard players add #dnl.global_sid dnl.sid 1
+
+macro assign_equipment
+    name=brigadier:string{"type": "word"}
+    option=brigadier:string{"type": "word"}:
+        if option.value == "set":
+            if name.value == "all":
+                store result score @s dnl.offhand run data get entity @s HandItems[1].tag.dnl.id
+                store result score @s dnl.mainhand run data get entity @s HandItems[0].tag.dnl.id
+                store result score @s dnl.head run data get entity @s ArmorItems[3].tag.dnl.id
+                store result score @s dnl.chest run data get entity @s ArmorItems[2].tag.dnl.id
+                store result score @s dnl.leg run data get entity @s ArmorItems[1].tag.dnl.id
+                store result score @s dnl.feet run data get entity @s ArmorItems[0].tag.dnl.id
+                scoreboard players reset @s dnl.offhand.timer
+                scoreboard players reset @s dnl.mainhand.timer
+                scoreboard players reset @s dnl.head.timer
+                scoreboard players reset @s dnl.chest.timer
+                scoreboard players reset @s dnl.leg.timer
+                scoreboard players reset @s dnl.feet.timer
+            elif name.value == "mainhand":
+                store result score @s dnl.mainhand run data get entity @s HandItems[0].tag.dnl.id
+                scoreboard players reset @s dnl.mainhand.timer
+            elif name.value == "offhand":
+                store result score @s dnl.offhand run data get entity @s HandItems[1].tag.dnl.id
+                scoreboard players reset @s dnl.offhand.timer
+            elif name.value == "head":
+                store result score @s dnl.head run data get entity @s ArmorItems[3].tag.dnl.id
+                scoreboard players reset @s dnl.head.timer
+            elif name.value == "chest":
+                store result score @s dnl.chest run data get entity @s ArmorItems[2].tag.dnl.id
+                scoreboard players reset @s dnl.chest.timer
+            elif name.value == "leg":
+                store result score @s dnl.leg run data get entity @s ArmorItems[1].tag.dnl.id
+                scoreboard players reset @s dnl.leg.timer
+            elif name.value == "feet":
+                store result score @s dnl.feet run data get entity @s ArmorItems[0].tag.dnl.id
+                scoreboard players reset @s dnl.feet.timer
+        if option.value == "remove":
+            if name.value == "all":
+                scoreboard players reset @s dnl.offhand
+                scoreboard players reset @s dnl.mainhand
+                scoreboard players reset @s dnl.head
+                scoreboard players reset @s dnl.chest
+                scoreboard players reset @s dnl.leg
+                scoreboard players reset @s dnl.feet
+            elif name.value == "mainhand":
+                scoreboard players reset @s dnl.mainhand
+            elif name.value == "offhand":
+                scoreboard players reset @s dnl.offhand
+            elif name.value == "head":
+                scoreboard players reset @s dnl.head
+            elif name.value == "chest":
+                scoreboard players reset @s dnl.chest
+            elif name.value == "leg":
+                scoreboard players reset @s dnl.leg
+            elif name.value == "feet":
+                scoreboard players reset @s dnl.feet
+
+macro setup_core
+    name=brigadier:string{"type": "word"}:
+        scoreboard players operation f"#dnl.{name.value}.lid" dnl.lid = @s dnl.lid
+        as @e[type=marker,tag=dnl.core,tag=f"dnl.{name.value}",distance=..30] run function f"dnl:entity/{name.value}/core/copy":
+            scoreboard players operation @s dnl.lid = f"#dnl.{name.value}.lid" dnl.lid
+            tag @s add dnl.start
+
+        unless entity @e[type=marker,tag=dnl.core,tag=dnl.cleric_z,distance=..30] run function f"dnl:entity/{name.value}/core/setup":
+            summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.core",f"dnl.{name.value}","dnl.start","dnl.new_marker"]}
+            scoreboard players operation @e[type=marker,tag=dnl.new_marker] dnl.lid = @s dnl.lid
+            tag @e[type=marker,tag=dnl.new_marker] remove dnl.new_marker
+
+macro add_marker_skill
+    mob_name=brigadier:string{"type": "word"}
+    skill_name=brigadier:string{"type": "word"}
+    nbt=minecraft:nbt_compound_tag:
+    @listener(on_marker_skill)
+    def marker_skill():
+        if entity @s[tag=f"dnl.{mob_name.value}.{skill_name.value}"] run function f"dnl:entity/{mob_name.value}/{skill_name.value}/main"
+    
+    function f"dnl:entity/{mob_name.value}/{skill_name.value}/summon":
+        summon marker ~ ~ ~ nbt
+
+macro summon_skill
+    mob_name=brigadier:string{"type": "word"}
+    skill_name=brigadier:string{"type": "word"}:
+        summon minecraft:marker ~ ~ ~ {Tags:["dnl.marker","dnl.skill",f"dnl.{mob_name.value}",f"dnl.{mob_name.value}.{skill_name.value}"]}
+

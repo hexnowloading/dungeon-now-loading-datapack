@@ -35,7 +35,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4045004, dnl: {name: 'forbidden_golden_apple', item: 1, id: 5004, true: 1}}"
+              "tag": "{dnl: {name: 'forbidden_golden_apple', item: 1, id: 5004}}"
             }
           ]
         }

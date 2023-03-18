@@ -1,0 +1,1 @@
+summon zombie_villager ~ ~ ~ {DeathLootTable: "dnl:entity/cleric_z/death", Tags: ["dnl.boss", "dnl.mob", "dnl.tick", "dnl.cleric_z"], PersistenceRequired: 1b, Health: 200.0f, Attributes: [{Name: "generic.max_health", Base: 200}], VillagerData: {profession: "minecraft:cleric"}}

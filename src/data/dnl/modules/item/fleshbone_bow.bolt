@@ -12,7 +12,7 @@ from reapermc:api import
 
 id = ctx.meta.item.fleshbone_bow
 
-nbt = get_nbt("fleshbone_bow", id, "bow")
+nbt = get_nbt("fleshbone_bow", id)
 
 add_custom_model_data("fleshbone_bow", id, "bow")
 
@@ -74,7 +74,7 @@ def projectile_load():
     
 @listener(on_projectile_unload)
 def projectile_unload():
-    if score #dnl.type dnl.bow matches id if entity @s[type=#dnl:undeads] run function ../fleshbone_bow/unload:
+    if score #dnl.type dnl.bow matches id if entity @s[type=#dnl:undeads] run function ./fleshbone_bow/unload:
         function ../effect/undead_stun/apply_bow
 
 @listener(on_projectile_land)

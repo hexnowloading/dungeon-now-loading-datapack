@@ -4,7 +4,7 @@ from ../api import
 
 id = ctx.meta.item.honeycomb_ingot
 
-nbt = get_nbt("honeycomb_ingot", id, "false")
+nbt = get_nbt("honeycomb_ingot", id)
 
 add_custom_model_data("honeycomb_ingot", id, "gold_ingot")
 

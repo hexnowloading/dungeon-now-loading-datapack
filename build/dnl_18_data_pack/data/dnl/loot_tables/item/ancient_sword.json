@@ -39,7 +39,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4041002, dnl: {name: 'ancient_sword', item: 1, id: 1002}}"
+              "tag": "{dnl: {name: 'ancient_sword', item: 1, id: 1002}}"
             }
           ]
         }

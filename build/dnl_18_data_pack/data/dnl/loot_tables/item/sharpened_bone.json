@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4048007, dnl: {name: 'sharpened_bone', item: 1, id: 8007, true: 1}}"
+              "tag": "{CustomModelData: 4048007, dnl: {name: 'sharpened_bone', item: 1, id: 8007}}"
             }
           ]
         }

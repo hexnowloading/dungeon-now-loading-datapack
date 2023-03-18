@@ -1,5 +1,6 @@
 from ../api import
     on_entity_effect
+    on_player_respawn
 
 from reapermc:api import
     listener

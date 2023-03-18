@@ -7,7 +7,7 @@ from ../api import
 
 id = ctx.meta.item.golem_gift
 
-nbt = get_nbt("golem_gift", id, "true")
+nbt = get_nbt("golem_gift", id, "false")
 
 loot_table ../item/golem_gift {
     "pools": [

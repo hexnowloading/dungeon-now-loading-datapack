@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4048009, dnl: {name: 'staring_flesh', item: 1, id: 8009, true: 1}}"
+              "tag": "{CustomModelData: 4048009, dnl: {name: 'staring_flesh', item: 1, id: 8009}}"
             }
           ]
         }

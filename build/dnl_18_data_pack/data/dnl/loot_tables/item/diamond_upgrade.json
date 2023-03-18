@@ -39,7 +39,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4044002, dnl: {name: 'diamond_upgrade', item: 1, id: 4002, true: 1}}"
+              "tag": "{CustomModelData: 4044002, dnl: {name: 'diamond_upgrade', item: 1, id: 4002}}"
             }
           ]
         }

@@ -28,7 +28,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4048004, dnl: {name: 'old_letter', item: 1, id: 8004, false: 1}}"
+              "tag": "{dnl: {name: 'old_letter', item: 1, id: 8004}}"
             }
           ]
         }

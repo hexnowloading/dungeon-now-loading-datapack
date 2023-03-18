@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4048006, dnl: {name: 'ominous_emerald', item: 1, id: 8006, true: 1}}"
+              "tag": "{CustomModelData: 4048006, dnl: {name: 'ominous_emerald', item: 1, id: 8006}}"
             }
           ]
         }

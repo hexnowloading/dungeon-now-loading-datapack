@@ -49,7 +49,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4046001, dnl: {name: 'ancient_shield', item: 1, id: 6001}}"
+              "tag": "{dnl: {name: 'ancient_shield', item: 1, id: 6001}}"
             },
             {
               "function": "minecraft:set_nbt",

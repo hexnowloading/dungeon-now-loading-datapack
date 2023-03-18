@@ -1,0 +1,14 @@
+from reapermc:api import
+    listener
+
+from ../api import
+    in_player_setting
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:bossbar_clear":
+    for i in range(10):
+        bossbar remove f"dnl:bossbar{i}"
+    scoreboard objectives remove dnl.boolean
+    scoreboard objectives remove dnl.bossbar_id
+    reload

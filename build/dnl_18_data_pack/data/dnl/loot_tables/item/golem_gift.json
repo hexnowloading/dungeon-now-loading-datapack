@@ -34,7 +34,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4044008, dnl: {name: 'golem_gift', item: 1, id: 4008, true: 1}}"
+              "tag": "{dnl: {name: 'golem_gift', item: 1, id: 4008}}"
             }
           ]
         }

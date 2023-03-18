@@ -9,7 +9,7 @@
           "functions": [
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4042002, dnl: {name: 'spawner_breaker', item: 1, id: 2002, tool: 1}}"
+              "tag": "{CustomModelData: 4042002, dnl: {name: 'spawner_breaker', item: 1, id: 2002}}"
             }
           ]
         }

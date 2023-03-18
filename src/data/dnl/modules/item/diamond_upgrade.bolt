@@ -65,7 +65,7 @@ loot_table ../item/diamond_upgrade {
 
 @listener(on_entity_item_tick)
 def entity_item_tick():
-    if score #dnl.item_entity_id dnl.int matches id if score #dnl.5t dnl.tick matches 1 run function ./diamond_upgrade/main:
+    if score #dnl.item_entity_id dnl.int matches id run function ./diamond_upgrade/main:
         scoreboard players set #dnl.upgraded dnl.boolean 0
         as @e[type=item,distance=..0.5] at @s if score @s dnl.item_entity_tier matches 1.. run function ./diamond_upgrade/detect_upgrade_item:
             scoreboard players operation #dnl.weapon_id dnl.int = @s dnl.item_entity

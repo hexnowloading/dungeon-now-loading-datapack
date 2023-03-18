@@ -19,11 +19,6 @@ def load():
     scoreboard objectives add dnl.bow dummy
     scoreboard objectives add dnl.return minecraft.custom:minecraft.leave_game
 
-@listener(on_entity_living_tick)
-def entity_living_tick():
-    if entity @s[type=#dnl:skeletons] run function ./projectiles/tick_skeleton
-    if entity @s[nbt={ActiveEffects:[{Id:26}]}] run function ./projectiles/arrow_hit_entity
-
 @listener(on_entity_technical_tick)
 def entity_technical_tick():
     if entity @s[type=minecraft:arrow] run function ./projectiles/tick_arrow
@@ -32,8 +27,16 @@ def entity_technical_tick():
 @listener(on_entity_player_tick)
 def entity_player_tick():
     if score @s dnl.return matches 1.. run function ./projectiles/return
-    unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run scoreboard players operation @s dnl.bow = @s dnl.offhand
-    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run scoreboard players operation @s dnl.bow = @s dnl.mainhand
+    unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run function ./projectiles/player_offhand:
+        scoreboard players operation @s dnl.bow = @s dnl.offhand
+        scoreboard players reset #dnl.projectiles.saved_mainhand dnl.boolean
+        scoreboard players reset #dnl.projectiles.saved_offhand dnl.boolean
+        scoreboard players set #dnl.projectiles.saved_offhand dnl.boolean 1
+    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run function ./projectiles/player_mainhand:
+        scoreboard players operation @s dnl.bow = @s dnl.mainhand
+        scoreboard players reset #dnl.projectiles.saved_mainhand dnl.boolean
+        scoreboard players reset #dnl.projectiles.saved_offhand dnl.boolean
+        scoreboard players set #dnl.projectiles.saved_mainhand dnl.boolean 1
     unless score @s dnl.offhand_used matches 1.. unless score @s dnl.mainhand matches 1..127 if predicate ./projectiles/has_bow_crossbow run scoreboard players reset @s dnl.bow
     unless score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1.. run scoreboard players reset @s dnl.bow
     scoreboard players reset #dnl.has_bow_crossbow dnl.boolean
@@ -88,10 +91,17 @@ function ./projectiles/tick_arrow:
         as @e[type=#dnl:arrow_shooters] if score @s dnl.uuid0 = #dnl.search dnl.uuid0 if score @s dnl.uuid1 = #dnl.search dnl.uuid1 if score @s dnl.uuid2 = #dnl.search dnl.uuid2 if score @s dnl.uuid3 = #dnl.search dnl.uuid3 run function ./projectiles/owner:
             scoreboard players operation #dnl.type dnl.bow = @s dnl.bow
             scoreboard players operation #dnl.pid dnl.bow = @s dnl.pid
-            
+
+            data remove storage dnl:item/bow Item
+            if score #dnl.projectiles.saved_mainhand dnl.boolean matches 1 run data modify storage dnl:item/bow Item.tag set from entity @s SelectedItem.tag
+            if score #dnl.projectiles.saved_offhand dnl.boolean matches 1 run data modify storage dnl:item/bow Item.tag set from entity @s Inventory[{Slot:-106b}].tag
+            if entity @s[type=!player] run data modify storage dnl:item/bow Item.tag set from entity @s HandItems[0].tag
+            tag @s add dnl.this
+
             function ./projectiles/ammo/directory
         
         if score #dnl.type dnl.bow matches 1.. run function ./projectiles/load/directory
+        tag @e[type=#dnl:arrow_shooters] remove dnl.this
     
     if predicate ./projectiles/has_custom_potion run function ./projectiles/mid_air:
         if entity @s[tag=dnl.arrow_trail] positioned ~ ~-0.75 ~ run function ./projectiles/trail
@@ -101,7 +111,7 @@ function ./projectiles/tick_arrow:
 
             store result score #dnl.type dnl.bow run data get entity @s CustomPotionEffects[{Id:26}].Amplifier
             function ./projectiles/land/directory
-            tag @e remove dnl.this
+            tag @e[type=#dnl:arrow_shooters] remove dnl.this
 
 function ./projectiles/tick_firework:
     if entity @s[tag=!dnl.init] run function ./projectiles/firework_init:
@@ -129,10 +139,10 @@ function ./projectiles/tick_firework:
             function ./projectiles/explode_firework/directory
 
 function ./projectiles/tick_skeleton:
-    if entity @s[tag=!dnl.init] run function ./projectiles/init_skeleton:
-        tag @s add dnl.init
+    if entity @s[tag=!dnl.skeleton.init] run function ./projectiles/init_skeleton:
+        tag @s add dnl.skeleton.init
         function ./projectiles/entity_init
-    store result score @s dnl.bow run data get entity @s HandItems[0].tag.dnl.id
+    scoreboard players operation @s dnl.bow = @s dnl.mainhand
 
 function ./projectiles/arrow_hit_entity:
     store result score #dnl.pid dnl.bow run data get entity @s ActiveEffects[{Id:27}].Amplifier

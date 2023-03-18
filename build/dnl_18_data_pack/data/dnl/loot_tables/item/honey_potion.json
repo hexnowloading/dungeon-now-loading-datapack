@@ -40,7 +40,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4045005, dnl: {name: 'honey_potion', item: 1, id: 5005, true: 1}}"
+              "tag": "{dnl: {name: 'honey_potion', item: 1, id: 5005}}"
             },
             {
               "function": "minecraft:set_nbt",

@@ -8,7 +8,7 @@ from ../api import
 
 id = ctx.meta.item.crown_of_olympus
 
-nbt = get_nbt("crown_of_olympus", id)
+nbt = get_nbt("crown_of_olympus", id, false)
 
 loot_table ../item/crown_of_olympus {
     "pools": [

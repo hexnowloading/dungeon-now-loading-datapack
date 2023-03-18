@@ -7,7 +7,7 @@ from reapermc:api import
     listener
 
 id = ctx.meta.item.royal_honey_potion
-nbt = get_nbt("royal_honey_potion", id, "true")
+nbt = get_nbt("royal_honey_potion", id, "false")
 
 loot_table ../item/royal_honey_potion {
     "type": "minecraft:generic",

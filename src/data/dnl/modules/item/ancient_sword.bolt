@@ -11,7 +11,7 @@ from ../api import
 
 id = ctx.meta.item.ancient_sword
 
-nbt = get_nbt("ancient_sword", id)
+nbt = get_nbt("ancient_sword", id, "false")
 
 # add_custom_model_data("ancient_sword", id, "netherite_sword")
 

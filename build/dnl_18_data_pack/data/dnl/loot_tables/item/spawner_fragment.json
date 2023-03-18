@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4048008, dnl: {name: 'spawner_fragment', item: 1, id: 8008, true: 1}}"
+              "tag": "{CustomModelData: 4048008, dnl: {name: 'spawner_fragment', item: 1, id: 8008}}"
             }
           ]
         }

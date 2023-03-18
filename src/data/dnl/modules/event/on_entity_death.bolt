@@ -1,0 +1,15 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_entity_death = Event('on_entity_death')
+on_entity_death.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_death")
+
+@on_entity_death.handler
+def handler():
+    execute function on_entity_death.generate_path('entity_death'):
+        function ../util/death/listener:
+            store result score #dnl.death_id dnl.int run data get entity @s Item.tag.dnl.death
+            store result score #dnl.death_entity_id dnl.eid run data get entity @s Item.tag.AttributeModifiers[0].Amount
+            store result score #dnl.death_entity_lid dnl.lid run data get entity @s Item.tag.AttributeModifiers[1].Amount
+            on_entity_death.trigger()
+            kill @s

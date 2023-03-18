@@ -34,7 +34,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4044004, dnl: {name: 'olympus_key', item: 1, id: 4004, true: 1}}"
+              "tag": "{dnl: {name: 'olympus_key', item: 1, id: 4004}}"
             }
           ]
         }

@@ -1,14 +1,11 @@
 from reapermc:event_handler import Event, listener
-from ./on_entity_living_tick import on_entity_living_tick
+from reapermc:flag_handler import Flag
 
 on_entity_mob_tick = Event('on_entity_mob_tick')
 on_entity_mob_tick.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_mob_tick")
 
-
 @on_entity_mob_tick.handler
 def handler():
-
-    @listener(on_entity_living_tick)
-    def _on_entity_living_tick():
-        if entity @s[tag=dnl.mob]:
+    execute function on_entity_mob_tick.generate_path('entity_mob_tick'):
+        function ../util/entity_mob_tick_listener:
             on_entity_mob_tick.trigger()

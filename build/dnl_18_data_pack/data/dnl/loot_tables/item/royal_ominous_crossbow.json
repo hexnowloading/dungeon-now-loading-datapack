@@ -49,7 +49,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4040007, dnl: {name: 'royal_ominous_crossbow', item: 1, id: 7, true: 1}}"
+              "tag": "{CustomModelData: 4040007, dnl: {name: 'royal_ominous_crossbow', item: 1, id: 7}}"
             }
           ]
         }

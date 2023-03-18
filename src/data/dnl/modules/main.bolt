@@ -7,6 +7,8 @@ from ./api import
     in_player_setting
     in_world_setting
     on_entity_player_tick
+    on_entity_living_tick
+    on_entity_technical_tick
 
 datapack_version = ctx.meta.dnl.datapack_version
 
@@ -18,8 +20,21 @@ def load():
     scoreboard objectives add dnl.constant dummy
     scoreboard objectives add dnl.version dummy
     scoreboard objectives add dnl.effect dummy
-    scoreboard objectives add dnl.timer dummy
     scoreboard objectives add dnl.tick dummy
+
+    scoreboard objectives add dnl.timer dummy
+    scoreboard objectives add dnl.timer1 dummy
+    scoreboard objectives add dnl.timer2 dummy
+    scoreboard objectives add dnl.timer3 dummy
+    scoreboard objectives add dnl.timer4 dummy
+
+    scoreboard objectives add dnl.eid dummy # Entity ID
+    scoreboard objectives add dnl.lid dummy # Link ID
+    scoreboard objectives add dnl.sid dummy
+    scoreboard objectives add dnl.health dummy
+    scoreboard objectives add dnl.phase dummy
+    scoreboard objectives add dnl.move dummy
+    scoreboard objectives add dnl.var dummy
 
     scoreboard objectives add dnl.max_health dummy
     scoreboard objectives add dnl.time_since_death minecraft.custom:minecraft.time_since_death
@@ -30,19 +45,33 @@ def load():
     scoreboard objectives add dnl.chest dummy
     scoreboard objectives add dnl.leg dummy
     scoreboard objectives add dnl.feet dummy
+    scoreboard objectives add dnl.mainhand.timer dummy
+    scoreboard objectives add dnl.offhand.timer dummy
+    scoreboard objectives add dnl.head.timer dummy
+    scoreboard objectives add dnl.chest.timer dummy
+    scoreboard objectives add dnl.leg.timer dummy
+    scoreboard objectives add dnl.feet.timer dummy
     scoreboard objectives add dnl.offhand_used dummy
     scoreboard objectives add dnl.offhand_delay dummy
 
     scoreboard players set #dnl.1 dnl.constant 1
+    scoreboard players set #dnl.8 dnl.constant 8
     scoreboard players set #dnl.9 dnl.constant 9
     scoreboard players set #dnl.10 dnl.constant 10
     scoreboard players set #dnl.80 dnl.constant 80
 
+    team add dnl.no_collision
+    team modify dnl.no_collision collisionRule pushOwnTeam
+
+    unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
+
 @listener(on_server_tick)
 def tick():
     if score #dnl.1s dnl.tick matches 20.. run scoreboard players reset #dnl.1s dnl.tick
+    if score #dnl.10t dnl.tick matches 10.. run scoreboard players reset #dnl.10t dnl.tick
     if score #dnl.5t dnl.tick matches 5.. run scoreboard players reset #dnl.5t dnl.tick
     scoreboard players add #dnl.1s dnl.tick 1
+    scoreboard players add #dnl.10t dnl.tick 1
     scoreboard players add #dnl.5t dnl.tick 1
     as @e[type=#dnl:mobs_and_players] at @s run function ./tick/living
     as @e[type=#dnl:others] at @s run function ./tick/technical
@@ -64,7 +93,23 @@ def entity_player_tick():
     store result score @s dnl.leg run data get entity @s Inventory[{Slot:101b}].tag.dnl.id
     store result score @s dnl.feet run data get entity @s Inventory[{Slot:100b}].tag.dnl.id
 
+@listener(on_entity_living_tick)
+def entity_living_tick():
+    execute if score #loaded dnl.eid matches 1 unless score @s dnl.eid = @s dnl.eid run function dnl:util/entity_hit_matching/id/assign
+    if entity @s[tag=dnl.mob, tag=dnl.tick] run function dnl:util/entity_mob_tick_listener
+    if entity @s[type=player] run function dnl:util/entity_player_tick_listener
+    if score @s dnl.effect matches 1.. run function dnl:util/entity_effect/main
+    if entity @s[tag=dnl.mob] if score @s dnl.mainhand matches 1..127 run function dnl:util/projectiles/tick_skeleton
+    if entity @s[nbt={ActiveEffects:[{Id:26}]}] run function dnl:util/projectiles/arrow_hit_entity
 
-function ./test:
-    for i in range(99):
-        summon skeleton ~ ~ ~ 
+@listener(on_entity_technical_tick)
+def entity_technical_tick():
+    if entity @s[type=snowball] run function dnl:util/entity_snowball_tick_listener
+    if entity @s[type=tnt] run function dnl:util/entity_tnt_tick_listener
+    if entity @s[tag=dnl.mob, tag=dnl.tick] run function dnl:util/technical_mob_tick_listener
+    if entity @s[type=marker, tag=dnl.marker] run function dnl:util/entity_marker_tick_listener
+
+function ./util/assign_id:
+    execute if score #next_id dnl.eid matches 19683.. run function ./entity_hit_matching/set_defaults
+    scoreboard players operation @s dnl.eid = #next_id dnl.eid
+    scoreboard players add #next_id dnl.eid 1

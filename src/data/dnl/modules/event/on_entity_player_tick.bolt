@@ -1,14 +1,11 @@
 from reapermc:event_handler import Event, listener
-from ./on_entity_living_tick import on_entity_living_tick
+from reapermc:flag_handler import Flag
 
 on_entity_player_tick = Event('on_entity_player_tick')
 on_entity_player_tick.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_player_tick")
 
-
 @on_entity_player_tick.handler
 def handler():
-
-    @listener(on_entity_living_tick)
-    def _on_entity_living_tick():
-        as @s[type=player]:
+    execute function on_entity_player_tick.generate_path('entity_player_tick'):
+        function ../util/entity_player_tick_listener:
             on_entity_player_tick.trigger()

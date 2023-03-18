@@ -11,7 +11,7 @@ from reapermc:api import
 
 id = ctx.meta.item.ominous_axe
 
-nbt = get_nbt("ominous_axe", id, "weapon", "exp")
+nbt = get_nbt("ominous_axe", id)
 
 add_custom_model_data("ominous_axe", id, "iron_axe")
 

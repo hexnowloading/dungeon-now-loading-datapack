@@ -66,3 +66,13 @@ item_tag ../pickaxes {
         "minecraft:netherite_pickaxe"
     ]
 }
+
+item_tag ../axes {
+    "values": [
+        "minecraft:wooden_axe",
+        "minecraft:stone_axe",
+        "minecraft:iron_axe",
+        "minecraft:diamond_axe",
+        "minecraft:netherite_axe"
+    ]
+}

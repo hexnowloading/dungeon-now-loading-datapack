@@ -7,7 +7,7 @@ from ../api import
 
 id = ctx.meta.item.sharpened_bone
 
-nbt = get_nbt("sharpened_bone", id, "true")
+nbt = get_nbt("sharpened_bone", id)
 
 add_custom_model_data("sharpened_bone", id, "bone")
 

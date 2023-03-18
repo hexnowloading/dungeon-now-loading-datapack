@@ -59,7 +59,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4041005, dnl: {name: 'ominous_axe', item: 1, id: 1005, weapon: 1, exp: 1}}"
+              "tag": "{CustomModelData: 4041005, dnl: {name: 'ominous_axe', item: 1, id: 1005}}"
             },
             {
               "function": "minecraft:set_nbt",

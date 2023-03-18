@@ -1,12 +1,12 @@
 from reapermc:api import
     listener
+    defer
 
 from ../api import
     on_entity_living_tick
     on_entity_marker_tick
 
-@listener(on_entity_living_tick)
-def entity_living_tick():
+function ./entity_effect/main:
     if score @s dnl.effect matches 1.. run function ./entity_effect/living:
         function ./entity_effect/listener
         if score @s dnl.effect matches 0 run scoreboard players reset @s dnl.effect

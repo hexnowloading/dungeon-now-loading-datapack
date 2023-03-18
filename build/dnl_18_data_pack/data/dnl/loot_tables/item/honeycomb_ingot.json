@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4048002, dnl: {name: 'honeycomb_ingot', item: 1, id: 8002, false: 1}}"
+              "tag": "{CustomModelData: 4048002, dnl: {name: 'honeycomb_ingot', item: 1, id: 8002}}"
             }
           ]
         }

@@ -6,7 +6,6 @@ from ../api import
     on_projectile_land
     rng
     outcome
-    arrow_land_break
     on_firework_explode
     on_firework_load
     arrow_load_remove_unluck
@@ -16,7 +15,7 @@ from reapermc:api import
 
 id = ctx.meta.item.royal_ominous_crossbow
 
-nbt = get_nbt("royal_ominous_crossbow", id, "true")
+nbt = get_nbt("royal_ominous_crossbow", id)
 
 add_custom_model_data("royal_ominous_crossbow", id, "crossbow")
 

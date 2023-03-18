@@ -30,7 +30,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4049005, dnl: {name: 'music_disc_welcome_to_hell', item: 1, id: 9005, true: 1, music: 1}}"
+              "tag": "{dnl: {name: 'music_disc_welcome_to_hell', item: 1, id: 9005, music: 1}}"
             },
             {
               "function": "minecraft:set_nbt",

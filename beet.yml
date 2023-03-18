@@ -40,7 +40,9 @@ meta:
     fleshbone_bow: 5
     ominous_crossbow: 6
     royal_ominous_crossbow: 7
-    
+    broken_bow: 8
+    frost_watcher_bow: 9
+  
     ancient_axe: 1001
     ancient_sword: 1002
     fleshbone_sword: 1003
@@ -48,6 +50,7 @@ meta:
     ominous_axe: 1005
     royal_ominous_axe: 1006
     poison_rapier: 1007
+    oasis_trident: 1008
 
     ancient_pickaxe: 2001
     spawner_breaker: 2002
@@ -106,3 +109,5 @@ meta:
     music_disc_bees: 9003
     music_disc_woodland_fountain: 9004
     music_disc_welcome_to_hell: 9005
+
+    death_star: 9999

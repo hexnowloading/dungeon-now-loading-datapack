@@ -35,6 +35,10 @@
             {
               "function": "minecraft:set_nbt",
               "tag": "{CustomModelData: 4040001, dnl: {name: 'ancient_bow', item: 1, id: 1}}"
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl:{lvl:1}}"
             }
           ]
         }

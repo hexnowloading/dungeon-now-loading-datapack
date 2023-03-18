@@ -16,6 +16,17 @@ scoreboard objectives add dnl.math dummy
 scoreboard objectives add constant dummy
 scoreboard players set #lcg constant 1103515245
 execute unless score #lcg dnl.math matches ..0 unless score #lcg dnl.math matches 1.. run function dnl:util/rng/zprivate/uuid_reset
+scoreboard objectives add dnl.bossbar_id dummy
+bossbar add dnl:bossbar0 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar1 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar2 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar3 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar4 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar5 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar6 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar7 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar8 {"text": "Reserved", "color": "aqua"}
+bossbar add dnl:bossbar9 {"text": "Reserved", "color": "aqua"}
 function reaper_framework:__internal__/event_handler/on_player_load/player_load
 function reaper_framework:__internal__/event_handler/in_world_setting/world_load
 scoreboard objectives add dnl.timer.hastening dummy
@@ -29,8 +40,19 @@ scoreboard objectives add dnl.percent dummy
 scoreboard objectives add dnl.constant dummy
 scoreboard objectives add dnl.version dummy
 scoreboard objectives add dnl.effect dummy
-scoreboard objectives add dnl.timer dummy
 scoreboard objectives add dnl.tick dummy
+scoreboard objectives add dnl.timer dummy
+scoreboard objectives add dnl.timer1 dummy
+scoreboard objectives add dnl.timer2 dummy
+scoreboard objectives add dnl.timer3 dummy
+scoreboard objectives add dnl.timer4 dummy
+scoreboard objectives add dnl.eid dummy
+scoreboard objectives add dnl.lid dummy
+scoreboard objectives add dnl.sid dummy
+scoreboard objectives add dnl.health dummy
+scoreboard objectives add dnl.phase dummy
+scoreboard objectives add dnl.move dummy
+scoreboard objectives add dnl.var dummy
 scoreboard objectives add dnl.max_health dummy
 scoreboard objectives add dnl.time_since_death minecraft.custom:minecraft.time_since_death
 scoreboard objectives add dnl.death_penalty_level dummy
@@ -40,16 +62,26 @@ scoreboard objectives add dnl.head dummy
 scoreboard objectives add dnl.chest dummy
 scoreboard objectives add dnl.leg dummy
 scoreboard objectives add dnl.feet dummy
+scoreboard objectives add dnl.mainhand.timer dummy
+scoreboard objectives add dnl.offhand.timer dummy
+scoreboard objectives add dnl.head.timer dummy
+scoreboard objectives add dnl.chest.timer dummy
+scoreboard objectives add dnl.leg.timer dummy
+scoreboard objectives add dnl.feet.timer dummy
 scoreboard objectives add dnl.offhand_used dummy
 scoreboard objectives add dnl.offhand_delay dummy
 scoreboard players set #dnl.1 dnl.constant 1
+scoreboard players set #dnl.8 dnl.constant 8
 scoreboard players set #dnl.9 dnl.constant 9
 scoreboard players set #dnl.10 dnl.constant 10
 scoreboard players set #dnl.80 dnl.constant 80
+team add dnl.no_collision
+team modify dnl.no_collision collisionRule pushOwnTeam
+execute unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
 data modify storage dnl:temp ItemName set value []
 scoreboard objectives add dnl.timer.shield dummy
-scoreboard objectives add ehm._ dummy
-execute unless score #loaded ehm._ = #loaded ehm._ run function dnl:util/entity_hit_matching/set_defaults
+scoreboard objectives add dnl.eid dummy
+execute unless score #loaded dnl.eid = #loaded dnl.eid run function dnl:util/entity_hit_matching/set_defaults
 scoreboard objectives add dnl.item_entity dummy
 scoreboard objectives add dnl.item_entity_tier dummy
 scoreboard objectives add dnl.mined_spawner minecraft.mined:minecraft.spawner

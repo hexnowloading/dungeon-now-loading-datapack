@@ -1,2 +1,2 @@
-data get entity @s {HasStung: 0b, AngerTime: 1000000, CannotEnterHiveTicks: 1000000}
-execute if entity @p[distance=..20] run function dnl:entity/angry_bee/copy_uuid
+data merge entity @s {AngerTime: 9999, Anger: 9999, CannotEnterHiveTicks: 1000000, HasStung: 0b}
+data modify entity @s AngryAt set from entity @p[distance=..16] UUID

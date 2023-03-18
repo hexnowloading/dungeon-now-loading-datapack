@@ -44,9 +44,9 @@ function ./rng/zprivate/next_int:
 
     function ./rng/lcg
 
-    scoreboard players operation #temp dnl.math = #dnl.out dnl.math
-    scoreboard players operation #dnl.out dnl.math %= #dnl.range dnl.math
-    scoreboard players operation #temp dnl.math -= #dnl.out dnl.math
+    scoreboard players operation #temp dnl.math = #dnl.rng dnl.math
+    scoreboard players operation #dnl.rng dnl.math %= #dnl.range dnl.math
+    scoreboard players operation #temp dnl.math -= #dnl.rng dnl.math
     scoreboard players operation #temp dnl.math += #m1 dnl.math
     execute if score #temp dnl.math matches ..-1 run function ./rng/zprivate/next_int
 
@@ -60,7 +60,7 @@ function ./rng/lcg:
 
     scoreboard players operation #lcg dnl.math *= #lcg constant
     scoreboard players add #lcg dnl.math 12345
-    scoreboard players operation #dnl.out dnl.math = #lcg dnl.math
+    scoreboard players operation #dnl.rng dnl.math = #lcg dnl.math
 
 function ./rng/range:
     ## AUTHOR: CloudWolf
@@ -68,7 +68,7 @@ function ./rng/range:
     #
     # #dnl.lower_bound = lower range
     # #dnl.upper_bound = upper range
-    # #dnl.out = random number between range
+    # #dnl.rng = random number between range
 
 
     scoreboard players add #dnl.upper_bound dnl.math 1
@@ -78,7 +78,7 @@ function ./rng/range:
     scoreboard players operation #m1 dnl.math = #dnl.range dnl.math
     scoreboard players remove #m1 dnl.math 1
     function ./rng/zprivate/next_int
-    scoreboard players operation #dnl.out dnl.math += #dnl.lower_bound dnl.math
+    scoreboard players operation #dnl.rng dnl.math += #dnl.lower_bound dnl.math
 
     scoreboard players reset #m1 dnl.math
     scoreboard players remove #dnl.upper_bound dnl.math 1
@@ -94,5 +94,5 @@ macro outcome
     rng_val=brigadier:string{"type": "word"}
     body=mecha:nested_root:
 
-    if score #dnl.out dnl.math matches rng_val.value:
+    if score #dnl.rng dnl.math matches rng_val.value:
         yield body

@@ -1,0 +1,12 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_entity_tnt_tick = Event('on_entity_tnt_tick')
+on_entity_tnt_tick.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_tnt_tick")
+
+@on_entity_tnt_tick.handler
+def handler():
+    execute function on_entity_tnt_tick.generate_path('tnt_tick'):
+        function ../util/entity_tnt_tick_listener:
+            on_entity_tnt_tick.trigger()
+            

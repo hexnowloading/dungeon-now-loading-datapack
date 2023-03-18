@@ -64,7 +64,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4041007, dnl: {name: 'poison_rapier', item: 1, id: 1007, weapon: 1}}"
+              "tag": "{CustomModelData: 4041007, dnl: {name: 'poison_rapier', item: 1, id: 1007}}"
             },
             {
               "function": "minecraft:set_nbt",

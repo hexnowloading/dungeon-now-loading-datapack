@@ -35,7 +35,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4045002, dnl: {name: 'forbidden_berries', item: 1, id: 5002, true: 1}}"
+              "tag": "{dnl: {name: 'forbidden_berries', item: 1, id: 5002}}"
             }
           ]
         }

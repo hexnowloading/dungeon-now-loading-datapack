@@ -39,7 +39,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{CustomModelData: 4044005, dnl: {name: 'ominous_horn', item: 1, id: 4005, horn: 1}}"
+              "tag": "{CustomModelData: 4044005, dnl: {name: 'ominous_horn', item: 1, id: 4005}}"
             },
             {
               "function": "minecraft:set_nbt",

@@ -6,6 +6,8 @@ from ../api import
     arrow_load_data
     arrow_land_break
     arrow_load_remove_unluck
+    rng
+    outcome
 
 from reapermc:api import
     listener
@@ -53,6 +55,10 @@ loot_table ../item/ancient_bow {
                         {
                             "function": "minecraft:set_nbt",
                             "tag": nbt
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{dnl:{lvl:1}}"
                         }
                     ]
                 }
@@ -61,12 +67,47 @@ loot_table ../item/ancient_bow {
     ]
 }
 
+item_modifier ./ancient_bow/set_1 [
+    {
+        "function": "minecraft:set_nbt",
+        "tag": "{dnl:{lvl:1}}"
+    }
+]
+
+item_modifier ./ancient_bow/set_2 [
+    {
+        "function": "minecraft:set_nbt",
+        "tag": "{dnl:{lvl:2}}"
+    }
+]
+
+item_modifier ./ancient_bow/set_3 [
+    {
+        "function": "minecraft:set_nbt",
+        "tag": "{dnl:{lvl:3}}"
+    }
+]
+
 @listener(on_projectile_load)
 def projectile_load():
     if score #dnl.type dnl.bow matches id run function ./ancient_bow/load:
         # arrow_load_data id 1200
         arrow_load_remove_unluck
-        store result entity @s damage double 1.5 run data get entity @s damage 1
+        scoreboard players reset #dnl.ancient_bow.is_skeleton dnl.boolean
+        if entity @e[type=skeleton,tag=dnl.this] run function ./ancient_bow/shooter_is_skeleton:
+            execute store result score #dnl.ancient_bow.lvl dnl.int run data get storage dnl:item/bow Item.tag.dnl.lvl 1
+            execute store result entity @s damage double 1.5 run attribute @e[type=skeleton,tag=dnl.this,limit=1] minecraft:generic.attack_damage get 1
+            if score #dnl.ancient_bow.lvl dnl.int matches 2 run function ./ancient_bow/level_2:
+                rng 1 3
+                outcome 1:
+                    data merge entity @s {Fire:100,PierceLevel:1b,CustomPotionEffects:[{Id:7b,Amplifier:0b,Duration:1}]}
+            if score #dnl.ancient_bow.lvl dnl.int matches 3 run function ./ancient_bow/level_3:
+                rng 1 3
+                outcome 1..2:
+                    data merge entity @s {Fire:100,PierceLevel:1b,CustomPotionEffects:[{Id:7b,Amplifier:0b,Duration:1}]}
+
+            scoreboard players set #dnl.ancient_bow.is_skeleton dnl.boolean 1
+        unless score #dnl.ancient_bow.is_skeleton dnl.boolean matches 1 store result entity @s damage double 1.5 run data get entity @s damage 1
 
 @listener(on_projectile_land)
 def projectile_land():

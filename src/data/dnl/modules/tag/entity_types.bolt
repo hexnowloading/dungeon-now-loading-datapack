@@ -90,7 +90,9 @@ entity_type_tag ../others {
         "minecraft:marker",
         "minecraft:snowball",
         "minecraft:item",
-        "minecraft:item_frame"
+        "minecraft:item_frame",
+        "minecraft:armor_stand",
+        "minecraft:tnt"
     ]
 }
 
