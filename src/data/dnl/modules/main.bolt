@@ -75,6 +75,7 @@ def tick():
     scoreboard players add #dnl.5t dnl.tick 1
     as @e[type=#dnl:mobs_and_players] at @s run function ./tick/living
     as @e[type=#dnl:others] at @s run function ./tick/technical
+    as @e[type=item] at @s run function ./util/item_entity/tick
 
 @listener(in_player_setting)
 def player_setting():

@@ -7,3 +7,4 @@ scoreboard players add #dnl.10t dnl.tick 1
 scoreboard players add #dnl.5t dnl.tick 1
 execute as @e[type=#dnl:mobs_and_players] at @s run function dnl:tick/living
 execute as @e[type=#dnl:others] at @s run function dnl:tick/technical
+execute as @e[type=item] at @s run function dnl:util/item_entity/tick
