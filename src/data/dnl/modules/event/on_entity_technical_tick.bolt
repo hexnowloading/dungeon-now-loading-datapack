@@ -1,8 +1,6 @@
-from reapermc:event_handler import Event, listener
-from reapermc:flag_handler import Flag
+from reapermc:event_handler import Event
 
 on_entity_technical_tick = Event('on_entity_technical_tick')
-on_entity_technical_tick.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_technical_tick")
 
 @on_entity_technical_tick.handler
 def handler():

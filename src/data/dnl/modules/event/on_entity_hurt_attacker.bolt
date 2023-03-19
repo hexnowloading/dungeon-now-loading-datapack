@@ -2,7 +2,6 @@ from reapermc:event_handler import Event, listener
 from reapermc:flag_handler import Flag
 
 on_entity_hurt_attacker = Event('on_entity_hurt_attacker')
-on_entity_hurt_attacker.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_hurt_attacker")
 
 @on_entity_hurt_attacker.handler
 def handler():

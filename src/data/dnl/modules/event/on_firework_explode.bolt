@@ -2,7 +2,6 @@ from reapermc:event_handler import Event, listener
 from reapermc:flag_handler import Flag
 
 on_firework_explode = Event('on_firework_explode')
-on_firework_explode.set_handler_path(f"reaper_framework:__internal__/event_handler/on_firework_explode")
 
 @on_firework_explode.handler
 def handler():

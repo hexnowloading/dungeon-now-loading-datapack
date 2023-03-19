@@ -2,7 +2,6 @@ from reapermc:event_handler import Event, listener
 from reapermc:flag_handler import Flag
 
 on_player_mined_block = Event('on_player_mined_block')
-on_player_mined_block.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_mined_block")
 
 @on_player_mined_block.handler
 def handler():

@@ -38,7 +38,8 @@ from ./event/on_projectile_trail import on_projectile_trail
 from ./event/on_projectile_unload import on_projectile_unload
 from ./event/on_firework_load import on_firework_load
 from ./event/on_firework_explode import on_firework_explode
-from ./event/on_item_frame_has_item import on_item_frame_has_item
+from ./event/on_item_frame_monolith import on_item_frame_monolith
+from ./event/on_marker_monolith import on_marker_monolith
 from ./event/on_marker_summon import on_marker_summon
 from ./event/on_marker_spawner import on_marker_spawner
 from ./event/on_marker_jigsaw import on_marker_jigsaw

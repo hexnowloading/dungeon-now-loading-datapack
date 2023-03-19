@@ -1,1 +1,1 @@
-function #reaper_framework:__internal__/event_handler/on_player_mined_block
+function #dnl:reaper_framework/event_handler/on_player_mined_block

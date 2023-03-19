@@ -1,0 +1,10 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_item_frame_monolith = Event('on_item_frame_monolith')
+
+@on_item_frame_monolith.handler
+def handler():
+    execute function on_item_frame_monolith.generate_path('item_frame_monolith'):
+        function ../util/monolith/item_frame_listener:
+            on_item_frame_monolith.trigger()

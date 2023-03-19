@@ -9,6 +9,10 @@ from ../api import
     on_marker_core
     on_marker_skill
 
+@listener(on_marker_spawner)
+def marker_spawner():
+    if entity @s[tag=dnl.boss] at @s run particle minecraft:portal ~ ~ ~ 0.3 1 0.3 0.01 10 normal
+
 macro add_summon
     name=brigadier:string{"type": "word"}
     mob_type=brigadier:string{"type": "word"}
@@ -36,7 +40,6 @@ macro add_summon
 
         @listener(on_marker_spawner)
         def marker_spawner():
-            if entity @s[tag=dnl.boss] at @s run particle minecraft:portal ~ ~ ~ 0.3 1 0.3 0.01 10 normal
             if entity @s[tag=f"dnl.{name.value}"] positioned ~-range.value ~-depth.value ~-range.value if entity @p[dx=width,dy=height.value,dz=width] at @s run function f"dnl:util/mob/spawner/{name.value}":
                 particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
                 particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal

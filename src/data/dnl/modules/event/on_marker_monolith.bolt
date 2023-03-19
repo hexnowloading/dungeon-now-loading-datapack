@@ -1,0 +1,14 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ../api import on_entity_marker_tick
+
+on_marker_monolith = Event('on_marker_monolith')
+
+@on_marker_monolith.handler
+def handler():
+
+    @listener(on_entity_marker_tick)
+    def _on_entity_marker_tick():
+        execute function on_marker_monolith.generate_path('marker_monolith'):
+            if entity @s[tag=dnl.monolith]:
+                on_marker_monolith.trigger()

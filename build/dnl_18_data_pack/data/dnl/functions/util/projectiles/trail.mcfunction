@@ -1,2 +1,2 @@
 execute store result score #dnl.type dnl.bow run data get entity @s CustomPotionEffects[{Id: 26}].Amplifier
-function #reaper_framework:__internal__/event_handler/on_projectile_trail
+function #dnl:reaper_framework/event_handler/on_projectile_trail

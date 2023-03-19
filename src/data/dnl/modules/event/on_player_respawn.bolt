@@ -3,8 +3,6 @@ from reapermc:flag_handler import Flag
 from ../api import on_entity_player_tick
 
 on_player_respawn = Event('on_player_respawn')
-on_player_respawn.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_respawn")
-
 
 @on_player_respawn.handler
 def handler():

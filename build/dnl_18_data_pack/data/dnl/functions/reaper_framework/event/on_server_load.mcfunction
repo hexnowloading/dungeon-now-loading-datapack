@@ -27,8 +27,8 @@ bossbar add dnl:bossbar6 {"text": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar7 {"text": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar8 {"text": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar9 {"text": "Reserved", "color": "aqua"}
-function reaper_framework:__internal__/event_handler/on_player_load/player_load
-function reaper_framework:__internal__/event_handler/in_world_setting/world_load
+function dnl:reaper_framework/event_handler/on_player_load/player_load
+function dnl:reaper_framework/event_handler/in_world_setting/world_load
 scoreboard objectives add dnl.timer.hastening dummy
 scoreboard objectives add dnl.timer.lightning_storm dummy
 scoreboard objectives add dnl.timer.raining_fireball dummy

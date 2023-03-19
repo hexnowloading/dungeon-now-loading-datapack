@@ -1,1 +1,1 @@
-function #reaper_framework:__internal__/event_handler/on_projectile_ammo
+function #dnl:reaper_framework/event_handler/on_projectile_ammo

@@ -3,8 +3,6 @@ from reapermc:flag_handler import Flag
 from ./on_entity_player_tick import on_entity_player_tick
 
 on_player_hold_item = Event('on_player_hold_item')
-on_player_hold_item.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_hold_item")
-
 
 @on_player_hold_item.handler
 def handler():

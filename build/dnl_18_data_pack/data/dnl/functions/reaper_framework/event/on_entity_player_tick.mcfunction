@@ -1,9 +1,9 @@
-execute if score @s reaper_framework.event_handler.on_entity_player_join matches -1 run function reaper_framework:__internal__/event_handler/on_entity_player_join/join
+execute if score @s reaper_framework.event_handler.on_entity_player_join matches -1 run function dnl:reaper_framework/event_handler/on_entity_player_join/join
 execute if score @s reaper_framework.event_handler.on_entity_player_join matches 1.. run scoreboard players set @s reaper_framework.event_handler.on_entity_player_join -1
 execute if entity @s[tag=dnl.marker_visibility] at @e[type=marker, tag=dnl.marker, distance=..16] run particle end_rod ~ ~ ~ 0 0 0 0.001 1 normal @s
 execute if entity @s[tag=!dnl.init] run function dnl:item/abstract_forbidden_fruit/nested_execute_0
-function reaper_framework:__internal__/event_handler/on_player_respawn/player_respawn
-function reaper_framework:__internal__/event_handler/on_player_hold_item/hold_item
+function dnl:reaper_framework/event_handler/on_player_respawn/player_respawn
+function dnl:reaper_framework/event_handler/on_player_hold_item/hold_item
 execute store result score @s dnl.offhand run data get entity @s Inventory[{Slot: -106b}].tag.dnl.id
 execute store result score @s dnl.mainhand run data get entity @s SelectedItem.tag.dnl.id
 execute store result score @s dnl.head run data get entity @s Inventory[{Slot: 103b}].tag.dnl.id

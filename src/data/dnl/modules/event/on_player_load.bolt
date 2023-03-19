@@ -3,7 +3,6 @@ from reapermc:flag_handler import Flag
 from reapermc:event/on_server_load import on_server_load
 
 on_player_load = Event('on_player_load')
-on_player_load.set_handler_path(f"reaper_framework:__internal__/event_handler/on_player_load")
 
 @on_player_load.handler
 def handler():

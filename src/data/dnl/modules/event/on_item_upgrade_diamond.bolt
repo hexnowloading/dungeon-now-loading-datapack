@@ -2,7 +2,6 @@ from reapermc:event_handler import Event, listener
 from reapermc:flag_handler import Flag
 
 on_item_upgrade_diamond = Event('on_item_upgrade_diamond')
-on_item_upgrade_diamond.set_handler_path(f"reaper_framework:__internal__/event_handler/on_item_upgrade_diamond")
 
 @on_item_upgrade_diamond.handler
 def handler():

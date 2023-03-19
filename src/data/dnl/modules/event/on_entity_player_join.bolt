@@ -4,8 +4,6 @@ from reapermc:expr import Expr
 from ./on_entity_player_tick import on_entity_player_tick
 
 on_entity_player_join = Event('on_entity_player_join')
-on_entity_player_join.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_player_join")
-
 
 @on_entity_player_join.handler
 def handler():

@@ -4,7 +4,6 @@ from ./on_entity_player_join import on_entity_player_join
 from ./on_player_load import on_player_load
 
 in_player_setting = Event('in_player_setting')
-in_player_setting.set_handler_path(f"reaper_framework:__internal__/event_handler/in_player_setting")
 
 datapack_version = ctx.meta.dnl.datapack_version
 

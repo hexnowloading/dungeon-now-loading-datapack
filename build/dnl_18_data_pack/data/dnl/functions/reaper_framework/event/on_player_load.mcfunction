@@ -1,1 +1,1 @@
-function reaper_framework:__internal__/event_handler/in_player_setting/player_setting
+function dnl:reaper_framework/event_handler/in_player_setting/player_setting

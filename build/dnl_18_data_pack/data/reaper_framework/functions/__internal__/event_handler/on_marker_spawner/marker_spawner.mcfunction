@@ -1,1 +1,0 @@
-execute unless score #dnl.developer_mode dnl.boolean matches 1 if score #dnl.1s dnl.tick matches 1 if entity @s[tag=dnl.spawner] run function #reaper_framework:__internal__/event_handler/on_marker_spawner

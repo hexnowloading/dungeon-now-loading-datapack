@@ -2,7 +2,6 @@ from reapermc:event_handler import Event, listener
 from ./on_entity_technical_tick import on_entity_technical_tick
 
 on_entity_item_frame_tick = Event('on_entity_item_frame_tick')
-on_entity_item_frame_tick.set_handler_path(f"reaper_framework:__internal__/event_handler/on_entity_item_frame_tick")
 
 
 @on_entity_item_frame_tick.handler
@@ -10,7 +9,7 @@ def handler():
 
     @listener(on_entity_technical_tick)
     def _on_entity_technical_tick():
-        if entity @s[type=item_frame,tag=dnl.item_frame]:
+        if entity @s[type=#dnl:item_frames,tag=dnl.item_frame]:
             # store result score #dnl.item_frame_id dnl.int run data get entity @s Item.tag.dnl.id
             on_entity_item_frame_tick.trigger()
 

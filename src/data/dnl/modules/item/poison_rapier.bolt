@@ -2,7 +2,6 @@ from ../api import
     on_entity_hit_target
     on_entity_hit_attacker
     on_entity_hurt_target
-    on_entity_item_frame_tick
     on_item_upgrade_diamond
     get_nbt
     add_custom_model_data

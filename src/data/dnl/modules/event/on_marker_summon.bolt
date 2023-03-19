@@ -3,8 +3,6 @@ from reapermc:flag_handler import Flag
 from ../api import on_entity_marker_tick
 
 on_marker_summon = Event('on_marker_summon')
-on_marker_summon.set_handler_path(f"reaper_framework:__internal__/event_handler/on_marker_summon")
-
 
 @on_marker_summon.handler
 def handler():
