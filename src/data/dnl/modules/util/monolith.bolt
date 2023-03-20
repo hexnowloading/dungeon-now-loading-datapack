@@ -5,15 +5,31 @@ from reapermc:api import
 from ../api import
     on_entity_item_frame_tick
     on_technical_mob_tick
-    add_summon
     assign_lid
-    on_marker_spawner
+    on_marker_spawner_monolith
     on_marker_monolith
+    on_marker_summon_item_frame
     on_item_frame_monolith
+    get_cmd
 
 # @listener(on_item_frame_has_item)
 # def item_frame_has_item():
 #     if entity @s[tag=dnl.monolith] run function ./monolith/main:
+
+class RecipeIngredient:
+    def __init__(self, name, base_item, nbt):
+        self.name = name
+        self.base_item = base_item
+        self.nbt = nbt
+    
+    def get_name(self):
+        return self.name
+
+    def get_base_item(self):
+        return self.base_item
+    
+    def get_nbt(self):
+        return self.nbt
 
 @listener(on_entity_item_frame_tick)
 def entity_item_frame_tick():
@@ -32,16 +48,25 @@ predicate ./monolith/item_frame_has_item {
     }
 }
 
-def add_monolith(result,recipe):
+function ./monolith/ingredient_used:
+    data modify entity @s Invisible set value 0
+    tag @s add dnl.monolith.used
+
+function ./monolith/ingredient_reset:
+    data modify entity @s Invisible set value 1
+    tag @s remove dnl.monolith.used
+    scoreboard players reset @s dnl.lid
+
+def add_monolith(result,recipe,range=8,height=7,depth=0):
 
     function f"dnl:summon/monolith_{result}":
         summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.monolith",f"dnl.{result}"]}
 
     entity_type = "minecraft:polar_bear_spawn_egg"
-    entity_name = str(result).title().replace("_", " ") + " Spawn Egg"
+    entity_name = "Monolith " + str(result).title().replace("_", " ") + " Spawn Egg"
     entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.monolith\",\"dnl." + str(result) + "\"]}}"
 
-    loot_table f"dnl:spawnegg/monolith_{result}" {
+    loot_table f"dnl:monolith/result_{result}" {
         "pools": [
             {
                 "rolls": 1,
@@ -69,13 +94,55 @@ def add_monolith(result,recipe):
             }
         ]
     }
+
+    entity_name2 = "Monolith " + str(result).title().replace("_", " ") + " Spawner"
+    entity_nbt2 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.spawner\",\"dnl.monolith_spawner\",\"dnl." + str(result) + "\"]}}"
+
+    loot_table f"dnl:spawner/monolith_{result}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name2,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt2
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
     
+    width = range * 2 - 1
+
+    @listener(on_marker_spawner_monolith)
+    def marker_spawner_monolith():
+        if entity @s[tag=f"dnl.{result}"] positioned ~-range ~-depth ~-range if entity @p[dx=width,dy=height,dz=width] at @s run function f"dnl:util/monolith/spawner/{result}":
+            particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
+            particle flame ~ ~ ~ 0.5 1 0.5 0.001 10 normal
+            function f"dnl:summon/monolith_{result}"
+            kill @s
+
     @listener(on_marker_monolith)
     def marker_monolith():
         if entity @s[tag=f"dnl.{result}"] run function f"dnl:util/monolith/{result}/main"
     
     function f"dnl:util/monolith/{result}/summon_item_frame":
-        summon glow_item_frame ~ ~1 ~ {Facing:1b,Invulnerable:1b,Fixed:0b,Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.crafter",f"dnl.{result}","dnl.new"],Item:{}}
+        summon glow_item_frame ~ ~1 ~ {Facing:1b,Invulnerable:1b,Fixed:0b,Tags:["dnl.item_frame","dnl.tick","dnl.monolith","dnl.monolith.crafter",f"dnl.{result}","dnl.new"],Item:{}}
         scoreboard players operation #dnl.monolith.lid dnl.lid = @s dnl.lid
         scoreboard players operation #dnl.monolith.var dnl.var = @s dnl.var
         for i, x in enumerate(recipe):
@@ -101,7 +168,11 @@ def add_monolith(result,recipe):
             function f"dnl:util/monolith/{result}/summon_item_frame"
             data remove storage dnl:monolith/ingredients Ingredients
             for i, x in enumerate(recipe):
-                data modify storage dnl:monolith/ingredients Ingredients append value f"minecraft:{x}"
+                if x.find("minecraft:") != -1:
+                    data modify storage dnl:monolith/ingredients Ingredients append value f"{x}"
+                elif x.find("dnl:") != -1:
+                    y = x.replace("dnl:","")
+                    data modify storage dnl:monolith/ingredients Ingredients append value f"{y}"
                 
         ### Particle ###
         particle minecraft:enchant ~ ~1.9 ~ 0.1 0 0.1 1 2 normal
@@ -112,7 +183,7 @@ def add_monolith(result,recipe):
             scoreboard players operation #dnl.monolith.lid dnl.lid = @s dnl.lid
             if entity @a[distance=..10,gamemode=creative] run function f"dnl:util/monolith/{result}/repair_creative":
                 scoreboard players set #dnl.monolith.creative dnl.boolean 1
-                as @e[type=#dnl:item_frames,tag=dnl.monolith] if score @s dnl.lid = #dnl.monolith.lid dnl.lid run kill @s
+                as @e[type=#dnl:item_frames,tag=dnl.monolith.crafter] if score @s dnl.lid = #dnl.monolith.lid dnl.lid run kill @s
                 kill @s
             unless score #dnl.monolith.creative dnl.boolean matches 1 run function f"dnl:util/monolith/{result}/repair_non_creative":
                 playsound minecraft:entity.experience_orb.pickup master @a ~ ~ ~ 1 0.5 0
@@ -126,14 +197,17 @@ def add_monolith(result,recipe):
         if entity @s[tag=f"dnl.{result}"] run function f"dnl:util/monolith/{result}/crafting":
             data modify entity @s Invulnerable set value 0
             data remove storage dnl:monolith/container Item
-            data modify storage dnl:monolith/container Item.id set from entity @s Item.id
-            data modify storage dnl:monolith/container TempItem.id set from storage dnl:monolith/container Item.id
+            data modify storage dnl:monolith/container Item set from entity @s Item
+            data modify storage dnl:monolith/container TempItem set from storage dnl:monolith/container Item
             scoreboard players reset #dnl.monolith.success dnl.boolean
             for i, x in enumerate(recipe):
                 
                 unless entity @s[tag=f"dnl.monolith.ingredient_{i}"] unless score #dnl.monolith.success dnl.boolean matches 1 run function f"dnl:util/monolith/{result}/ingredient_{i}/check":
                     scoreboard players reset f"#dnl.monolith.ingredient_{i}" dnl.boolean
-                    store success score f"#dnl.monolith.ingredient_{i}" dnl.boolean run data modify storage dnl:monolith/container Item.id set from storage dnl:monolith/ingredients f"Ingredients[{i}]"
+                    if x.find("minecraft:") != -1:
+                        store success score f"#dnl.monolith.ingredient_{i}" dnl.boolean run data modify storage dnl:monolith/container Item.id set from storage dnl:monolith/ingredients f"Ingredients[{i}]"
+                    else:
+                        store success score f"#dnl.monolith.ingredient_{i}" dnl.boolean run data modify storage dnl:monolith/container Item.tag.dnl.name set from storage dnl:monolith/ingredients f"Ingredients[{i}]"
                     if score f"#dnl.monolith.ingredient_{i}" dnl.boolean matches 0 run function f"dnl:util/monolith/{result}/ingredient_{i}/matched":
                         scoreboard players set #dnl.monolith.success dnl.boolean 1
                         scoreboard players add @s dnl.var 1
@@ -143,27 +217,102 @@ def add_monolith(result,recipe):
                         as @e[type=marker,tag=dnl.monolith,distance=..1.1] if score @s dnl.lid = #dnl.monolith.lid dnl.lid run function f"dnl:util/monolith/{result}/ingredient_{i}/send_data":
                             scoreboard players operation @s dnl.var = #dnl.monolith.var dnl.var
                             tag @s add f"dnl.monolith.ingredient_{i}"
+                        if x.find("minecraft:") != -1:
+                            y = x.replace("minecraft:","")
+                            align xyz positioned ~-1 ~ ~-1 as @e[type=item_frame,tag=dnl.monolith.ingredient,tag=f"dnl.{y}",tag=!dnl.monolith.used,dx=2,dy=2,dz=2,limit=1,sort=random] function ./monolith/ingredient_used
+                        else:
+                            y = x.replace("dnl:","")
+                            align xyz positioned ~-1 ~ ~-1 as @e[type=item_frame,tag=dnl.monolith.ingredient,tag=f"dnl.{y}",tag=!dnl.monolith.used,dx=2,dy=2,dz=2,limit=1,sort=random] function ./monolith/ingredient_used
                         playsound minecraft:entity.experience_orb.pickup block @a ~ ~ ~ 1 1 1
                         particle minecraft:totem_of_undying ~ ~0.5 ~ 0.3 0.3 0.3 0.001 5 normal
+                        data modify entity @s Invulnerable set value 1
                         data remove entity @s Item.Count
                     unless score f"#dnl.monolith.ingredient_{i}" dnl.boolean matches 0 run data modify storage dnl:monolith/container Item.id set from storage dnl:monolith/container TempItem.id
+            
             unless score #dnl.monolith.success dnl.boolean matches 1 run function f"dnl:util/monolith/{result}/unmatched":
                 data modify entity @s Invulnerable set value 0
                 tag @s add dnl.monolith.unmatched
             if score @s dnl.var matches len(recipe) run function f"dnl:util/monolith/{result}/spawn_result":
                 scoreboard players reset @s dnl.var
                 scoreboard players operation #dnl.monolith.lid dnl.lid = @s dnl.lid
-                as @e[type=marker,tag=dnl.monolith,distance=..1.1] if score @s dnl.lid = #dnl.monolith.lid dnl.lid run scoreboard players reset @s dnl.var
+                as @e[type=marker,tag=dnl.monolith,distance=..1.1] if score @s dnl.lid = #dnl.monolith.lid dnl.lid run function f"dnl:util/monolith/{result}/reset_marker":
+                    scoreboard players reset @s dnl.var
+                    for i, x in enumerate(recipe):
+                        tag @s remove f"dnl.monolith.ingredient_{i}"
+                align xyz positioned ~-1 ~ ~-1 as @e[type=item_frame,tag=dnl.monolith.ingredient,tag=dnl.monolith.used,dx=2,dy=2,dz=2] function ./monolith/ingredient_reset
                 playsound minecraft:entity.experience_orb.pickup block @a ~ ~ ~ 1 1 1
                 particle minecraft:totem_of_undying ~1 ~ ~1 0.3 0.3 0.3 0.001 5 normal
-                loot spawn ~ ~ ~ loot dnl:item/spawner_breaker
+                loot spawn ~ ~ ~ loot f"dnl:item/{result}"
                 for i, x in enumerate(recipe):
-                    
                     tag @s remove f"dnl.monolith.ingredient_{i}"
+    
+    register_item_frames(recipe)
 
-spawner_breaker_recipe = ["diamond","diamond","diamond","iron_ingot","iron_ingot","gold_ingot"]
-add_monolith("spawner_breaker",spawner_breaker_recipe)
+registered_item_frames = []
 
+def register_item_frames(recipe):
+    for x in recipe:
+        if (not x in registered_item_frames) and (x.find("minecraft:") != -1):
+            registered_item_frames.append(x)
+            y = x.replace("minecraft:","")
+            add_item_frame(y, y)
+
+def add_item_frame(item, base_item, id="false"):
+
+    entity_type = "minecraft:snow_golem_spawn_egg"
+    entity_name = "Monolith Item Frame " + str(item).title().replace("_", " ") + " Spawn Egg"
+    entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.item_frame\",\"dnl.summon\",\"dnl." + str(item) + "\"]}}"
+
+    loot_table f"dnl:monolith/ingredient_{item}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    custom_name = "{\"translate\":\"" + str(item).title().replace("_", " ") + "\",\"color\":\"white\",\"italic\":false}"
+
+    if id == "false":
+        function f"dnl:summon/item_frame_{item}":
+            if entity @s[y_rotation=-180..-135] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:3b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name}}}}
+            if entity @s[y_rotation=-134..-45] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:4b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name}}}}
+            if entity @s[y_rotation=-44..45] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:2b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name}}}}
+            if entity @s[y_rotation=46..134] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:5b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name}}}}
+            if entity @s[y_rotation=135..180] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:3b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name}}}}
+    else:
+        cmd = int(get_cmd(id))
+        function f"dnl:summon/item_frame_{item}":
+            if entity @s[y_rotation=-180..-135] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:3b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name},CustomModelData:cmd}}}
+            if entity @s[y_rotation=-134..-45] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:4b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name},CustomModelData:cmd}}}
+            if entity @s[y_rotation=-44..45] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:2b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name},CustomModelData:cmd}}}
+            if entity @s[y_rotation=46..134] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:5b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name},CustomModelData:cmd}}}
+            if entity @s[y_rotation=135..180] run summon item_frame ~ ~ ~ {Tags:["dnl.item_frame","dnl.monolith","dnl.monolith.ingredient",f"dnl.{item}"],Facing:3b,Invulnerable:1b,Invisible:1b,Fixed:1b,Item:{id:f"minecraft:{base_item}",Count:1b,tag:{display:{Name:custom_name},CustomModelData:cmd}}}
+ 
+    @listener(on_marker_summon_item_frame)
+    def marker_summon_item_frame():
+        if entity @s[tag=f"dnl.{item}"] as @p[distance=..10] run function f"dnl:summon/item_frame_{item}"
 # function ./monolith/main:
 #     unless entity @s[tag=dnl.monolith.init] run function ./monolith/init:
 #         tag @s add dnl.monolith.init

@@ -4,8 +4,6 @@ from ../api import
     on_projectile_load
     on_projectile_unload
     on_projectile_land
-    rng
-    outcome
     on_firework_explode
     on_firework_load
     arrow_load_remove_unluck

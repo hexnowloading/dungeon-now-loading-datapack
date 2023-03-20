@@ -1,12 +1,15 @@
 from ../api import
     get_nbt
     add_custom_model_data
+    add_item_frame
 
 id = ctx.meta.item.honeycomb_ingot
 
 nbt = get_nbt("honeycomb_ingot", id)
 
 add_custom_model_data("honeycomb_ingot", id, "gold_ingot")
+
+add_item_frame("honeycomb_ingot", "gold_ingot", id)
 
 loot_table ../item/honeycomb_ingot {
     "pools": [

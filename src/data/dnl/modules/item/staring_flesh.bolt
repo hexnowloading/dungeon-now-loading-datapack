@@ -4,12 +4,15 @@ from reapermc:api import
 from ../api import
     get_nbt
     add_custom_model_data
+    add_item_frame
 
 id = ctx.meta.item.staring_flesh
 
 nbt = get_nbt("staring_flesh", id)
 
 add_custom_model_data("staring_flesh", id, "rotten_flesh")
+
+add_item_frame("staring_flesh", "rotten_flesh", id)
 
 loot_table ../item/staring_flesh {
     "pools": [

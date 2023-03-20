@@ -41,7 +41,9 @@ from ./event/on_firework_explode import on_firework_explode
 from ./event/on_item_frame_monolith import on_item_frame_monolith
 from ./event/on_marker_monolith import on_marker_monolith
 from ./event/on_marker_summon import on_marker_summon
+from ./event/on_marker_summon_item_frame import on_marker_summon_item_frame
 from ./event/on_marker_spawner import on_marker_spawner
+from ./event/on_marker_spawner_monolith import on_marker_spawner_monolith
 from ./event/on_marker_jigsaw import on_marker_jigsaw
 from ./event/on_marker_skill import on_marker_skill
 from ./event/on_marker_core import on_marker_core
@@ -73,5 +75,8 @@ from ./util/mob import set_bossbar
 from ./util/mob import remove_bossbar
 from ./util/mob import setup_core
 from ./util/mob import assign_equipment
+
+from ./util/monolith import add_item_frame
+from ./util/monolith import add_monolith
 
 from ./util/death import add_death_event

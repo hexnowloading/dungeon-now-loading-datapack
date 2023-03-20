@@ -6,8 +6,6 @@ scoreboard players add #dnl.global_lid dnl.lid 1
 function dnl:util/monolith/spawner_breaker/summon_item_frame
 data remove storage dnl:monolith/ingredients Ingredients
 data modify storage dnl:monolith/ingredients Ingredients append value "minecraft:diamond"
-data modify storage dnl:monolith/ingredients Ingredients append value "minecraft:diamond"
-data modify storage dnl:monolith/ingredients Ingredients append value "minecraft:diamond"
-data modify storage dnl:monolith/ingredients Ingredients append value "minecraft:iron_ingot"
 data modify storage dnl:monolith/ingredients Ingredients append value "minecraft:iron_ingot"
 data modify storage dnl:monolith/ingredients Ingredients append value "minecraft:gold_ingot"
+data modify storage dnl:monolith/ingredients Ingredients append value "spawner_fragment"

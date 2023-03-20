@@ -9,7 +9,7 @@ def handler():
 
     @listener(on_entity_technical_tick)
     def _on_entity_technical_tick():
-        if entity @s[type=#dnl:item_frames,tag=dnl.item_frame]:
+        if entity @s[type=#dnl:item_frames,tag=dnl.tick]:
             # store result score #dnl.item_frame_id dnl.int run data get entity @s Item.tag.dnl.id
             on_entity_item_frame_tick.trigger()
 

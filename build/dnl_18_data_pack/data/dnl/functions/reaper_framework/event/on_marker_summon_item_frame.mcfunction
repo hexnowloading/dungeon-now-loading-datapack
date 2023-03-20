@@ -1,0 +1,9 @@
+execute if entity @s[tag=dnl.honeycomb_ingot] as @p[distance=..10] run function dnl:summon/item_frame_honeycomb_ingot
+execute if entity @s[tag=dnl.staring_flesh] as @p[distance=..10] run function dnl:summon/item_frame_staring_flesh
+execute if entity @s[tag=dnl.honeycomb] as @p[distance=..10] run function dnl:summon/item_frame_honeycomb
+execute if entity @s[tag=dnl.honey_block] as @p[distance=..10] run function dnl:summon/item_frame_honey_block
+execute if entity @s[tag=dnl.potion] as @p[distance=..10] run function dnl:summon/item_frame_potion
+execute if entity @s[tag=dnl.diamond] as @p[distance=..10] run function dnl:summon/item_frame_diamond
+execute if entity @s[tag=dnl.iron_ingot] as @p[distance=..10] run function dnl:summon/item_frame_iron_ingot
+execute if entity @s[tag=dnl.gold_ingot] as @p[distance=..10] run function dnl:summon/item_frame_gold_ingot
+execute if entity @s[tag=dnl.stick] as @p[distance=..10] run function dnl:summon/item_frame_stick

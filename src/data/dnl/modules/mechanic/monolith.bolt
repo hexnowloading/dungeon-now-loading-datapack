@@ -1,0 +1,24 @@
+from ../api import
+    add_monolith
+
+### Honey Potion ###
+
+a = "minecraft:honeycomb"
+b = "minecraft:honey_block"
+c = "dnl:honeycomb_ingot"
+d = "minecraft:potion"
+
+honey_potion_recipe = [
+    a,  b,  a,
+    a,  c,  a,
+        d
+]
+
+add_monolith("honey_potion", honey_potion_recipe)
+
+
+spawner_breaker_recipe = ["minecraft:diamond","minecraft:iron_ingot","minecraft:gold_ingot","dnl:spawner_fragment"]
+add_monolith("spawner_breaker",spawner_breaker_recipe)
+
+fleshbone_sword_recipe = ["minecraft:stick","dnl:staring_flesh","dnl:staring_flesh","dnl:sharpened_bone"]
+add_monolith("fleshbone_sword",fleshbone_sword_recipe)

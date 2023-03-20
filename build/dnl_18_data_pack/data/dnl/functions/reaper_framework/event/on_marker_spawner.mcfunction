@@ -31,3 +31,4 @@ execute if entity @s[tag=dnl.slime_core] positioned ~-8 ~ ~-8 if entity @p[dx=15
 execute if entity @s[tag=dnl.station_chief] positioned ~-8 ~ ~-8 if entity @p[dx=15, dy=7, dz=15] at @s run function dnl:util/mob/spawner/station_chief
 execute if entity @s[tag=dnl.station_chief_ravager] positioned ~-8 ~ ~-8 if entity @p[dx=15, dy=7, dz=15] at @s run function dnl:util/mob/spawner/station_chief_ravager
 execute if entity @s[tag=dnl.the_champion] positioned ~-8 ~ ~-8 if entity @p[dx=15, dy=7, dz=15] at @s run function dnl:util/mob/spawner/the_champion
+function dnl:reaper_framework/event_handler/on_marker_spawner_monolith/marker_spawner_monolith
