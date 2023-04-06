@@ -1,5 +1,5 @@
 execute if entity @s[tag=!dnl.frost_watcher.init] run function dnl:entity/frost_watcher/init
-execute if entity @p[distance=..30] if entity @s[tag=!dnl.bossbar] run function dnl:entity/frost_watcher/set_bossbar
+execute if entity @p[distance=..64] if entity @s[tag=!dnl.bossbar] run function dnl:entity/frost_watcher/set_bossbar
 execute if score @s dnl.bossbar_id matches 0 run function dnl:entity/frost_watcher/bossbar_visibility/0
 execute if score @s dnl.bossbar_id matches 1 run function dnl:entity/frost_watcher/bossbar_visibility/1
 execute if score @s dnl.bossbar_id matches 2 run function dnl:entity/frost_watcher/bossbar_visibility/2

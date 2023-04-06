@@ -1,0 +1,87 @@
+from reapermc:api import
+    listener
+
+from ../api import
+    on_entity_marker_tick
+
+@listener(on_entity_marker_tick)
+def entity_marker_tick():
+    if entity @s[tag=dnl.marker_killer] run function ./marker_killer/main
+    if entity @s[tag=dnl.height_adjuster] run function ./height_adjuster/main
+
+function ./marker_killer/main:
+    particle dust 1.000 0.000 0.000 1 ~ ~ ~ 0 0 0 1 10 normal
+    kill @e[type=marker,distance=..0.1]
+    kill @e[type=area_effect_cloud,distance=..0.1]
+    kill @s
+
+function ./height_adjuster/main:
+    particle dust 0.020 0.933 1.000 1 ~ ~ ~ 0 0 0 1 10 normal
+    tp @e[type=marker,tag=!dnl.height_adjuster,distance=..0.009] ~ ~0.01 ~
+    kill @s
+
+entity_type = "minecraft:mooshroom_spawn_egg"
+entity_name = "Marker Killer Spawn Egg"
+entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.marker_killer\"]}}"
+
+loot_table f"dnl:spawnegg/marker_killer" {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": entity_type,
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": entity_name,
+                                "color": "#FF55FF",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": entity_nbt
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+entity_type = "minecraft:phantom_spawn_egg"
+entity_name = "Marker Height Adjuster Spawn Egg"
+entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.height_adjuster\"]}}"
+
+loot_table f"dnl:spawnegg/height_adjuster" {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": entity_type,
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": entity_name,
+                                "color": "#FF55FF",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": entity_nbt
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

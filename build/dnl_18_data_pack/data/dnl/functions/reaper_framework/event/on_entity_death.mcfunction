@@ -14,3 +14,4 @@ execute if score #dnl.death_id dnl.int matches 13 run function dnl:entity/slime_
 execute if score #dnl.death_id dnl.int matches 14 run function dnl:entity/station_chief/death
 execute if score #dnl.death_id dnl.int matches 15 run function dnl:entity/station_chief_ravager/death
 execute if score #dnl.death_id dnl.int matches 16 run function dnl:entity/the_champion/death
+execute if score #dnl.death_id dnl.int matches 17 run function dnl:util/raid/raid_mob/death

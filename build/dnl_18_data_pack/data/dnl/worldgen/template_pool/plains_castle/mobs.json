@@ -7,7 +7,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/mobs/iron_sword_zombie",
+                "location": "dnl:plains_castle/mob/plains_castle_iron_sword_zombie",
                 "processors": "minecraft:empty"
             }
         },
@@ -16,7 +16,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/mobs/diamond_sword_zombie",
+                "location": "dnl:plains_castle/mob/plains_castle_diamond_sword_zombie",
                 "processors": "minecraft:empty"
             }
         },
@@ -25,7 +25,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/mobs/iron_axe_zombie",
+                "location": "dnl:plains_castle/mob/plains_castle_iron_axe_zombie",
                 "processors": "minecraft:empty"
             }
         },
@@ -34,7 +34,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/mobs/diamond_axe_zombie",
+                "location": "dnl:plains_castle/mob/plains_castle_diamond_axe_zombie",
                 "processors": "minecraft:empty"
             }
         },
@@ -43,7 +43,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/mobs/iron_bow_skeleton",
+                "location": "dnl:plains_castle/mob/plains_castle_iron_bow_skeleton",
                 "processors": "minecraft:empty"
             }
         },
@@ -52,7 +52,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/mobs/diamond_bow_skeleton",
+                "location": "dnl:plains_castle/mob/plains_castle_diamond_bow_skeleton",
                 "processors": "minecraft:empty"
             }
         }

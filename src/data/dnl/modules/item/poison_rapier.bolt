@@ -252,6 +252,7 @@ def on_item_upgrade_diamond():
 function ./poison_rapier/target:
     scoreboard players set #dnl.poison_rapier.burst_sound dnl.boolean 0
     if predicate ../item/poison_rapier/burst at @s run function ./poison_rapier/burst:
+        advancement grant @a[distance=..32] only dnl:story/structures/hivenest/three_shot_of_poison
         effect give @s minecraft:instant_damage 1 1 true
         # particle wax_on ~ ~1 ~ 1 1 1 0.5 10 normal
         # particle dust 0.086 0.161 0.055 1 ~ ~1 ~ 1 1 1 1 20 normal

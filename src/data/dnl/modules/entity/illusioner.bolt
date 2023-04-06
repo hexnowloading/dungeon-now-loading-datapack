@@ -118,7 +118,10 @@ function ./illusioner/main:
 
 function ./illusioner/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.illusioner] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/gallery_of_illusion/illusionist
+    as @e[type=marker,tag=dnl.core,tag=dnl.illusioner] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function ./illusioner/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/illusioner/reward"}
+        kill @s
     as @e[type=marker,tag=dnl.illusioner_minion_spawn_point] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
     as @e[type=#dnl:mobs,tag=dnl.illusioner_minion] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run tp ~ -1000 ~
 
@@ -271,3 +274,74 @@ function ./illusioner/summon/pumpkin_skeleton:
         HandDropChances:[0.000F,0.000F],
         ArmorDropChances:[0.085F,0.085F,0.085F,0.000F]
     }
+
+loot_table ./illusioner/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_melon"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/music_disc_jack_and_lantern"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:tipped_arrow",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 32,
+                                "max": 64
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{CustomPotionEffects:[{Id:2b,Amplifier:2b,Duration:300},{Id:15b,Amplifier:0b,Duration:300}],CustomPotionColor:12728}"
+                        },
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Arrow of Blindness"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:emerald",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 32,
+                                "max": 64
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,94 @@
+from ../api import
+    get_nbt
+
+from bolt.contrib.defer import Defer
+
+import textwrap
+
+# class CheckpointPlayerHead:
+#     def __init__(self, name, message=""):
+#         self.name = name
+#         self.message = message
+    
+#     def get_name(self):
+#         return self.name
+    
+#     def get_message(self):
+#         return self.message
+
+
+# CheckpointPlayerHead("player","hello there")
+
+defer = ctx.inject(Defer)
+
+id = ctx.meta.item.checkpoint_player_head
+
+nbt = get_nbt("checkpoint_player_head", id)
+
+all_player_heads = set()
+
+def add_checkpoint_player_head(player_name, player_message="", role="", name_color="yellow", role_color="gold"):
+
+    id_nbt = "dnl:{name:'checkpoint_player_head',item:1,id:" + str(id) + "},SkullOwner:\"" + str(player_name) + "\","
+
+    message_nbt = ""
+    # if role == "patron":
+    #     message_nbt = "display:{Lore:['{\"translate\":\"[Patron]\",\"color\":\"gold\",\"italic\":false}','{\"translate\":\"" + str(player_message) + "\",\"italic\":false}']}"
+    
+    wrapped_player_message = textwrap.wrap(player_message, 40)
+    message_lines = []
+
+    if not role == "":
+        message_lines.append("'{\"translate\":\"[" + str(role) + "]\",\"color\":\"" + str(role_color) + "\",\"italic\":false}'")
+    for x in wrapped_player_message:
+        y = x.replace("'", "\\'")
+        message_lines.append("'{\"translate\":\"" + y + "\",\"color\":\"gray\",\"italic\":false}'")
+    message_nbt = "display:{Name:'{\"text\":\"" + str(player_name) + "\\'s Head\",\"color\":\"" + str(name_color) + "\",\"italic\":false}',Lore:[" + ','.join(message_lines) + "]}"
+
+    nbt = "{" + id_nbt + message_nbt + "}"
+
+    loot_table_name = player_name.lower()
+
+    loot_table f"dnl:checkpoint_player_head/{loot_table_name}" {
+        "type": "minecraft:chest",
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": "minecraft:player_head",
+                        "functions": [
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": nbt
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    
+    all_player_heads.add(loot_table_name)
+    
+@defer
+def _create_checkpoint_player_head_loot_table():
+    pools = []
+
+    for x in all_player_heads:
+        pools.append(
+            {
+            "type": "minecraft:loot_table",
+            "name": f"dnl:checkpoint_player_head/{x}"
+            }
+        )
+
+    loot_table dnl:checkpoint_player_head {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": pools
+            }
+        ]
+    }

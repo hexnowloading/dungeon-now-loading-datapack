@@ -22,7 +22,10 @@ macro add_summon
     depth=brigadier:float
     par=brigadier:string{"type": "word"}
     nbt=minecraft:nbt_compound_tag:
-
+        if height.value == 0 and depth.value == 0:
+            range_type = "spherical"
+        else:
+            range_type = "cubical"
         function f"dnl:summon/{name.value}":  
             summon mob_type.value ~ ~ ~ nbt
         
@@ -40,23 +43,26 @@ macro add_summon
 
         @listener(on_marker_spawner)
         def marker_spawner():
-            if entity @s[tag=f"dnl.{name.value}"] positioned ~-range.value ~-depth.value ~-range.value if entity @p[dx=width,dy=height.value,dz=width] at @s run function f"dnl:util/mob/spawner/{name.value}":
-                particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
-                particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal
-                function f"dnl:summon/{name.value}"
-                kill @s
+            if range_type == "spherical":
+                if entity @s[tag=f"dnl.{name.value}"] if entity @p[distance=f"..{range.value}"] at @s run function f"dnl:util/mob/spawner/{name.value}":
+                    particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
+                    particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal
+                    function f"dnl:summon/{name.value}"
+                    kill @s
+            elif range_type == "cubical":
+                if entity @s[tag=f"dnl.{name.value}"] positioned ~-range.value ~-depth.value ~-range.value if entity @p[dx=width,dy=height.value,dz=width] at @s run function f"dnl:util/mob/spawner/{name.value}":
+                    particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
+                    particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal
+                    function f"dnl:summon/{name.value}"
+                    kill @s
 
         @listener(on_marker_jigsaw)
         def marker_jigsaw():
             if entity @s[tag=f"dnl.{name.value}"] run function f"dnl:util/mob/jigsaw/{name.value}":
-                setblock ~ ~1 ~ jigsaw[orientation=down_north]{name:"dnl:mob_connector",pool:"minecraft:empty",final_state:"minecraft:air",target:"minecraft:empty",joint:"aligned"} replace
-                summon minecraft:marker ~ ~2 ~ {Tags:["dnl.marker","dnl.spawner",f"dnl.{name.value}"]}
-                setblock ~ ~ ~ structure_block[mode=save]{name:f"dnl:mob/{name.value}",posX:0,posY:1,posZ:0,sizeX:1,sizeY:3,sizeZ:1,rotation:"NONE",mirror:"NONE",mode:"SAVE",ignoreEntities:0b} replace
-                setblock ~ ~4 ~ iron_block replace
-                setblock ~1 ~2 ~ glass replace
-                setblock ~-1 ~2 ~ glass replace
-                setblock ~ ~2 ~1 glass replace
-                setblock ~ ~2 ~-1 glass replace
+                setblock ~ ~2 ~ jigsaw[orientation=down_north]{name:"dnl:mob_connector",pool:"minecraft:empty",final_state:"minecraft:air",target:"minecraft:empty",joint:"aligned"} replace
+                setblock ~ ~1 ~ structure_void
+                summon minecraft:marker ~ ~1.01 ~ {Tags:["dnl.marker","dnl.spawner",f"dnl.{name.value}"]}
+                setblock ~ ~ ~ structure_block[mode=save]{name:f"dnl:mob/{name.value}",posX:0,posY:1,posZ:0,sizeX:1,sizeY:2,sizeZ:1,rotation:"NONE",mirror:"NONE",mode:"SAVE",ignoreEntities:0b} replace
                 kill @s
 
         if mob_type.value == "marker" or mob_type.value == "armor_stand" or mob_type.value == "illusioner":
@@ -160,6 +166,55 @@ macro add_summon
             ]
         }
 
+### Summon V2 ###
+macro add_summon_v2
+    name=brigadier:string{"type": "word"}
+    mob_type=brigadier:string{"type": "word"}
+    sub_type=brigadier:string{"type": "word"}
+    structure=brigadier:string{"type": "word"}
+    range=brigadier:float
+    height=brigadier:float
+    depth=brigadier:float
+    par=brigadier:string{"type": "word"}
+    nbt=minecraft:nbt_compound_tag:
+        add_summon name.value mob_type.value sub_type.value range.value height.value depth.value par.value nbt
+        
+        entity_name3 = str(name.value).title().replace("_", " ") + " Mob Jigsaw"
+        entity_nbt3 = "{BlockEntityTag:{joint:\"aligned\",name:\"minecraft:empty\",pool:\"" + str(structure.value) + "mob\"" + str(name.value) + "\", final_state:\"minecraft:air\",id:\"minecraft:jigsaw\",target:\"dnl:mob_connector\"}}"
+
+        if mob_type.value == "marker" or mob_type.value == "armor_stand" or mob_type.value == "illusioner":
+            entity_type = "minecraft:polar_bear_spawn_egg"
+        else:
+            entity_type = "minecraft:" + str(mob_type.value) + "_spawn_egg"
+        
+        loot_table f"dnl:jigsaw/{name.value}" {
+            "pools": [
+                {
+                    "rolls": 1,
+                    "entries": [
+                        {
+                            "type": "minecraft:item",
+                            "name": entity_type,
+                            "functions": [
+                                {
+                                    "function": "minecraft:set_name",
+                                    "entity": "this",
+                                    "name": {
+                                        "translate": entity_name3,
+                                        "color": "#FF55FF",
+                                        "italic": false
+                                    }
+                                },
+                                {
+                                    "function": "minecraft:set_nbt",
+                                    "tag": entity_nbt3
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
 ### Boss Bar ###
 
 @listener(on_server_load)
@@ -215,9 +270,11 @@ macro set_bossbar
             for i in range(10):
                 if score @s dnl.bossbar_id matches i run function f"dnl:entity/{name.value}/bossbar_visibility/{i}":
                     if score #dnl.1s dnl.tick matches 1 run function f"dnl:entity/{name.value}/bossbar_player_tick/{i}":
-                        as @a[distance=f"{dist.value}.."] run bossbar set f"dnl:bossbar{i}" visible false
-                        as @a[distance=f"..{dist.value}"] run bossbar set f"dnl:bossbar{i}" visible true
-                        unless entity @a[distance=f"..{dist.value}"] run function ./mob/bossbar/remove_by_range
+                        as @a[distance=f"..{dist.value}"] run function f"dnl:entity/{name.value}/bossbar_sphere/{i}":
+                            bossbar set f"dnl:bossbar{i}" visible true
+                            tag @s add f"dnl.{name.value}.in_sphere_{i}"
+                        as @a[tag=!f"dnl.{name.value}.in_sphere_{i}"] run bossbar set f"dnl:bossbar{i}" visible false
+                        tag @a remove f"dnl.{name.value}.in_sphere_{i}"
                     store result bossbar f"dnl:bossbar{i}" value run scoreboard players get @s dnl.health
         elif range_type.value == "cube":
             diameter = dist.value * 2 - 1

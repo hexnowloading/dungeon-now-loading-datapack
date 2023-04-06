@@ -1,0 +1,13 @@
+from reapermc:event_handler import Event, listener
+from ../api import on_entity_marker_tick
+
+on_marker_raid = Event('on_marker_raid')
+
+@on_marker_raid.handler
+def handler():
+
+    @listener(on_entity_marker_tick)
+    def _on_entity_marker_tick():
+        execute function on_marker_raid.generate_path('marker_raid'):
+            if entity @s[tag=dnl.raid]:
+                on_marker_raid.trigger()

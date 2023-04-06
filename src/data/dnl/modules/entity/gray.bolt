@@ -8,7 +8,7 @@ from reapermc:api import
 add_summon gray wolf none 8 7 0 flame {
     Anger:0,
     Age:-20000,
-    Tags:["dnl.mob","dnl.tick","dnl.gray","dnl.gray.free"],
+    Tags:["dnl.mob","dnl.tick","dnl.gray"],
     PersistenceRequired:1b,
     Health:40f,
     Attributes:[{Name:generic.max_health,Base:40}],
@@ -29,6 +29,7 @@ function ./gray/main:
     if entity @s[tag=!dnl.gray.free] if score #dnl.1s dnl.tick matches 1 if entity @a[distance=..5] run function ./gray/untamed:
         data merge entity @s {NoAI:0b,Sitting:0b}
         tag @s add dnl.gray.free
+        advancement grant @a[distance=..32] only dnl:story/structures/hunters_grave/gray
 
     ### Tamed ###
     if entity @s[tag=dnl.gray.free] if score #dnl.1s dnl.tick matches 1 run function ./gray/tamed:

@@ -213,6 +213,12 @@ function ./chaos_spawner/death:
     as @e[type=#dnl:mobs,tag=dnl.chaos_spawner.minion] if score @s dnl.lid = #dnl.chaos_spawner.core.lid dnl.lid run tp ~ -1000 ~
     as @e[type=area_effect_cloud,tag=dnl.chaos_spawner.mining_fatigue_spell] if score @s dnl.lid = #dnl.chaos_spawner.core.lid dnl.lid run kill @s
     as @e[type=marker,tag=dnl.chaos_spawner.beam] if score @s dnl.lid = #dnl.chaos_spawner.core.lid dnl.lid run kill @s
+    as @e[type=marker,tag=dnl.chaos_spawner.break_wall_water,distance=..20] at @s run setblock ~ ~ ~ minecraft:air destroy
+    as @e[type=marker,tag=dnl.chaos_spawner.break_wall_monolith,distance=..20] at @s run fill ~1 ~2 ~1 ~-1 ~ ~-1 minecraft:air destroy
+    kill @e[type=marker,tag=dnl.chaos_spawner.break_wall_water,distance=..20]
+    kill @e[type=marker,tag=dnl.chaos_spawner.break_wall_monolith,distance=..20]
+    setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/chaos_spawner/reward"}
+    advancement grant @a[distance=..32] only dnl:story/structures/labyrinth/chaos_spawner
     remove_bossbar this
     kill @s
 
@@ -423,3 +429,34 @@ function ./chaos_spawner/beam_eight/main:
     if score @s dnl.timer matches 95 run function ./chaos_spawner/beam/shoot
     if score @s dnl.timer matches 95 run kill @s
     
+loot_table ./chaos_spawner/reward {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/spawner_fragment",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 5,
+                                "max": 8
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_apple"
+                }
+            ]
+        }
+    ]
+}

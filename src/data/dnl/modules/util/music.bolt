@@ -26,6 +26,8 @@ advancement ./music/on_player_play_music {
 @listener(on_entity_item_tick)
 def entity_item_tick():
     if score #dnl.item_entity_id dnl.int matches 9001..9998 if entity @s[tag=!dnl.music_stop] run function ..util/music/stop_music:
+        scoreboard players operation #dnl.music_id dnl.int = #dnl.item_entity_id dnl.int
+        function ./music/stop_music_listener
         stopsound @a[distance=..16] record
         tag @s add dnl.music_stop
 

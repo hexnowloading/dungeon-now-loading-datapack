@@ -8,7 +8,7 @@
         "element_type": "minecraft:single_pool_element",
         "projection": "rigid",
         "location": "dnl:olympus/trial/base/1",
-        "processors": "minecraft:empty"
+        "processors": "dnl:structures/olympus/bedrock_to_andesite"
       }
     }
   ]

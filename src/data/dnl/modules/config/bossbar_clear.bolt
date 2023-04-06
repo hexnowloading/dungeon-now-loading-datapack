@@ -9,6 +9,9 @@ cmd = ctx.meta.dnl.cmd_namespace
 function f"{cmd}:bossbar_clear":
     for i in range(10):
         bossbar remove f"dnl:bossbar{i}"
+    for i in range(10):
+        bossbar remove f"dnl:raidbar{i}"
     scoreboard objectives remove dnl.boolean
     scoreboard objectives remove dnl.bossbar_id
+    scoreboard objectives remove dnl.raidbar_id
     reload

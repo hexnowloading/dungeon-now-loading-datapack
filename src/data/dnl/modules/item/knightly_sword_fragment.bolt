@@ -2,11 +2,15 @@ from ../api import
     get_nbt
     add_custom_model_data
 
+from ../util/monolith import
+    add_item_frame
 id = ctx.meta.item.knightly_sword_fragment
 
-nbt = get_nbt("knightly_sword_fragment", id, "false")
+nbt = get_nbt("knightly_sword_fragment", id, "true")
 
 add_custom_model_data("knightly_sword_fragment", id, "iron_ingot")
+
+add_item_frame("knightly_sword_fragment", "iron_ingot", id)
 
 loot_table ../item/knightly_sword_fragment {
     "pools": [

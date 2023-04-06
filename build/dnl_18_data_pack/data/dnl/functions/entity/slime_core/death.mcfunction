@@ -9,6 +9,8 @@ execute if score #dnl.death_bossbar_id dnl.int matches 6 run function dnl:util/m
 execute if score #dnl.death_bossbar_id dnl.int matches 7 run function dnl:util/mob/bossbar/remove_7
 execute if score #dnl.death_bossbar_id dnl.int matches 8 run function dnl:util/mob/bossbar/remove_8
 execute if score #dnl.death_bossbar_id dnl.int matches 9 run function dnl:util/mob/bossbar/remove_9
+advancement grant @a[distance=..32] only dnl:story/structures/sinkhole/slime_core
 summon marker ~ ~ ~ {Tags: ["dnl.marker", "dnl.slime_core.kill_noai_slime"]}
 schedule function dnl:entity/slime_core/kill_noai_slime 1s
+execute as @e[type=marker, tag=dnl.core, tag=dnl.slime_core] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function dnl:entity/slime_core/summon_reward
 execute as @e[type=marker, tag=dnl.core, tag=dnl.slime_core] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run kill @s

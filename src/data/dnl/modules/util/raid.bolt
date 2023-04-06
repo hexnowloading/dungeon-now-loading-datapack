@@ -1,0 +1,424 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../api import
+    on_marker_raid
+    on_marker_raid_mob
+    assign_lid
+    add_death_event
+
+from ../event/on_marker_raid_jigsaw import 
+    on_marker_raid_jigsaw
+
+from ../event/on_marker_raid_mob_jigsaw import 
+    on_marker_raid_mob_jigsaw
+
+def add_raid(name, structure="", time=30, loot_table="minecraft:empty", range=8, height=7, depth=1):
+
+    width = range * 2 - 1
+    spherical = "false"
+    if height == 0 and depth == 0:
+        spherical = "true"
+    else:
+        width = range * 2 - 1
+    entity_type = "minecraft:pillager_spawn_egg"
+    entity_name = "Raid " + str(name).title().replace("_", " ") + " Spawn Egg"
+    entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.raid\",\"dnl." + str(name) + "\"]}}"
+
+    loot_table f"dnl:raid/{name}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    
+    @listener(on_marker_raid)
+    def marker_raid():
+        if entity @s[tag=f"dnl.{name}"] run function f"dnl:raid/{name}/main"
+    
+    function f"dnl:raid/{name}/main":
+        ### Init ###
+        unless entity @s[tag=dnl.raid.init] run function f"dnl:raid/{name}/init":
+            tag @s add dnl.raid.init
+            setblock ~ ~ ~ minecraft:campfire[lit=false]
+        
+        ### Particle ###
+        particle soul ~ ~0.4 ~ 0.15 0.3 0.15 0.0000001 1 normal
+
+        ### Repair ###
+        unless block ~ ~ ~ minecraft:campfire run function f"dnl:raid/{name}/repair"
+
+        ### Start Raid ###
+        if score #dnl.1s dnl.tick matches 1 if block ~ ~ ~ minecraft:campfire[lit=true] unless entity @s[tag=dnl.raid.start] run function f"dnl:raid/{name}/start"
+        
+        ### While Raid ###
+        if entity @s[tag=dnl.raid.start] run function f"dnl:raid/{name}/while"
+
+    ### Repair ###
+    function f"dnl:raid/{name}/repair":
+        scoreboard players reset #dnl.raid.creative dnl.boolean
+        if entity @a[distance=..10,gamemode=creative] run function f"dnl:raid/{name}/repair/creative":
+            if entity @s[tag=dnl.raid.start] run function ./raid/reset_mobs
+            tag @s remove dnl.raid.start
+            scoreboard players set #dnl.raid.creative dnl.boolean 1
+            remove_raidbar this
+            kill @s
+        unless score #dnl.raid.creative dnl.boolean matches 1 run function f"dnl:raid/{name}/repair/non_creative":
+            playsound minecraft:entity.experience_orb.pickup master @a ~ ~ ~ 1 0.5 0
+            tellraw @a[distance=..10] {"translate":"● You cannot mine this block","color":"red","italic":false}
+            if entity @s[tag=dnl.raid.start] run setblock ~ ~ ~ minecraft:campfire[lit=true]
+            unless entity @s[tag=dnl.raid.start] run setblock ~ ~ ~ minecraft:campfire[lit=false]
+            kill @e[type=minecraft:item,distance=..1,nbt={Age:0s}]
+
+    ### Start ###
+    function f"dnl:raid/{name}/start":
+        tag @s add dnl.raid.start
+        scoreboard players set @s dnl.timer time
+        assign_lid
+        scoreboard players operation #dnl.raid.lid dnl.lid = @s dnl.lid
+        if spherical == "true":
+            store result score @s dnl.var run execute if entity @e[type=marker,tag=dnl.raid_mob_spawn,tag=!dnl.raid_mob_spawn.summoned,distance=f"..{range}"]
+            as @e[type=marker,tag=dnl.raid_mob_spawn,tag=!dnl.raid_mob_spawn.summoned,distance=f"..{range}"] at @s run function dnl:util/raid/summon_mobs
+        else:
+            store result score @s dnl.var positioned ~-range ~-depth ~-range run execute if entity @e[type=marker,tag=dnl.raid_mob_spawn,tag=!dnl.raid_mob_spawn.summoned,dx=width,dy=height,dz=width]
+            positioned ~-range ~-depth ~-range as @e[type=marker,tag=dnl.raid_mob_spawn,tag=!dnl.raid_mob_spawn.summoned,dx=width,dy=height,dz=width] at @s run function dnl:util/raid/summon_mobs
+        scoreboard players operation @e[tag=dnl.new] dnl.lid = @s dnl.lid
+        tag @e remove dnl.new
+        scoreboard players operation @s dnl.health = @s dnl.var
+
+    ### While ###
+    function f"dnl:raid/{name}/while":
+        set_raidbar f"{name}" blue progress sphere 30 0 0
+        if score #dnl.1s dnl.tick matches 1 run scoreboard players remove @s dnl.timer 1
+        if score #dnl.1s dnl.tick matches 1 if score @s dnl.timer matches 6.. positioned ~-range ~-depth ~-range run title @a[dx=width,dy=height,dz=width] actionbar {"score":{"name":"@s","objective":"dnl.timer"},"italic":false,"color":"green"}
+        if score #dnl.1s dnl.tick matches 1 if score @s dnl.timer matches 1..5 positioned ~-range ~-depth ~-range run title @a[dx=width,dy=height,dz=width] actionbar {"score":{"name":"@s","objective":"dnl.timer"},"italic":false,"color":"red"}
+        if score @s dnl.health matches ..0 run function f"dnl:raid/{name}/complete"
+        if score @s dnl.timer matches ..0 run function f"dnl:raid/{name}/end"
+
+    ### Complete ###
+    function f"dnl:raid/{name}/complete":
+        playsound minecraft:entity.arrow.hit_player master @a ~ ~ ~ 1 1 0
+        particle lava ~ ~0.3 ~ 0.3 0.3 0.3 0.0001 10 normal
+        setblock ~ ~ ~ minecraft:campfire[lit=false]
+        tag @s remove dnl.raid.start
+        positioned ~-range ~-depth ~-range run title @a[dx=width,dy=height,dz=width] actionbar {"translate":"Challenge Complete!","color":"gold","italic":false}
+        remove_raidbar this
+        scoreboard players reset #dnl.raid.creative dnl.boolean
+        positioned ~-range ~-depth ~-range if entity @p[gamemode=creative,dx=width,dy=height,dz=width] run function f"dnl:raid/{name}/complete/creative":
+            scoreboard players set #dnl.raid.creative dnl.boolean 1
+            function ./raid/reset_mobs
+            scoreboard players reset @s dnl.timer
+            scoreboard players reset @s dnl.second
+        unless score #dnl.raid.creative dnl.boolean matches 1 run function f"dnl:raid/{name}/complete/survival":
+            setblock ~ ~ ~ chest[type=single]{LootTable:f"{loot_table}"} replace
+            as @e[type=marker,tag=dnl.raid_mob_spawn] if score @s dnl.lid = #dnl.raid.lid dnl.lid run kill @s
+            kill @s
+
+    ### End ###
+    function f"dnl:raid/{name}/end":
+        tag @s remove dnl.raid.start
+        positioned ~-range ~-depth ~-range run title @a[dx=width,dy=height,dz=width] actionbar {"translate":"Time's Up!","color":"red","italic":false}
+        setblock ~ ~ ~ minecraft:campfire[lit=false]
+        function ./raid/reset_mobs
+        remove_raidbar this
+    
+    entity_name3 = str(name).title().replace("_", " ") + "Spawner Chest Jigsaw"
+    entity_nbt3 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.jigsaw\",\"dnl.raid\",\"dnl.raid_jigsaw_" + str(name) + "\"]}}"
+
+
+    loot_table f"dnl:jigsaw/raid_{structure}_{name}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name3,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt3
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    @listener(on_marker_raid_jigsaw)
+    def marker_raid_jigsaw():
+        if entity @s[tag=f"dnl.raid_jigsaw_{name}"] run function f"dnl:util/mob/jigsaw/raid_jigsaw_{structure}_{name}":
+            setblock ~ ~2 ~ jigsaw[orientation=down_north]{name:"dnl:mob_connector",pool:"minecraft:empty",final_state:"minecraft:air",target:"minecraft:empty",joint:"aligned"} replace
+            summon minecraft:marker ~ ~1.01 ~ {Tags:["dnl.marker","dnl.raid",f"dnl.{name}"]}
+            setblock ~ ~ ~ structure_block[mode=save]{name:f"dnl:{structure}/raid/{name}",posX:0,posY:1,posZ:0,sizeX:1,sizeY:2,sizeZ:1,rotation:"NONE",mirror:"NONE",mode:"SAVE",ignoreEntities:0b} replace
+            item replace entity @p weapon.mainhand with jigsaw{BlockEntityTag:{joint:"aligned",name:"minecraft:empty",pool:f"dnl:{structure}/raid/{name}",final_state:"minecraft:air",target:"dnl:mob_connector"}}
+            kill @s
+
+function ./raid/reset_mobs:
+    scoreboard players operation #dnl.raid.lid dnl.lid = @s dnl.lid
+    as @e[tag=dnl.raid_mob] if score @s dnl.lid = #dnl.raid.lid dnl.lid run tp @s ~ -1000 ~
+    as @e[type=marker,tag=dnl.raid_mob_spawn] if score @s dnl.lid = #dnl.raid.lid dnl.lid run tag @s remove dnl.raid_mob_spawn.summoned
+
+### Boss Bar ###
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.raidbar_id dummy
+    for i in range(10):
+        bossbar add f"dnl:raidbar{i}" {"translate":"Reserved","color":"aqua"}
+
+macro set_raidbar
+    name=brigadier:string{"type": "word"}
+    bar_color=brigadier:string{"type": "word"}
+    bar_style=brigadier:string{"type": "word"}
+    range_type=brigadier:string{"type": "word"}
+    dist=brigadier:float
+    height=brigadier:float
+    depth=brigadier:float:
+        if range_type.value == "sphere":
+            if entity @p[distance=f"..{dist.value}"] if entity @s[tag=!dnl.raidbar] run function f"dnl:raid/{name.value}/set_bossbar":
+                function dnl:util/raid/bossbar/assign
+                for i in range(10):
+                    if score @s dnl.raidbar_id matches i run function f"dnl:raid/{name.value}/bossbar_set/{i}":
+                        bossbar set f"dnl:raidbar{i}" name {"translate":"▪ ","color":"#FFAA00","bold":false,"italic":false,"extra":[{"translate":"Remaining Mobs","extra":[{"translate":" ▪","color":"#FFAA00"}]}]}
+                        # {"translate":f"{str(name.value).title().replace("_", " ")}","color":"#FFFF55","bold":true,"italic":false}
+                        # str(name.value).title().replace("_", " ")
+                        if bar_color.value == "blue":
+                            bossbar set f"dnl:raidbar{i}" color blue
+                        elif bar_color.value == "green":
+                            bossbar set f"dnl:raidbar{i}" color green
+                        elif bar_color.value == "pink":
+                            bossbar set f"dnl:raidbar{i}" color pink
+                        elif bar_color.value == "purple":
+                            bossbar set f"dnl:raidbar{i}" color purple
+                        elif bar_color.value == "red":
+                            bossbar set f"dnl:raidbar{i}" color red
+                        elif bar_color.value == "yellow":
+                            bossbar set f"dnl:raidbar{i}" color yellow
+                        else:
+                            bossbar set f"dnl:raidbar{i}" color white
+                        store result bossbar f"dnl:raidbar{i}" max run scoreboard players get @s dnl.var
+                        store result bossbar f"dnl:raidbar{i}" value run scoreboard players get @s dnl.var
+                        bossbar set f"dnl:raidbar{i}" players @a
+                        if bar_style.value == "notched_6":
+                            bossbar set f"dnl:raidbar{i}" style notched_6
+                        elif bar_style.value == "notched_10":
+                            bossbar set f"dnl:raidbar{i}" style notched_10
+                        elif bar_style.value == "notched_12":
+                            bossbar set f"dnl:raidbar{i}" style notched_12
+                        elif bar_style.value == "notched_20":
+                            bossbar set f"dnl:raidbar{i}" style notched_20
+                        else:
+                            bossbar set f"dnl:raidbar{i}" style progress
+            for i in range(10):
+                if score @s dnl.raidbar_id matches i run function f"dnl:raid/{name.value}/bossbar_visibility/{i}":
+                    if score #dnl.1s dnl.tick matches 1 run function f"dnl:raid/{name.value}/bossbar_player_tick/{i}":
+                        as @a[distance=f"{dist.value}.."] run bossbar set f"dnl:raidbar{i}" visible false
+                        as @a[distance=f"..{dist.value}"] run bossbar set f"dnl:raidbar{i}" visible true
+                        unless entity @a[distance=f"..{dist.value}"] run function ./raid/bossbar/remove_by_range
+                    store result bossbar f"dnl:raidbar{i}" value run scoreboard players get @s dnl.health
+        elif range_type.value == "cube":
+            diameter = dist.value * 2 - 1
+            positioned ~-dist.value ~-depth.value ~-dist.value if entity @p[dx=diameter,dy=height.value,dz=diameter] if entity @s[tag=!dnl.raidbar] run function f"dnl:raid/{name.value}/set_bossbar":
+                function dnl:util/raid/bossbar/assign
+                for i in range(10):
+                    if score @s dnl.raidbar_id matches i run function f"dnl:raid/{name.value}/bossbar_set/{i}":
+                        bossbar set f"dnl:raidbar{i}" name {"translate":"▪ ","color":"#FFAA00","bold":false,"italic":false,"extra":[{"translate":"Remaining Mobs","extra":[{"translate":" ▪","color":"#FFAA00"}]}]}
+                        # {"translate":f"{str(name.value).title().replace("_", " ")}","color":"#FFFF55","bold":true,"italic":false}
+                        # str(name.value).title().replace("_", " ")
+                        if bar_color.value == "blue":
+                            bossbar set f"dnl:raidbar{i}" color blue
+                        elif bar_color.value == "green":
+                            bossbar set f"dnl:raidbar{i}" color green
+                        elif bar_color.value == "pink":
+                            bossbar set f"dnl:raidbar{i}" color pink
+                        elif bar_color.value == "purple":
+                            bossbar set f"dnl:raidbar{i}" color purple
+                        elif bar_color.value == "red":
+                            bossbar set f"dnl:raidbar{i}" color red
+                        elif bar_color.value == "yellow":
+                            bossbar set f"dnl:raidbar{i}" color yellow
+                        else:
+                            bossbar set f"dnl:raidbar{i}" color white
+                        store result bossbar f"dnl:raidbar{i}" max run scoreboard players get @s dnl.var
+                        store result bossbar f"dnl:raidbar{i}" value run scoreboard players get @s dnl.var
+                        bossbar set f"dnl:raidbar{i}" players @a
+                        if bar_style.value == "notched_6":
+                            bossbar set f"dnl:raidbar{i}" style notched_6
+                        elif bar_style.value == "notched_10":
+                            bossbar set f"dnl:raidbar{i}" style notched_10
+                        elif bar_style.value == "notched_12":
+                            bossbar set f"dnl:raidbar{i}" style notched_12
+                        elif bar_style.value == "notched_20":
+                            bossbar set f"dnl:raidbar{i}" style notched_20
+                        else:
+                            bossbar set f"dnl:raidbar{i}" style progress
+            for i in range(10):
+                if score @s dnl.raidbar_id matches i positioned ~-dist.value ~-depth.value ~-dist.value run function f"dnl:raid/{name.value}/bossbar_visibility/{i}":
+                    if score #dnl.1s dnl.tick matches 1 run function f"dnl:raid/{name.value}/bossbar_player_tick/{i}":
+                        as @a[dx=diameter,dy=height.value,dz=diameter] run function f"dnl:raid/{name.value}/bossbar_cube/{i}":
+                            bossbar set f"dnl:raidbar{i}" visible true
+                            tag @s add f"dnl.{name.value}.in_cube_{i}"
+                        as @a[tag=!f"dnl.{name.value}.in_cube_{i}"] run bossbar set f"dnl:raidbar{i}" visible false
+                        tag @a remove f"dnl.{name.value}.in_cube_{i}"
+                        unless entity @a[dx=diameter,dy=height.value,dz=diameter] run function ./raid/bossbar/remove_by_range
+                    store result bossbar f"dnl:raidbar{i}" value run scoreboard players get @s dnl.health
+
+function ./raid/bossbar/assign:
+    scoreboard players set #dnl.raidbar_assigned dnl.boolean 0
+    for i in range(10):
+        unless score #dnl.raidbar_assigned dnl.boolean matches 1 unless score f"#dnl.raidbar{i}" dnl.boolean matches 1 run function f"dnl:util/raid/bossbar/assign_{i}":
+            scoreboard players set f"#dnl.raidbar{i}" dnl.boolean 1
+            scoreboard players set #dnl.raidbar_assigned dnl.boolean 1
+            scoreboard players set @s dnl.raidbar_id i
+            tag @s add dnl.raidbar
+
+function ./raid/bossbar/remove_by_range:
+    for i in range(10):
+        if score @s dnl.raidbar_id matches i run function f"dnl:util/raid/bossbar/remove_{i}"
+    scoreboard players reset @s dnl.raidbar_id
+    tag @s remove dnl.raidbar
+
+for i in range(10):
+    function f"dnl:util/raid/bossbar/remove_{i}":
+        scoreboard players set f"#dnl.raidbar{i}" dnl.boolean 0
+        as @a run bossbar set f"dnl:raidbar{i}" visible false
+
+macro remove_raidbar
+    type=brigadier:string{"type": "word"}:
+    if type.value == "item":
+        store result score #dnl.death_raidbar_id dnl.int run data get entity @s Item.tag.dnl.raidbar_id
+        for i in range(10):
+            if score #dnl.death_raidbar_id dnl.int matches i run function f"dnl:util/raid/bossbar/remove_{i}"
+    elif type.value == "this":
+        function ./raid/bossbar/remove_by_range
+
+### Raid Mob ###
+macro add_raid_mob_summon
+    name=brigadier:string{"type": "word"}
+    structure=brigadier:string{"type": "word"}
+    mob_type=brigadier:string{"type": "word"}
+    nbt=minecraft:nbt_compound_tag:
+
+    entity_type = "minecraft:ravager_spawn_egg"
+    entity_name = "Raid Mob" + str(name.value).title().replace("_", " ") + " Spawn Egg"
+    entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.raid_mob_spawn\",\"dnl." + str(name.value) + "\"]}}"
+
+    loot_table f"dnl:raid_mob/{name.value}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    
+    @listener(on_marker_raid_mob)
+    def marker_raid_mob():
+        if entity @s[tag=f"dnl.{name.value}"] run function f"dnl:raid_mob/{name.value}":
+            particle poof ~ ~ ~ 0.3 1 0.3 0.0001 5 normal
+            summon f"minecraft:{mob_type.value}" ~ ~ ~ nbt
+            scoreboard players operation @s dnl.lid = #dnl.raid.lid dnl.lid
+            tag @s add dnl.raid_mob_spawn.summoned
+    
+    entity_name3 = str(name.value).title().replace("_", " ") + " Raid Mob Jigsaw"
+    entity_nbt3 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.jigsaw\",\"dnl.raid_mob\",\"dnl.raid_mob_jigsaw_" + str(name.value) + "\"]}}"
+
+
+    loot_table f"dnl:jigsaw/raid_mob_{structure.value}_{name.value}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name3,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt3
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    @listener(on_marker_raid_mob_jigsaw)
+    def marker_raid_mob_jigsaw():
+        if entity @s[tag=f"dnl.raid_mob_jigsaw_{name.value}"] run function f"dnl:util/mob/jigsaw/raid_mob_jigsaw_{structure.value}_{name.value}":
+            setblock ~ ~2 ~ jigsaw[orientation=down_north]{name:"dnl:mob_connector",pool:"minecraft:empty",final_state:"minecraft:air",target:"minecraft:empty",joint:"aligned"} replace
+            summon minecraft:marker ~ ~1.01 ~ {Tags:["dnl.marker","dnl.raid_mob_spawn",f"dnl.{name.value}"]}
+            setblock ~ ~ ~ structure_block[mode=save]{name:f"dnl:{structure.value}/raid_mob/{name.value}",posX:0,posY:1,posZ:0,sizeX:1,sizeY:2,sizeZ:1,rotation:"NONE",mirror:"NONE",mode:"SAVE",ignoreEntities:0b} replace
+            item replace entity @p weapon.mainhand with jigsaw{BlockEntityTag:{joint:"aligned",name:"minecraft:empty",pool:f"dnl:{structure.value}/raid_mob/{name.value}",final_state:"minecraft:air",target:"dnl:mob_connector"}}
+            kill @s
+    
+add_death_event("raid_mob","util/raid")
+
+function ./raid/raid_mob/death:
+    as @e[type=marker,tag=dnl.raid] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run scoreboard players remove @s dnl.health 1
+    kill @e[type=experience_orb,nbt={Age:0s}]
+# macro raid_mob_function
+            

@@ -1,0 +1,10 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_marker_raid_mob = Event('on_marker_raid_mob')
+
+@on_marker_raid_mob.handler
+def handler():
+    execute function on_marker_raid_mob.generate_path('marker_raid_mob'):
+        function ../util/raid/summon_mobs:
+            on_marker_raid_mob.trigger()

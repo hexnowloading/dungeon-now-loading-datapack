@@ -1,0 +1,39 @@
+from ../api import
+    on_entity_effect
+
+from reapermc:api import
+    listener
+    on_server_load
+
+@listener(on_entity_effect)
+def entity_effect():
+    if entity @s[tag=dnl.pumpkin_curse] run function ./pumpkin_curse/effect
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.timer.pumpkin_curse dummy
+
+function ./pumpkin_curse/apply:
+    unless entity @s[tag=dnl.pumpkin_curse] run scoreboard players add @s dnl.effect 1
+    tag @s add dnl.pumpkin_curse
+
+function ./pumpkin_curse/apply_bow:
+    unless entity @s[tag=dnl.pumpkin_curse] run scoreboard players add @s dnl.effect 1
+    tag @s add dnl.pumpkin_curse
+
+function ./pumpkin_curse/remove:
+    item replace entity @s armor.head with minecraft:air
+    scoreboard players remove @s dnl.effect 1
+    scoreboard players reset @s dnl.timer.pumpkin_curse
+    tag @s remove dnl.pumpkin_curse
+
+function ./pumpkin_curse/effect:
+    scoreboard players add @s dnl.timer.pumpkin_curse 1
+    execute if score @s dnl.timer.pumpkin_curse matches 1 run item replace entity @s armor.head with minecraft:carved_pumpkin
+    execute if score @s dnl.timer.pumpkin_curse matches 1 run effect give @s minecraft:slowness 10 2 false
+    execute if score @s dnl.timer.pumpkin_curse matches 1 run effect give @s minecraft:weakness 10 2 false
+    execute if score @s dnl.timer.pumpkin_curse matches 200.. run function ./pumpkin_curse/remove
+
+    scoreboard players reset #dnl.pumpkin_curse.fire_duration dnl.int
+    unless score #dnl.pumpkin_curse.fire_duration dnl.int matches 1.. store result score #dnl.pumpkin_curse.fire_duration dnl.int run data get entity @s Fire 1
+    if score #dnl.pumpkin_curse.fire_duration dnl.int matches 1.. run item replace entity @s armor.head with minecraft:jack_o_lantern

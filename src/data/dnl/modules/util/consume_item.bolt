@@ -1,0 +1,23 @@
+
+advancement ./on_player_consume_item {
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:consume_item",
+            "conditions": {
+                "item": {
+                    "tag": "dnl:consumables",
+                    "nbt": "{dnl:{item:1}}"
+                }
+            }
+        }
+    },
+    "rewards": {
+        "function": "dnl:util/consume_item/trigger"
+    }
+}
+
+function ./consume_item/trigger:
+    advancement revoke @s only ./on_player_consume_item
+    if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.consumed_item_id dnl.int = @s dnl.offhand
+    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.consumed_item_id dnl.int = @s dnl.mainhand
+    if score #dnl.consumed_item_id dnl.int matches 1.. function ./consume_item/listener

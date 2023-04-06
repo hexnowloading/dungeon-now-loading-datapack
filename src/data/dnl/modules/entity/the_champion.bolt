@@ -14,7 +14,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon the_champion skeleton boss 8 7 0 flame {
+add_summon the_champion skeleton boss 6 0 0 flame {
     DeathLootTable:"dnl:entity/the_champion/death",
     Tags:["dnl.tick","dnl.mob","dnl.the_champion"],
     PersistenceRequired:1b,
@@ -43,13 +43,13 @@ def marker_core():
         ### Start ###
         if entity @s[tag=dnl.start] if score #dnl.1s dnl.tick matches 1 run function ./the_champion/core/start:
             scoreboard players operation #dnl.the_champion.core.lid dnl.lid = @s dnl.lid
-            unless entity @a[distance=..30] run tag @s add dnl.reset
+            unless entity @a[distance=..42] run tag @s add dnl.reset
             as @e[type=skeleton,tag=dnl.the_champion] if score @s dnl.lid = #dnl.the_champion.core.lid dnl.lid unless entity @s[distance=..30] run tp @s ~ ~ ~
         
         ### Reset ###
         if entity @s[tag=dnl.reset] run function ./the_champion/core/reset:
             scoreboard players operation #dnl.the_champion.core.lid dnl.lid = @s dnl.lid
-            as @e[type=skeleton,tag=dnl.the_champion,distance=..30] if score @s dnl.lid = #dnl.the_champion.core.lid dnl.lid run tag @s add dnl.reset
+            as @e[type=skeleton,tag=dnl.the_champion,distance=..42] if score @s dnl.lid = #dnl.the_champion.core.lid dnl.lid run tag @s add dnl.reset
             as @e[type=skeleton,tag=dnl.the_champion.minion] if score @s dnl.lid = #dnl.the_champion.core.lid dnl.lid run tp ~ -1000 ~
             tag @s remove dnl.start
             tag @s remove dnl.reset
@@ -67,18 +67,18 @@ function ./the_champion/main:
         scoreboard players operation #dnl.the_champion.lid dnl.lid = @s dnl.lid
 
         ### Link ID Existing The Champion Core Marker ###
-        as @e[type=marker,tag=dnl.core,tag=dnl.the_champion,distance=..30] run function ./the_champion/core/copy:
+        as @e[type=marker,tag=dnl.core,tag=dnl.the_champion,distance=..42] run function ./the_champion/core/copy:
             scoreboard players operation @s dnl.lid = #dnl.the_champion.lid dnl.lid
             tag @s add dnl.start
 
         ### Summon and Link ID The Champion Core Marker ###
-        unless entity @e[type=marker,tag=dnl.core,tag=dnl.the_champion,distance=..30] run function ./the_champion/core/setup:
+        unless entity @e[type=marker,tag=dnl.core,tag=dnl.the_champion,distance=..42] run function ./the_champion/core/setup:
             summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.core","dnl.the_champion","dnl.start","dnl.core.new_marker"]}
             scoreboard players operation @e[type=marker,tag=dnl.core.new_marker] dnl.lid = @s dnl.lid
             tag @e[type=marker,tag=dnl.core.new_marker] remove dnl.core.new_marker
     
     ### Boss Bar ###
-    set_bossbar the_champion purple notched_10 300 sphere 30 0 0
+    set_bossbar the_champion purple notched_10 300 sphere 42 0 0
     store result score @s dnl.health run data get entity @s Health 1
 
     ### Reset ###
@@ -314,5 +314,137 @@ function ./the_champion/weapon/remove_offhand:
 
 function ./the_champion/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.the_champion] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/olympus/lord_of_olympus
+    as @e[type=marker,tag=dnl.core,tag=dnl.the_champion] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function ./the_champion/core/death: 
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/the_champion/reward"}
+        kill @s
     as @e[type=skeleton,tag=dnl.the_champion.minion] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run tp ~ -1000 ~
+
+loot_table ./the_champion/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/ancient_sword"
+                },
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/ancient_axe"
+                },
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/ancient_pickaxe"
+                },
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/ancient_shield"
+                },
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/ancient_bow"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_melon",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/crown_of_olympus",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:netherite_scrap",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 8,
+                                "max": 16
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:player_head",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{SkullOwner:{Id:[I;515157811,511200210,-1116696388,-1312666365],Properties:{textures:[{Value:'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjQ4ZmE5NGNkZGIyNGIzODQ1MzI4MTM1MWU1OGJiZTM2OGYzMzY1ZGI4ZDc2ZTQ2NDgxNzcxYjIwMjM1Mjk4NiJ9fX0='}]}}}"
+                        },
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "The Champion's Head",
+                                "italic": false
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:bone",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 10,
+                                "max": 20
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:maps/temple_of_tears"
+                }
+            ]
+        }
+    ]
+}

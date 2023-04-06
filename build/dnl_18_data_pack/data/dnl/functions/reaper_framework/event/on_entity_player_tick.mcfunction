@@ -1,7 +1,7 @@
+execute if entity @s[tag=!dnl.init] run function dnl:config/death_penalty/nested_execute_0
+execute if entity @s[tag=dnl.marker_visibility] at @e[type=#dnl:invisible] run function dnl:config/marker_visibility/init
 execute if score @s reaper_framework.event_handler.on_entity_player_join matches -1 run function dnl:reaper_framework/event_handler/on_entity_player_join/join
 execute if score @s reaper_framework.event_handler.on_entity_player_join matches 1.. run scoreboard players set @s reaper_framework.event_handler.on_entity_player_join -1
-execute if entity @s[tag=dnl.marker_visibility] at @e[type=marker, tag=dnl.marker, distance=..16] run particle end_rod ~ ~ ~ 0 0 0 0.001 1 normal @s
-execute if entity @s[tag=!dnl.init] run function dnl:item/abstract_forbidden_fruit/nested_execute_0
 function dnl:reaper_framework/event_handler/on_player_respawn/player_respawn
 function dnl:reaper_framework/event_handler/on_player_hold_item/hold_item
 execute store result score @s dnl.offhand run data get entity @s Inventory[{Slot: -106b}].tag.dnl.id

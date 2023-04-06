@@ -12,7 +12,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon frost_watcher skeleton boss 8 7 0 flame {
+add_summon frost_watcher skeleton boss 64 0 0 flame {
     DeathLootTable:"dnl:entity/frost_watcher/death",
     Tags:["dnl.boss","dnl.mob","dnl.tick","dnl.frost_watcher"],
     PersistenceRequired:1b,
@@ -34,8 +34,8 @@ def marker_core():
     if entity @s[tag=dnl.frost_watcher] run function ./frost_watcher/core/main:
         if entity @s[tag=dnl.reset] run function ./frost_watcher/core/reset:
             tag @s remove dnl.reset
-            scoreboard players set @e[tag=dnl.frost_watcher_minion,distance=..30] dnl.timer 1200
-            tp @e[type=stray,tag=dnl.frost_watcher_guard,distance=..30] ~ ~-1000 ~
+            scoreboard players set @e[tag=dnl.frost_watcher_minion,distance=..64] dnl.timer 1200
+            tp @e[type=stray,tag=dnl.frost_watcher_guard,distance=..64] ~ ~-1000 ~
             function ../spawner/frost_watcher
 
 @listener(on_entity_hurt_attacker)
@@ -58,15 +58,15 @@ function ./frost_watcher/main:
         assign_equipment mainhand set
 
         scoreboard players operation #dnl.frost_watcher.id dnl.eid = @s dnl.eid
-        as @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher,distance=..30] run function ./frost_watcher/core/copy:
+        as @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher,distance=..64] run function ./frost_watcher/core/copy:
             scoreboard players operation @s dnl.eid = #dnl.frost_watcher.id dnl.eid
-        unless entity @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher,distance=..30] run function ./frost_watcher/core/setup:
+        unless entity @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher,distance=..64] run function ./frost_watcher/core/setup:
             summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.core","dnl.frost_watcher","dnl.new_marker"]}
             scoreboard players operation @e[type=marker,tag=dnl.new_marker] dnl.eid = @s dnl.eid
             tag @e[type=marker,tag=dnl.new_marker] remove dnl.new_marker
     
     ### Boss Bar ###
-    set_bossbar frost_watcher purple notched_10 300 sphere 30 0 0
+    set_bossbar frost_watcher purple notched_10 300 sphere 64 0 0
     store result score @s dnl.health run data get entity @s Health 1
 
     ### Arena ###
@@ -75,8 +75,8 @@ function ./frost_watcher/main:
     if score #dnl.1s dnl.tick matches 1 run function ./frost_watcher/core/tick:
         tag @s add dnl.this
         as @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher] if score @s dnl.eid = #dnl.frost_watcher.id dnl.eid run function ./frost_watcher/core/check:
-            at @s unless entity @a[distance=..30] run function ./frost_watcher/core/trigger_reset
-            if entity @s[distance=30..] at @s run tp @e[type=skeleton,tag=dnl.frost_watcher,tag=dnl.this] ~ ~ ~
+            at @s unless entity @a[distance=..64] run function ./frost_watcher/core/trigger_reset
+            if entity @s[distance=64..] at @s run tp @e[type=skeleton,tag=dnl.frost_watcher,tag=dnl.this] ~ ~ ~
         tag @s remove dnl.this
     if score #dnl.frost_watcher.reset dnl.boolean matches 1 run function ./frost_watcher/reset:
         data modify entity @s DeathLootTable set value "minecraft:empty"
@@ -120,5 +120,23 @@ function ./frost_watcher/core/trigger_reset:
 
 function ./frost_watcher/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/watcher_camp/frost_watcher
+    as @e[type=marker,tag=dnl.core,tag=dnl.frost_watcher] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function ./frost_watcher/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/frost_watcher/reward"}
+        kill @s
+
+loot_table ./frost_watcher/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_berries"
+                }
+            ]
+        }
+    ]
+}
 

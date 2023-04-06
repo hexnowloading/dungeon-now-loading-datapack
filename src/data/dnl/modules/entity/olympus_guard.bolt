@@ -6,7 +6,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon olympus_archer skeleton none 8 7 0 flame {
+add_summon olympus_archer skeleton none 16 0 0 flame {
     DeathLootTable:"dnl:entity/olympus_archer/reward",
     Tags:["dnl.mob","dnl.tick","dnl.olympus_guard","dnl.olympus_archer"],
     PersistenceRequired:1b,
@@ -17,7 +17,7 @@ add_summon olympus_archer skeleton none 8 7 0 flame {
     ArmorItems:[{id:"minecraft:netherite_boots",Count:1b},{id:"minecraft:netherite_leggings",Count:1b},{id:"minecraft:netherite_chestplate",Count:1b},{id:"minecraft:netherite_helmet",Count:1b}]
 }
 
-add_summon olympus_swordsmen skeleton none 8 7 0 flame {
+add_summon olympus_swordsmen skeleton none 16 0 0 flame {
     DeathLootTable:"dnl:entity/olympus_swordsmen/reward",
     Tags:["dnl.mob","dnl.tick","dnl.olympus_guard","dnl.olympus_swordsmen"],
     PersistenceRequired:1b,
@@ -28,7 +28,7 @@ add_summon olympus_swordsmen skeleton none 8 7 0 flame {
     ArmorItems:[{id:"minecraft:netherite_boots",Count:1b},{id:"minecraft:netherite_leggings",Count:1b},{id:"minecraft:netherite_chestplate",Count:1b},{id:"minecraft:netherite_helmet",Count:1b}]
 }
 
-add_summon olympus_charger skeleton none 8 7 0 flame {
+add_summon olympus_charger skeleton none 16 0 0 flame {
     DeathLootTable:"dnl:entity/olympus_charger/reward",
     Tags:["dnl.mob","dnl.tick","dnl.olympus_guard","dnl.olympus_charger"],
     PersistenceRequired:1b,
@@ -39,7 +39,7 @@ add_summon olympus_charger skeleton none 8 7 0 flame {
     ArmorItems:[{id:"minecraft:netherite_boots",Count:1b},{id:"minecraft:netherite_leggings",Count:1b},{id:"minecraft:netherite_chestplate",Count:1b},{id:"minecraft:netherite_helmet",Count:1b}]
 }
 
-add_summon olympus_knight skeleton none 8 7 0 flame {
+add_summon olympus_knight skeleton none 16 0 0 flame {
     DeathLootTable:"dnl:entity/olympus_knight/reward",
     Tags:["dnl.mob","dnl.tick","dnl.olympus_guard","dnl.olympus_knight"],
     PersistenceRequired:1b,
@@ -50,7 +50,7 @@ add_summon olympus_knight skeleton none 8 7 0 flame {
     ArmorItems:[{id:"minecraft:netherite_boots",Count:1b},{id:"minecraft:netherite_leggings",Count:1b},{id:"minecraft:netherite_chestplate",Count:1b},{id:"minecraft:netherite_helmet",Count:1b}]
 }
 
-add_summon olympus_miner skeleton none 8 7 0 flame {
+add_summon olympus_miner skeleton none 16 0 0 flame {
     DeathLootTable:"dnl:entity/olympus_miner/reward",
     Tags:["dnl.mob","dnl.tick","dnl.olympus_guard","dnl.olympus_miner"],
     PersistenceRequired:1b,
@@ -104,13 +104,31 @@ loot_table ./olympus_archer/reward {
                         {
                             "function": "minecraft:set_count",
                             "count": 1
-                        }
-                    ],
-                    "conditions": [
+                        },
                         {
-                            "condition": "minecraft:random_chance_with_looting",
-                            "chance": 0.01,
-                            "looting_multiplier": 0.01
+                            "function": "minecraft:set_damage",
+                            "damage": {
+                                "min": 0.001,
+                                "max": 0.02
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Cannot Be Repaired",
+                                    "color": "#FF5555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{RepairCost:40}"
+                        },
+                        {
+                            "function": "minecraft:enchant_randomly"
                         }
                     ]
                 }
@@ -118,6 +136,7 @@ loot_table ./olympus_archer/reward {
         }
     ]
 }
+
 
 loot_table ./olympus_charger/reward {
     "pools": [
@@ -131,13 +150,31 @@ loot_table ./olympus_charger/reward {
                         {
                             "function": "minecraft:set_count",
                             "count": 1
-                        }
-                    ],
-                    "conditions": [
+                        },
                         {
-                            "condition": "minecraft:random_chance_with_looting",
-                            "chance": 0.01,
-                            "looting_multiplier": 0.01
+                            "function": "minecraft:set_damage",
+                            "damage": {
+                                "min": 0.001,
+                                "max": 0.02
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Cannot Be Repaired",
+                                    "color": "#FF5555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{RepairCost:40}"
+                        },
+                        {
+                            "function": "minecraft:enchant_randomly"
                         }
                     ]
                 }
@@ -158,13 +195,66 @@ loot_table ./olympus_knight/reward {
                         {
                             "function": "minecraft:set_count",
                             "count": 1
-                        }
-                    ],
-                    "conditions": [
+                        },
                         {
-                            "condition": "minecraft:random_chance_with_looting",
-                            "chance": 0.01,
-                            "looting_multiplier": 0.01
+                            "function": "minecraft:set_damage",
+                            "damage": {
+                                "min": 0.001,
+                                "max": 0.02
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Cannot Be Repaired",
+                                    "color": "#FF5555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{RepairCost:40}"
+                        },
+                        {
+                            "function": "minecraft:enchant_randomly"
+                        }
+                    ]
+                },
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/ancient_shield",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": 1
+                        },
+                        {
+                            "function": "minecraft:set_damage",
+                            "damage": {
+                                "min": 0.001,
+                                "max": 0.02
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Cannot Be Repaired",
+                                    "color": "#FF5555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{RepairCost:40}"
+                        },
+                        {
+                            "function": "minecraft:enchant_randomly"
                         }
                     ]
                 }
@@ -185,13 +275,31 @@ loot_table ./olympus_miner/reward {
                         {
                             "function": "minecraft:set_count",
                             "count": 1
-                        }
-                    ],
-                    "conditions": [
+                        },
                         {
-                            "condition": "minecraft:random_chance_with_looting",
-                            "chance": 0.01,
-                            "looting_multiplier": 0.01
+                            "function": "minecraft:set_damage",
+                            "damage": {
+                                "min": 0.001,
+                                "max": 0.02
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Cannot Be Repaired",
+                                    "color": "#FF5555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{RepairCost:40}"
+                        },
+                        {
+                            "function": "minecraft:enchant_randomly"
                         }
                     ]
                 }
@@ -212,13 +320,31 @@ loot_table ./olympus_swordsmen/reward {
                         {
                             "function": "minecraft:set_count",
                             "count": 1
-                        }
-                    ],
-                    "conditions": [
+                        },
                         {
-                            "condition": "minecraft:random_chance_with_looting",
-                            "chance": 0.01,
-                            "looting_multiplier": 0.01
+                            "function": "minecraft:set_damage",
+                            "damage": {
+                                "min": 0.001,
+                                "max": 0.02
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Cannot Be Repaired",
+                                    "color": "#FF5555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{RepairCost:40}"
+                        },
+                        {
+                            "function": "minecraft:enchant_randomly"
                         }
                     ]
                 }

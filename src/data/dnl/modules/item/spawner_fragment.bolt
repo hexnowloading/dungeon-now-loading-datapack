@@ -5,11 +5,16 @@ from ../api import
     get_nbt
     add_custom_model_data
 
+from ../util/monolith import
+    add_item_frame
+
 id = ctx.meta.item.spawner_fragment
 
 nbt = get_nbt("spawner_fragment", id)
 
 add_custom_model_data("spawner_fragment", id, "iron_nugget")
+
+add_item_frame("spawner_fragment", "iron_nugget", id)
 
 loot_table ../item/spawner_fragment {
     "pools": [

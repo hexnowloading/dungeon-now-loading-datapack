@@ -5,7 +5,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon oasis_trident armor_stand none 8 7 0 flame {
+add_summon oasis_trident armor_stand none 16 0 0 flame {
     Rotation:[90.0f,0.0f],
     Tags:["dnl.mob","dnl.tick","dnl.oasis_trident"],
     Invulnerable:0b,

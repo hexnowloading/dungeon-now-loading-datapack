@@ -3,16 +3,18 @@ from reapermc:api import
 
 from ../api import
     in_player_setting
+    on_entity_player_init
 
 cmd = ctx.meta.dnl.cmd_namespace
 
-@listener(in_player_setting)
-def player_setting():
+@listener(on_entity_player_init)
+def entity_player_init():
     # Default Death Penalty Level
     #  0 - peaceful
     #  1 - casual
     #  2 - expert
     #  3 - hardcore
+    say player setting
     scoreboard players set @s dnl.death_penalty_level 1
 
 function f"{cmd}:death_penalty":

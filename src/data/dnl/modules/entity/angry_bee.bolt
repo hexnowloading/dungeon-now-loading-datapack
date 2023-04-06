@@ -6,7 +6,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon angry_bee bee none 8 7 0 flame {DeathLootTable:"minecraft:empty",Tags:["dnl.mob","dnl.tick","dnl.angry_bee"],AngerTime:9999,Anger:9999,CannotEnterHiveTicks:1000000}
+add_summon angry_bee bee none 16 0 0 flame {DeathLootTable:"minecraft:empty",Tags:["dnl.mob","dnl.tick","dnl.angry_bee"],AngerTime:9999,Anger:9999,CannotEnterHiveTicks:1000000}
  
 @listener(on_entity_mob_tick)
 def entity_mob_tick():

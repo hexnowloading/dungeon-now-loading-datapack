@@ -412,6 +412,59 @@ function ./camp_chief/weapon/remove_offhand:
 
 function ./camp_chief/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.camp_chief] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/pillager_camp/camp_chief
+    as @e[type=marker,tag=dnl.core,tag=dnl.camp_chief] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function ./camp_chief/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/camp_chief/reward"}
+        kill @s
     as @e[type=#dnl:illagers,tag=dnl.camp_chief.minion] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
     as @e[type=armor_stand,tag=dnl.camp_chief.shield] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
+    kill @e[type=marker,tag=dnl.raid_mob_spawn,distance=..100]
+
+loot_table ./camp_chief/reward {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "weight": 1,
+                    "name": "dnl:item/ominous_axe"
+                },
+                {
+                    "type": "minecraft:loot_table",
+                    "weight": 1,
+                    "name": "dnl:item/ominous_crossbow"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_apple"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:emerald",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 32,
+                                "max": 64
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+

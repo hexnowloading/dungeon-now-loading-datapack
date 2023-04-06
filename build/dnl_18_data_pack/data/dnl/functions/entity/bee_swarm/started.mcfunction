@@ -14,5 +14,5 @@ execute if score #dnl.1s dnl.tick matches 1 run function dnl:entity/bee_swarm/ch
 execute if score @s dnl.phase matches 1 run function dnl:entity/bee_swarm/phase_1/main
 execute if score @s dnl.phase matches 2 run function dnl:entity/bee_swarm/phase_2/main
 execute if score @s dnl.phase matches 3 run function dnl:entity/bee_swarm/phase_3/main
-execute if score #dnl.1s dnl.tick matches 1 run function dnl:entity/bee_swarm/reset_check
+execute if score #dnl.1s dnl.tick matches 1 unless entity @a[distance=..15] run function dnl:entity/bee_swarm/reset
 execute if score @s dnl.health matches ..0 run function dnl:entity/bee_swarm/death

@@ -10,24 +10,6 @@
                 "location": "dnl:plains_castle/base/1",
                 "processors": "minecraft:empty"
             }
-        },
-        {
-            "weight": 1,
-            "element": {
-                "element_type": "minecraft:single_pool_element",
-                "projection": "rigid",
-                "location": "dnl:plains_castle/base/2",
-                "processors": "minecraft:empty"
-            }
-        },
-        {
-            "weight": 1,
-            "element": {
-                "element_type": "minecraft:single_pool_element",
-                "projection": "rigid",
-                "location": "dnl:plains_castle/base/3",
-                "processors": "minecraft:empty"
-            }
         }
     ]
 }

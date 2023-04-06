@@ -9,6 +9,7 @@ execute if score #dnl.death_bossbar_id dnl.int matches 6 run function dnl:util/m
 execute if score #dnl.death_bossbar_id dnl.int matches 7 run function dnl:util/mob/bossbar/remove_7
 execute if score #dnl.death_bossbar_id dnl.int matches 8 run function dnl:util/mob/bossbar/remove_8
 execute if score #dnl.death_bossbar_id dnl.int matches 9 run function dnl:util/mob/bossbar/remove_9
-execute as @e[type=marker, tag=dnl.core, tag=dnl.illusioner] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
+advancement grant @a[distance=..32] only dnl:story/structures/gallery_of_illusion/illusionist
+execute as @e[type=marker, tag=dnl.core, tag=dnl.illusioner] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function dnl:entity/illusioner/core/death
 execute as @e[type=marker, tag=dnl.illusioner_minion_spawn_point] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
 execute as @e[type=#dnl:mobs, tag=dnl.illusioner_minion] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run tp ~ -1000 ~

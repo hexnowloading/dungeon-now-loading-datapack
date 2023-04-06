@@ -1,0 +1,9 @@
+from reapermc:event_handler import Event, listener
+
+on_player_interacted_spawner_chest = Event('on_player_interacted_spawner_chest')
+
+@on_player_interacted_spawner_chest.handler
+def handler():
+    execute function on_player_interacted_spawner_chest.generate_path('player_interacted_spawner_chest'):
+        function ../util/chests/player_interacted_spawner_chest:
+            on_player_interacted_spawner_chest.trigger()

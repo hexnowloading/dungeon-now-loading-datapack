@@ -10,5 +10,6 @@ execute if score #dnl.death_bossbar_id dnl.int matches 7 run function dnl:util/m
 execute if score #dnl.death_bossbar_id dnl.int matches 8 run function dnl:util/mob/bossbar/remove_8
 execute if score #dnl.death_bossbar_id dnl.int matches 9 run function dnl:util/mob/bossbar/remove_9
 scoreboard players reset #dnl.hunter_ghost.killed_with_broken_bow dnl.boolean
+advancement grant @a[distance=..32] only dnl:story/structures/hunters_grave/hunters_ghost
 execute if entity @a[tag=dnl.hunter_ghost.killed_with_broken_bow] run function dnl:entity/hunter_ghost/killed_with_broken_bow
 execute as @e[type=marker, tag=dnl.core, tag=dnl.hunter_ghost] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function dnl:entity/hunter_ghost/check_spawn

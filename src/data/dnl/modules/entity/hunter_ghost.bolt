@@ -138,14 +138,52 @@ function ./hunter_ghost/core/trigger_reset:
 function ./hunter_ghost/death:
     remove_bossbar item
     scoreboard players reset #dnl.hunter_ghost.killed_with_broken_bow dnl.boolean
+    advancement grant @a[distance=..32] only dnl:story/structures/hunters_grave/hunters_ghost
     if entity @a[tag=dnl.hunter_ghost.killed_with_broken_bow] run function ./hunter_ghost/killed_with_broken_bow:
+        advancement grant @a[distance=..32] only dnl:story/structures/hunters_grave/heir_of_hunter
         tag @a[tag=dnl.hunter_ghost.killed_with_broken_bow] remove dnl.hunter_ghost.killed_with_broken_bow
-        playsound entity.wolf.howl ambient @a[distance=..16] ~ ~ ~ 1.0 1 1
+        playsound entity.wolf.howl ambient @a ~ ~ ~ 1.0 1 1
         scoreboard players set #dnl.hunter_ghost.killed_with_broken_bow dnl.boolean 1
     as @e[type=marker,tag=dnl.core,tag=dnl.hunter_ghost] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function ./hunter_ghost/check_spawn:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/hunter_ghost/reward"}
         if score #dnl.hunter_ghost.killed_with_broken_bow dnl.boolean matches 1 run function ./hunter_ghost/spawn_gray:
-            function ../summon/gray
+            positioned ~ ~1 ~ run function ../summon/gray
             particle minecraft:cloud ~ ~ ~ 0.5 0.5 0.5 0.01 10
         kill @s
+
+loot_table ./hunter_ghost/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/old_letter",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 3,
+                                "max": 5
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_berries"
+                }
+            ]
+        }
+    ]
+}
+
+
 
     

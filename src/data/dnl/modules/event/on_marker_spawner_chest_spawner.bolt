@@ -1,0 +1,13 @@
+from reapermc:event_handler import Event, listener
+from ../api import on_entity_marker_tick
+
+on_marker_spawner_chest_spawner = Event('on_marker_spawner_chest_spawner')
+
+@on_marker_spawner_chest_spawner.handler
+def handler():
+
+    @listener(on_entity_marker_tick)
+    def _on_entity_marker_tick():
+        execute function on_marker_spawner_chest_spawner.generate_path('marker_spawner_chest_spawner'):
+            if entity @s[tag=dnl.spawner_chest_spawner]:
+                on_marker_spawner_chest_spawner.trigger()

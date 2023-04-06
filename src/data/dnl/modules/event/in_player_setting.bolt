@@ -15,10 +15,12 @@ def handler():
         execute function in_player_setting.generate_path('player_setting'):
             unless score @s dnl.version matches datapack_version:
                 in_player_setting.trigger()
+                scoreboard players set @s dnl.version datapack_version
     
     @listener(on_entity_player_join)
     def _on_entity_player_join():
         execute function in_player_setting.generate_path('player_setting'):
             unless score @s dnl.version matches datapack_version:
                 in_player_setting.trigger()
+                scoreboard players set @s dnl.version datapack_version
                 

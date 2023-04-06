@@ -9,7 +9,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon station_chief pillager boss 8 7 0 flame {
+add_summon station_chief pillager boss 16 0 0 flame {
     DeathLootTable:"dnl:entity/station_chief/death",
     Tags:["dnl.boss","dnl.mob","dnl.tick","dnl.station_chief"],
     PersistenceRequired:1b,
@@ -32,7 +32,9 @@ def marker_core():
             tag @s remove dnl.overlayed
             unless entity @e[type=marker,tag=dnl.spawner,tag=dnl.station_chief,distance=..1] function ../spawner/station_chief
         if entity @s[tag=dnl.overlayed] run function ./station_chief/core/overlayed:
-            if score #dnl.1s dnl.tick matches 1 unless entity @e[type=marker,tag=dnl.core,tag=dnl.station_chief_ravager,distance=..1] run function ./station_chief/reward:
+            if score #dnl.1s dnl.tick matches 1 unless entity @e[type=marker,tag=dnl.core,tag=dnl.station_chief_ravager,distance=..1] at @s run function ./station_chief/reward:
+                setblock ~ ~ ~ chest{LootTable:"dnl:entity/station_chief/reward"}
+                advancement grant @a[distance=..32] only dnl:story/structures/railway_outpost/station_chief
                 kill @s
 
 function ./station_chief/main:
@@ -99,3 +101,27 @@ function ./station_chief/core/trigger_reset:
 function ./station_chief/death:
     remove_bossbar item
     as @e[type=marker,tag=dnl.core,tag=dnl.station_chief] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run tag @s add dnl.overlayed
+
+loot_table ./station_chief/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_apple"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_berries"
+                }
+            ]
+        }
+    ]
+}

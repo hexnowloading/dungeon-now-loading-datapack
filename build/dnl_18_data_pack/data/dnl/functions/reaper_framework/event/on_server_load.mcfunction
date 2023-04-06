@@ -27,10 +27,10 @@ bossbar add dnl:bossbar6 {"text": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar7 {"text": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar8 {"text": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar9 {"text": "Reserved", "color": "aqua"}
-function dnl:reaper_framework/event_handler/on_player_load/player_load
 function dnl:reaper_framework/event_handler/in_world_setting/world_load
 scoreboard objectives add dnl.timer.hastening dummy
 scoreboard objectives add dnl.timer.lightning_storm dummy
+scoreboard objectives add dnl.timer.pumpkin_curse dummy
 scoreboard objectives add dnl.timer.raining_fireball dummy
 scoreboard objectives add dnl.timer.raining_soul dummy
 scoreboard objectives add dnl.timer.undead_stun dummy
@@ -78,6 +78,19 @@ scoreboard players set #dnl.80 dnl.constant 80
 team add dnl.no_collision
 team modify dnl.no_collision collisionRule pushOwnTeam
 execute unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
+advancement grant @a only dnl:story/general/new_start
+say reloaded
+scoreboard objectives add dnl.raidbar_id dummy
+bossbar add dnl:raidbar0 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar1 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar2 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar3 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar4 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar5 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar6 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar7 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar8 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar9 {"translate": "Reserved", "color": "aqua"}
 data modify storage dnl:temp ItemName set value []
 scoreboard objectives add dnl.timer.shield dummy
 scoreboard objectives add dnl.eid dummy

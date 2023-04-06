@@ -16,7 +16,7 @@ def entity_item_tick():
 
 death_id = 0
 
-def add_death_event(name):
+def add_death_event(name, path="entity"):
     global death_id
     death_id += 1
     nbt2 = "{dnl:{death:" + str(death_id) + "}}"
@@ -203,4 +203,4 @@ def add_death_event(name):
 
     @listener(on_entity_death)
     def death_event():
-        if score #dnl.death_id dnl.int matches death_id run function f"dnl:entity/{name}/death"
+        if score #dnl.death_id dnl.int matches death_id run function f"dnl:{path}/{name}/death"

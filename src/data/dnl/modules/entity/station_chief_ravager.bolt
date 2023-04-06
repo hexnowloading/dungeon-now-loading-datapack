@@ -17,7 +17,7 @@ add_summon station_chief_ravager ravager boss 8 7 0 flame {
     Attributes:[{Name:generic.max_health,Base:180}],
     Passengers:[{id:"minecraft:pillager",
         DeathLootTable:"dnl:entity/station_chief/death",
-        Tags:["dnl.boss","dnl.mob","dnl.station_chief","dnl.station_chief.riding","dnl.station_chief.new","dnl.station_chief.init"],
+        Tags:["dnl.boss","dnl.mob","dnl.tick","dnl.station_chief","dnl.station_chief.riding","dnl.station_chief.new","dnl.station_chief.init"],
         PersistenceRequired:1b,
         Health:180f,
         Attributes:[{Name:generic.max_health,Base:360}],

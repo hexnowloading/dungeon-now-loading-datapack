@@ -29,7 +29,7 @@
             },
             {
               "function": "minecraft:set_nbt",
-              "tag": "{dnl: {name: 'knightly_sword_fragment', item: 1, id: 8003}}"
+              "tag": "{CustomModelData: 4048003, dnl: {name: 'knightly_sword_fragment', item: 1, id: 8003}}"
             }
           ]
         }

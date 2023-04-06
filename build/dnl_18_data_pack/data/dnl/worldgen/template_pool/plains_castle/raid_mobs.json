@@ -7,7 +7,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/raid_mobs/iron_sword_zombie",
+                "location": "dnl:plains_castle/raid_mob/iron_sword_zombie",
                 "processors": "minecraft:empty"
             }
         },
@@ -16,7 +16,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/raid_mobs/diamond_sword_zombie",
+                "location": "dnl:plains_castle/raid_mob/diamond_sword_zombie",
                 "processors": "minecraft:empty"
             }
         },
@@ -25,7 +25,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/raid_mobs/iron_bow_skeleton",
+                "location": "dnl:plains_castle/raid_mob/iron_bow_skeleton",
                 "processors": "minecraft:empty"
             }
         },
@@ -34,7 +34,7 @@
             "element": {
                 "element_type": "minecraft:single_pool_element",
                 "projection": "rigid",
-                "location": "dnl:plains_castle/raid_mobs/diamond_bow_skeleton",
+                "location": "dnl:plains_castle/raid_mob/diamond_bow_skeleton",
                 "processors": "minecraft:empty"
             }
         }

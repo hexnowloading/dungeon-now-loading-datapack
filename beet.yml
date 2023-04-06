@@ -57,8 +57,9 @@ meta:
     
     crown_of_olympus: 3001
     golem_heart_armor: 3002
+    heavy_iron_armor: 3003
     
-    player_head: 4001
+    checkpoint_player_head: 4001
     diamond_upgrade: 4002
     dungeon_clock: 4003
     olympus_key: 4004
@@ -73,8 +74,10 @@ meta:
     forbidden_golden_apple: 5004
     honey_potion: 5005
     royal_honey_potion: 5006
+    pumpkin_treat: 5007
 
     ancient_shield: 6001
+    pumpkin_shield: 6002
 
     hivenest: 7001
     sinkhole: 7002
@@ -93,11 +96,11 @@ meta:
     plains_pillager_camp: 7018
     hivenest_boss: 7101
 
-    golems_gift: 8001
+    rusted_iron_fragment: 8001
     honeycomb_ingot: 8002
     knightly_sword_fragment: 8003
     old_letter: 8004
-    memento_poppy: 8005
+    poppy_of_memories: 8005
     ominous_emerald: 8006
     sharpened_bone: 8007
     spawner_fragment: 8008
@@ -109,5 +112,6 @@ meta:
     music_disc_bees: 9003
     music_disc_woodland_fountain: 9004
     music_disc_welcome_to_hell: 9005
+    music_disc_jack_and_lantern: 9006
 
     death_star: 9999

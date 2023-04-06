@@ -10,13 +10,31 @@
             {
               "function": "minecraft:set_count",
               "count": 1
-            }
-          ],
-          "conditions": [
+            },
             {
-              "condition": "minecraft:random_chance_with_looting",
-              "chance": 0.01,
-              "looting_multiplier": 0.01
+              "function": "minecraft:set_damage",
+              "damage": {
+                "min": 0.001,
+                "max": 0.02
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "entity": "this",
+              "lore": [
+                {
+                  "translate": "Cannot Be Repaired",
+                  "color": "#FF5555",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{RepairCost:40}"
+            },
+            {
+              "function": "minecraft:enchant_randomly"
             }
           ]
         }

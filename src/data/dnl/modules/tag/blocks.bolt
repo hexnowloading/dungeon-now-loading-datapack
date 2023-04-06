@@ -1,3 +1,11 @@
+block_tag ../chests {
+    "description": "Non Solid Block list from unknown version. Have to be updated.",
+    "values": [
+        "minecraft:chest",
+        "minecraft:trapped_chest"
+    ]
+}
+
 block_tag ../nonsolid {
     "description": "Non Solid Block list from unknown version. Have to be updated.",
     "values": [

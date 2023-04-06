@@ -5,7 +5,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon bee_nest marker none 8 7 0 flame {
+add_summon bee_nest marker none 16 0 0 flame {
     Tags:["dnl.marker","dnl.mob","dnl.tick","dnl.bee_nest"]
 }
 
@@ -14,12 +14,11 @@ def technical_mob_tick():
     if entity @s[tag=dnl.bee_nest] run function ./bee_nest/main
 
 function ./bee_nest/main:    
-    if entity @s[tag=dnl.bee_nest.linked] if entity @s[tag=!dnl.bee_nest.destroyed] run function ./bee_nest/linked:
-        
+    if entity @s[tag=!dnl.bee_nest.destroyed] run function ./bee_nest/linked:
         ### Init ###
         if entity @s[tag=!dnl.bee_nest.init] run function ./bee_nest/init:
             tag @s add dnl.bee_nest.init
-            setblock ~ ~ ~ minecraft:bee_nest
+            if block ~ ~ ~ air run setblock ~ ~ ~ minecraft:bee_nest
         
         ### Main ###
         particle dust 1.000 0.800 0.251 1 ~ ~ ~ 0.4 0.4 0.4 1 10 normal
@@ -43,8 +42,7 @@ function ./bee_nest/main:
 
         if block ~ ~ ~ air run function ./bee_nest/destroyed:
             function dnl:summon/angry_bee
-            scoreboard players operation #dnl.bee_nest.lid dnl.lid = @s dnl.lid
-            as @e[type=marker,tag=dnl.bee_swarm] if score @s dnl.lid = #dnl.bee_nest.lid dnl.lid run tag @s add dnl.bee_swarm.hurt
+            as @e[type=marker,tag=dnl.bee_swarm,distance=..15] run tag @s add dnl.bee_swarm.hurt
             tag @s add dnl.bee_nest.destroyed
 
 function ./bee_nest/spawnable:
@@ -53,5 +51,5 @@ function ./bee_nest/spawnable:
     tag @s add dnl.bee_nest.spawned
 
 function ./bee_nest/reset:
-    function dnl:summon/bee_nest
-    kill @s
+    unless block ~ ~ ~ bee_nest run setblock ~ ~ ~ bee_nest
+    tag @s remove dnl.bee_nest.destroyed

@@ -1,2 +1,2 @@
-function dnl:summon/bee_nest
-kill @s
+execute unless block ~ ~ ~ bee_nest run setblock ~ ~ ~ bee_nest
+tag @s remove dnl.bee_nest.destroyed

@@ -34,6 +34,9 @@ def marker_core():
             tag @s remove dnl.reset
             kill @e[type=marker,tag=dnl.skill,tag=dnl.slime_core,distance=..30]
             as @e[type=slime,distance=..40] run tp @s ~ ~-1000 ~
+            setblock ~-3 ~-22 ~-3 minecraft:structure_block{mode:"LOAD",posX:0,posY:1,posZ:0,name:"dnl:sinkhole/boss_layers"}
+            setblock ~-3 ~-23 ~-3 minecraft:redstone_block
+            fill ~-3 ~-23 ~-3 ~-3 ~-22 ~-3 minecraft:air
             function ../spawner/slime_core
     
 @listener(on_marker_skill)
@@ -67,9 +70,11 @@ function ./slime_core/main:
     scoreboard players operation #dnl.slime_core.id dnl.eid = @s dnl.eid
     if score #dnl.1s dnl.tick matches 1 run function ./slime_core/core/tick:
         tag @s add dnl.this
-        as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.slime_core.id dnl.eid run function ./slime_core/core/check:
-            at @s unless entity @a[distance=..30] run function ./slime_core/core/trigger_reset
-            if entity @s[distance=30..] at @s run tp @e[type=slime,tag=dnl.slime_core,tag=dnl.this] ~ ~ ~
+        as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.slime_core.id dnl.eid at @s run function ./slime_core/core/check:
+            tag @e[type=slime,tag=dnl.slime_core,tag=dnl.this] remove dnl.slime_core.in_arena
+            positioned ~-12 ~-35 ~-12 run tag @e[type=slime,tag=dnl.slime_core,tag=dnl.this,dx=25,dy=45,dz=25] add dnl.slime_core.in_arena
+            positioned ~-12 ~-35 ~-12 unless entity @a[dx=25,dy=45,dz=25] run function ./slime_core/core/trigger_reset
+            tp @e[type=slime,tag=dnl.slime_core,tag=dnl.this,tag=!dnl.slime_core.in_arena] ~ ~ ~
         tag @s remove dnl.this
     if score #dnl.slime_core.reset dnl.boolean matches 1 run function ./slime_core/reset:
         data modify entity @s DeathLootTable set value "minecraft:empty"
@@ -83,18 +88,27 @@ function ./slime_core/main:
     if score @s dnl.health matches ..180 if score @s dnl.phase matches 1 run function ./slime_core/phase_1/init:
         scoreboard players add @s dnl.phase 1
         data modify entity @s Size set value 8
+        scoreboard players operation #dnl.slime_core.id dnl.eid = @s dnl.eid
+        as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.slime_core.id dnl.eid at @s run fill ~3 ~-9 ~3 ~-3 ~ ~-3 minecraft:air destroy
+        kill @e[type=item,nbt={Age:0s}]
     if score @s dnl.health matches ..160 if score @s dnl.phase matches 2 run function ./slime_core/phase_2/init:
         scoreboard players add @s dnl.phase 1
         data modify entity @s Size set value 7
     if score @s dnl.health matches ..140 if score @s dnl.phase matches 3 run function ./slime_core/phase_3/init:
         scoreboard players add @s dnl.phase 1
         data modify entity @s Size set value 6
+        scoreboard players operation #dnl.slime_core.id dnl.eid = @s dnl.eid
+        as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.slime_core.id dnl.eid at @s run fill ~3 ~-18 ~3 ~-3 ~-9 ~-3 minecraft:air destroy
+        kill @e[type=item,nbt={Age:0s}]
     if score @s dnl.health matches ..120 if score @s dnl.phase matches 4 run function ./slime_core/phase_4/init:
         scoreboard players add @s dnl.phase 1
         data modify entity @s Size set value 5
     if score @s dnl.health matches ..100 if score @s dnl.phase matches 5 run function ./slime_core/phase_5/init:
         scoreboard players add @s dnl.phase 1
         data modify entity @s Size set value 4
+        scoreboard players operation #dnl.slime_core.id dnl.eid = @s dnl.eid
+        as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.slime_core.id dnl.eid at @s run fill ~3 ~-27 ~3 ~-3 ~-18 ~-3 minecraft:air destroy
+        kill @e[type=item,nbt={Age:0s}]
     if score @s dnl.health matches ..80 if score @s dnl.phase matches 6 run function ./slime_core/phase_6/init:
         scoreboard players add @s dnl.phase 1
         data modify entity @s Size set value 3
@@ -144,9 +158,15 @@ function ./slime_core/core/trigger_reset:
 
 function ./slime_core/death:
     remove_bossbar item
+    advancement grant @a[distance=..32] only dnl:story/structures/sinkhole/slime_core
     summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.slime_core.kill_noai_slime"]}
     schedule function ./slime_core/kill_noai_slime 1s
+    as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function ./slime_core/summon_reward
     as @e[type=marker,tag=dnl.core,tag=dnl.slime_core] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run kill @s
+
+function ./slime_core/summon_reward:
+    setblock ~ ~-33 ~ minecraft:chiseled_stone_bricks
+    setblock ~ ~-32 ~ chest{LootTable:"dnl:structures/sinkhole/mobs/slimecore/reward"}
 
 function ./slime_core/kill_noai_slime:
     as @e[type=marker,tag=dnl.slime_core.kill_noai_slime] at @s as @e[type=slime,distance=..40] run tp @s ~ ~-1000 ~

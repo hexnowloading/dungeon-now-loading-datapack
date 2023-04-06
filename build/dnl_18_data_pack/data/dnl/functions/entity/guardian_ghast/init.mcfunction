@@ -5,7 +5,7 @@ scoreboard players operation @s dnl.lid = #dnl.global_lid dnl.lid
 scoreboard players add #dnl.global_lid dnl.lid 1
 scoreboard players set @s dnl.phase 0
 scoreboard players set @s dnl.health 12
-tp ~0.5 ~ ~0.5
-summon marker ~0.5 ~ ~0.5 {Tags: ["dnl.marker", "dnl.core", "dnl.guardian_ghast", "dnl.start", "dnl.core.new_marker"]}
+tp ~ ~ ~
+summon marker ~ ~ ~ {Tags: ["dnl.marker", "dnl.core", "dnl.guardian_ghast", "dnl.start", "dnl.core.new_marker"]}
 scoreboard players operation @e[type=marker, tag=dnl.core.new_marker] dnl.lid = @s dnl.lid
 tag @e[type=marker, tag=dnl.core.new_marker] remove dnl.core.new_marker

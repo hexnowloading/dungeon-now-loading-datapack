@@ -1,0 +1,7 @@
+from reapermc:api import
+    listener
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:noai":
+    execute as @e[type=#dnl:mobs] run data modify entity @s NoAI set value 1

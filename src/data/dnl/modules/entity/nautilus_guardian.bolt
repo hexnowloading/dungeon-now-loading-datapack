@@ -9,7 +9,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon nautilus_guardian elder_guardian boss 8 7 0 flame {
+add_summon nautilus_guardian elder_guardian boss 10 68 0 flame {
     DeathLootTable:"dnl:entity/nautilus_guardian/death",
     Tags:["dnl.boss","dnl.mob","dnl.tick","dnl.nautilus_guardian"],
     PersistenceRequired:1b,
@@ -69,4 +69,40 @@ function ./nautilus_guardian/core/trigger_reset:
 
 function ./nautilus_guardian/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.nautilus_guardian] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/deep_oasis/nautilus_guardian
+    as @e[type=marker,tag=dnl.core,tag=dnl.nautilus_guardian] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function ./nautilus_guardian/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/nautilus_guardian/reward"}
+        kill @s
+
+loot_table ./nautilus_guardian/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_apple"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:nautilus_shell",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 8
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

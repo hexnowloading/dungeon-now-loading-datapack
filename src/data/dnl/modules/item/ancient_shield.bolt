@@ -53,7 +53,7 @@ loot_table ../item/ancient_shield {
                                     "italic": false
                                 },
                                 {
-                                    "translate": "Counter Stun",
+                                    "translate": "Counter Stun III",
                                     "color": "#AAAAAA",
                                     "italic": false
                                 },
@@ -63,7 +63,7 @@ loot_table ../item/ancient_shield {
                                     "italic": false
                                 },
                                 {
-                                    "translate": "3s on parry.",
+                                    "translate": "5s on parry.",
                                     "color": "#555555",
                                     "italic": false
                                 }

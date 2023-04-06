@@ -1,0 +1,252 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from nbtlib import
+    parse_nbt
+    serialize_tag
+
+from ../api import
+    on_marker_spawner_chest
+    on_marker_spawner_chest_spawner
+    on_player_interacted_spawner_chest
+
+from ../event/on_marker_spawner_chest_jigsaw import 
+    on_marker_spawner_chest_jigsaw
+
+from ../event/on_marker_spawner_chest_spawner_jigsaw import 
+    on_marker_spawner_chest_spawner_jigsaw
+
+def add_spawner_chest(name, structure, type="normal", loot_table="minecraft:empty", radius=8, height=7, depth=1):
+    width = radius * 2 - 1
+    spherical = "false"
+    if height == 0 and depth == 0:
+        spherical = "true"
+    else:
+        width = radius * 2 - 1
+    
+    function f"dnl:summon/spawner_chest_{name}":
+        summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.spawner_chest",f"dnl.{name}"]}
+
+    entity_type = "minecraft:shulker_spawn_egg"
+    entity_name = str(name).title().replace("_", " ") + " Spawner Chest Spawn Egg"
+    entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.spawner_chest\",\"dnl." + str(name) + "\"]}}"
+
+    loot_table f"dnl:spawner_chest/{name}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    entity_name3 = str(name).title().replace("_", " ") + "Spawner Chest Jigsaw"
+    entity_nbt3 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.jigsaw\",\"dnl.spawner_chest\",\"dnl.spawner_chest_jigsaw_" + str(name) + "\"]}}"
+
+
+    loot_table f"dnl:jigsaw/spawner_chest_{structure}_{name}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name3,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt3
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    @listener(on_marker_spawner_chest_jigsaw)
+    def marker_spawner_chest_jigsaw():
+        if entity @s[tag=f"dnl.spawner_chest_jigsaw_{name}"] run function f"dnl:util/mob/jigsaw/spawner_chest_jigsaw_{structure}_{name}":
+            setblock ~ ~2 ~ jigsaw[orientation=down_north]{name:"dnl:mob_connector",pool:"minecraft:empty",final_state:"minecraft:air",target:"minecraft:empty",joint:"aligned"} replace
+            summon minecraft:marker ~ ~1.01 ~ {Tags:["dnl.marker","dnl.spawner_chest",f"dnl.{name}"]}
+            setblock ~ ~ ~ structure_block[mode=save]{name:f"dnl:{structure}/spawner_chest/{name}",posX:0,posY:1,posZ:0,sizeX:1,sizeY:2,sizeZ:1,rotation:"NONE",mirror:"NONE",mode:"SAVE",ignoreEntities:0b} replace
+            item replace entity @p weapon.mainhand with jigsaw{BlockEntityTag:{joint:"aligned",name:"minecraft:empty",pool:f"dnl:{structure}/spawner_chest/{name}",final_state:"minecraft:air",target:"dnl:mob_connector"}}
+            kill @s
+
+    @listener(on_marker_spawner_chest)
+    def marker_spawner_chest():
+        if entity @s[tag=f"dnl.{name}"] run function f"dnl:spawner_chest/{name}/main"
+    
+    function f"dnl:spawner_chest/{name}/main":
+        ### Init ###
+        unless entity @s[tag=dnl.spawner_chest.init] run function f"dnl:spawner_chest/{name}/init":
+            tag @s add dnl.spawner_chest.init
+            if type == "normal":
+                setblock ~ ~ ~ chest[type=single]{Lock:"Spawner Chest§r"} replace
+            if type == "trapped":
+                setblock ~ ~ ~ trapped_chest[type=single]{Lock:"Spawner Chest§r"} replace
+        
+        if block ~ ~ ~ air run function f"dnl:spawner_chest/{name}/repair"
+    
+    ### Repair ###
+    function f"dnl:spawner_chest/{name}/repair":
+        scoreboard players reset #dnl.spawner_chest.creative dnl.boolean
+        if entity @a[distance=..10,gamemode=creative] run function f"dnl:spawner_chest/{name}/repair/creative":
+            kill @s
+            scoreboard players set #dnl.spawner_chest.creative dnl.boolean 1
+        unless score #dnl.spawner_chest.creative dnl.boolean matches 1 run function f"dnl:spawner_chest/{name}/repair/non_creative":
+            playsound minecraft:entity.experience_orb.pickup master @a ~ ~ ~ 1 0.5 0
+            tellraw @a[distance=..10] {"translate":"● You cannot mine this block","color":"red","italic":false}
+            if type == "normal":
+                setblock ~ ~ ~ chest[type=single]{Lock:"Spawner Chest§r"} replace
+            if type == "trapped":
+                setblock ~ ~ ~ trapped_chest[type=single]{Lock:"Spawner Chest§r"} replace
+            kill @e[type=minecraft:item,distance=..1,nbt={Age:0s}]
+    
+    ### Check Spawner Count ###
+    @listener(on_player_interacted_spawner_chest)
+    def player_interacted_spawner_chest():
+        if entity @s[tag=f"dnl.{name}"] run function f"dnl:spawner_chest/{name}/interacted"
+    
+    function f"dnl:spawner_chest/{name}/interacted":
+        positioned ~ ~0.5 ~ run kill @e[type=area_effect_cloud,tag=dnl.spawner_chest.count_bar,distance=..1]
+        align xyz positioned ~-radius ~-depth ~-radius store result score #dnl.spawner_chest.spawner_count dnl.int run execute if entity @e[type=marker,tag=dnl.spawner_chest_spawner,dx=width,dy=height,dz=width]
+        for i in range(20):
+            j = i + 1
+            display_count = "{\"translate\":\"" + str(j) + " Spawner Remaining\",\"color\":\"yellow\",\"italic\":false}"
+            if score #dnl.spawner_chest.spawner_count dnl.int matches j run summon area_effect_cloud ~ ~0.5 ~ {CustomNameVisible:1b,Duration:40,Tags:["dnl.spawner_chest.count_bar"],CustomName:display_count}
+        if score #dnl.spawner_chest.spawner_count dnl.int matches 21.. run summon area_effect_cloud ~ ~0.5 ~ {CustomNameVisible:1b,Duration:40,Tags:["dnl.spawner_chest.count_bar"],CustomName:"{\"translate\":\"20+ Spawner Remaining\",\"color\":\"yellow\",\"italic\":false}"}
+        if score #dnl.spawner_chest.spawner_count dnl.int matches 0 run function f"dnl:spawner_chest/{name}/complete"
+    
+    ### Complete ###
+    function f"dnl:spawner_chest/{name}/complete":
+        playsound minecraft:entity.arrow.hit_player master @a ~ ~ ~ 1 1 0
+        particle lava ~ ~0.3 ~ 0.3 0.3 0.3 0.0001 10 normal
+        data modify block ~ ~ ~ LootTable set value f"{loot_table}"
+        data remove block ~ ~ ~ Lock
+        kill @s
+
+macro add_spawner_chest_spawner
+    name=brigadier:string{"type": "word"}
+    structure=brigadier:string{"type": "word"}
+    nbt=minecraft:nbt_compound_tag:
+
+    entity_type = "minecraft:silverfish_spawn_egg"
+    entity_name = str(name.value).title().replace("_", " ") + " Spawner Chest Spawner Spawn Egg"
+    entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.spawner_chest_spawner\",\"dnl." + str(name.value) + "\"]}}"
+
+    loot_table f"dnl:spawner_chest_spawner/{name.value}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    @listener(on_marker_spawner_chest_spawner)
+    def marker_spawner_chest_spawner():
+        if entity @s[tag=f"dnl.{name.value}"] run function f"dnl:spawner_chest_spawner/{name.value}/main":
+            unless entity @s[tag=dnl.spawner_chest_spawner.init] run function f"dnl:spawner_chest_spawner/{name.value}/init":
+                tag @s add dnl.spawner_chest_spawner.init
+                snbt = serialize_tag(nbt.evaluate(), compact=True)
+                setblock ~ ~ ~ f"minecraft:spawner{snbt}"
+            unless block ~ ~ ~ spawner run function f"dnl:spawner_chest_spawner/{name.value}/break":
+                playsound minecraft:entity.ender_dragon.growl master @a ~ ~ ~ 0.4 2 0
+                particle witch ~ ~ ~ 0.3 0.3 0.3 1.0 20 normal
+                kill @s
+    
+    entity_name3 = str(name.value).title().replace("_", " ") + " Spawner Chest Spawner Jigsaw"
+    entity_nbt3 = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.jigsaw\",\"dnl.spawner_chest_spawner\",\"dnl.spawner_chest_spawner_jigsaw_" + str(name.value) + "\"]}}"
+
+
+    loot_table f"dnl:jigsaw/spawner_chest_spawner_{structure.value}_{name.value}" {
+        "pools": [
+            {
+                "rolls": 1,
+                "entries": [
+                    {
+                        "type": "minecraft:item",
+                        "name": entity_type,
+                        "functions": [
+                            {
+                                "function": "minecraft:set_name",
+                                "entity": "this",
+                                "name": {
+                                    "translate": entity_name3,
+                                    "color": "#FF55FF",
+                                    "italic": false
+                                }
+                            },
+                            {
+                                "function": "minecraft:set_nbt",
+                                "tag": entity_nbt3
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+
+    @listener(on_marker_spawner_chest_spawner_jigsaw)
+    def marker_spawner_chest_spawner_jigsaw():
+        if entity @s[tag=f"dnl.spawner_chest_spawner_jigsaw_{name.value}"] run function f"dnl:util/mob/jigsaw/spawner_chest_spawner_jigsaw_{structure.value}_{name.value}":
+            setblock ~ ~2 ~ jigsaw[orientation=down_north]{name:"dnl:mob_connector",pool:"minecraft:empty",final_state:"minecraft:air",target:"minecraft:empty",joint:"aligned"} replace
+            summon minecraft:marker ~ ~1.01 ~ {Tags:["dnl.marker","dnl.spawner_chest_spawner",f"dnl.{name.value}"]}
+            setblock ~ ~ ~ structure_block[mode=save]{name:f"dnl:{structure.value}/spawner_chest_spawner/{name.value}",posX:0,posY:1,posZ:0,sizeX:1,sizeY:2,sizeZ:1,rotation:"NONE",mirror:"NONE",mode:"SAVE",ignoreEntities:0b} replace
+            item replace entity @p weapon.mainhand with jigsaw{BlockEntityTag:{joint:"aligned",name:"minecraft:empty",pool:f"dnl:{structure.value}/spawner_chest_spawner/{name.value}",final_state:"minecraft:air",target:"dnl:mob_connector"}}
+            kill @s
+
+# add_spawner_chest("test")
+# add_spawner_chest_spawner vanilla_zombie {SpawnData:{entity:{id:"minecraft:zombie"}}}

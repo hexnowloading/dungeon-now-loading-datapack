@@ -1,0 +1,10 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_player_stop_music = Event('on_player_stop_music')
+
+@on_player_stop_music.handler
+def handler():
+    execute function on_player_stop_music.generate_path('player_stop_music'):
+        function ../util/music/stop_music_listener:
+            on_player_stop_music.trigger()

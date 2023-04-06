@@ -1,34 +1,9 @@
 from reapermc:event_handler import Event, listener
-from reapermc:flag_handler import Flag
-from ../api import
-    on_entity_player_tick
 
 on_player_consume_item = Event('on_player_consume_item')
 
 @on_player_consume_item.handler
 def handler():
-    execute function on_player_consume_item.generate_path('consume_item'):
-        advancement revoke @s only ./on_player_consume_item
-        if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.consumed_item_id dnl.int = @s dnl.offhand
-        unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.consumed_item_id dnl.int = @s dnl.mainhand
-        if score #dnl.consumed_item_id dnl.int matches 1..:
+    execute function on_player_consume_item.generate_path('player_consume_item'):
+        function ../util/consume_item/listener:
             on_player_consume_item.trigger()
-
-advancement ./on_player_consume_item {
-    "criteria": {
-        "requirement": {
-            "trigger": "minecraft:consume_item",
-            "conditions": {
-                "item": {
-                    "tag": "dnl:consumables",
-                    "nbt": "{dnl:{item:1}}"
-                }
-            }
-        }
-    },
-    "rewards": {
-        "function": "reaper_framework:__internal__/event_handler/on_player_consume_item/consume_item"
-    }
-}
-
-

@@ -12,13 +12,40 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon cleric_z zombie_villager boss 8 7 0 flame {
+add_summon cleric_z zombie_villager boss 64 0 0 flame {
     DeathLootTable:"dnl:entity/cleric_z/death",
     Tags:["dnl.boss","dnl.mob","dnl.tick","dnl.cleric_z"],
     PersistenceRequired:1b,
     Health:200f,
     Attributes:[{Name:generic.max_health,Base:200}],
-    VillagerData:{profession:"minecraft:cleric"}
+    VillagerData:{level:99,profession:"minecraft:cleric",type:"minecraft:plains"},
+    Offers:{
+        Recipes:[
+            {
+                buy:{id:"minecraft:emerald",Count:7b},
+                buyB:{id:"minecraft:melon_slice",Count:1b},
+                sell:{id:"minecraft:potion",Count:1b,tag:{Potion:"minecraft:strong_healing"}}
+            },
+            {
+                buy:{id:"minecraft:emerald",Count:20b},
+                buyB:{id:"minecraft:melon_slice",Count:3b},
+                sell:{id:"minecraft:potion",Count:3b,tag:{Potion:"minecraft:strong_healing"}}
+            },
+            {
+                buy:{id:"minecraft:emerald",Count:7b},
+                buyB:{id:"minecraft:spider_eye",Count:1b},
+                sell:{id:"minecraft:splash_potion",Count:1b,tag:{Potion:"minecraft:weakness"}}
+            },
+            {
+                buy:{id:"minecraft:emerald",Count:16b},
+                sell:{id:"minecraft:golden_apple",Count:1b}
+            },
+            {
+                buy:{id:"minecraft:emerald",Count:64b},
+                sell:{id:"minecraft:chest",Count:1b,tag:{display:{Name:'{"text":"Cleric Loot Box","color":"gold","italic":false}'},BlockEntityTag:{LootTable:"dnl:entity/cleric_z_villager/loot_box"}}}
+            }
+        ]
+    }
 }
 
 add_death_event("cleric_z")
@@ -66,8 +93,18 @@ function ./cleric_z/main:
         tp @s ~ -1000 ~
         kill @s
 
+    ### Conversion ###
+    if score #dnl.1s dnl.tick matches 1 run scoreboard players reset #dnl.cleric_z.conversioning dnl.boolean
+    if score #dnl.1s dnl.tick matches 1 store success score #dnl.cleric_z.conversioning dnl.boolean run data get entity @s ConversionPlayer
+    if score #dnl.cleric_z.conversioning dnl.boolean matches 1 store result score #dnl.cleric_z.conversion_time dnl.int run data get entity @s ConversionTime
+    if score #dnl.cleric_z.conversioning dnl.boolean matches 1 if score #dnl.cleric_z.conversion_time dnl.int matches ..1 run function ./cleric_z/converted:
+        remove_bossbar this
+        advancement grant @a[distance=..32] only dnl:story/structures/cleric_hideout/villager_doctor
+        scoreboard players operation #dnl.cleric_z.lid dnl.lid = @s dnl.lid
+        as @e[type=marker,tag=dnl.core,tag=dnl.cleric_z] if score @s dnl.lid = #dnl.cleric_z.lid dnl.lid run kill @s
+
     ### Transformation ###
-    if score #dnl.1s dnl.tick matches 1 as @e[type=minecraft:zombie,distance=..64] at @s run function ./cleric_z/transform_zombie:
+    if score #dnl.1s dnl.tick matches 1 as @e[type=#dnl:undeads,tag=!dnl.mob,distance=..64] at @s run function ./cleric_z/transform_zombie:
         particle minecraft:cloud ~ ~ ~ 0.5 0.5 0.5 0.01 10
         function ../summon/potion_zombie_villager
         tp @s ~ -1000 ~
@@ -111,5 +148,23 @@ function ./cleric_z/potion_zombie_villager_init:
 
 function ./cleric_z/death:
     remove_bossbar item
+    advancement grant @a[distance=..32] only dnl:story/structures/cleric_hideout/cleric_z
     kill @e[type=zombie_villager,tag=dnl.potion_zombie_villager,distance=..64]
-    as @e[type=marker,tag=dnl.core,tag=dnl.cleric_z] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid run kill @s
+    as @e[type=marker,tag=dnl.core,tag=dnl.cleric_z] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function ./cleric_z/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/cleric_z/reward"}
+        kill @s
+
+loot_table ./cleric_z/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_apple"
+                }
+            ]
+        }
+    ]
+}

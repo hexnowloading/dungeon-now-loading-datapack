@@ -138,5 +138,58 @@ function ./poison_eyes/core/trigger_reset:
 
 function ./poison_eyes/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.poison_eyes] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/crawlers_lair/poison_eyes
+    as @e[type=marker,tag=dnl.core,tag=dnl.poison_eyes] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function ./poison_eyes/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/poison_eyes/reward"} 
+        kill @s
     
+loot_table ./poison_eyes/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_berries"
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:spider_eye",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 4,
+                                "max": 8
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:string",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": {
+                                "min": 4,
+                                "max": 8
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

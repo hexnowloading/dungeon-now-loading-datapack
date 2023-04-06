@@ -1,0 +1,56 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:restore_default":
+    tag @s add dnl.player_opening_setting
+    schedule function ./restore_default/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+function ./restore_default/display:
+    as @a[tag=dnl.player_opening_setting] run function ./restore_default/options:
+        tag @s remove dnl.player_opening_setting
+        function ../util/air_text
+        tellraw @s [{"translate":"                           ","strikethrough":true},{"translate":" Restore Default ","color":"gold","strikethrough":false,"bold":true},{"translate":"                           ","strikethrough":true}]
+        tellraw @s {"translate":"Sets settings to default! Which default settings do you want to restore?"}
+        tellraw @s {"translate":""}
+        unless score #dnl.restore_default.left_setting dnl.boolean matches 0 run function ./restore_default/off_chosen:
+            function ./restore_default/on_cross
+        unless score #dnl.restore_default.left_setting dnl.boolean matches 1 run function ./restore_default/on_chosen:
+            function ./restore_default/on_check
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/restore_default/leave"}},{"translate":" Go Back","color":"white"}]
+
+function ./restore_default/on_cross:
+    tellraw @s [{"translate":"[ Restore ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Restore!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/restore_default/everything_set"}}]
+
+function ./restore_default/on_check:
+    tellraw @s [{"translate":"[ Restore ] ","color":"green"}]
+
+function ./restore_default/everything_set:
+    tag @s add dnl.player_opening_setting
+    scoreboard players set #dnl.restore_default.left_setting dnl.boolean 0
+    
+    function ./restore_default/world_settings
+    as @a at @s run function ./restore_default/player_settings
+
+    schedule function ./restore_default/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+
+function ./restore_default/world_settings:
+    scoreboard players set #dnl.world_death_penalty_level dnl.int 0
+    scoreboard players set #dnl.world_maximum_heart dnl.int 10
+    scoreboard players set #dnl.world_maximum_heart_piece dnl.int 100
+    scoreboard players set #dnl.developer_mode dnl.boolean 0
+    gamerule sendCommandFeedback true
+
+function ./restore_default/player_settings:
+    if score @s dnl.max_health > #dnl.world_maximum_heart_piece dnl.int run function ./maximum_heart/update_health
+    scoreboard players set @s dnl.death_penalty_level 1
+    tag @s remove dnl.marker_visibility
+
+function ./restore_default/leave:
+    scoreboard players set #dnl.restore_default.left_setting dnl.boolean 1
+    function f"{cmd}:settings"

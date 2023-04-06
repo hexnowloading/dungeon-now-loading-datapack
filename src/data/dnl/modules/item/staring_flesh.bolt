@@ -4,6 +4,8 @@ from reapermc:api import
 from ../api import
     get_nbt
     add_custom_model_data
+
+from ../util/monolith import
     add_item_frame
 
 id = ctx.meta.item.staring_flesh

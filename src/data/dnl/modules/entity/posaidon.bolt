@@ -9,7 +9,7 @@ from ../api import
 from reapermc:api import
     listener
 
-add_summon posaidon drowned boss 8 7 0 flame {
+add_summon posaidon drowned boss 16 0 0 flame {
     DeathLootTable:"dnl:entity/posaidon/death",
     Tags:["dnl.boss","dnl.mob","dnl.tick","dnl.posaidon"],
     PersistenceRequired:1b,
@@ -70,4 +70,22 @@ function ./posaidon/core/trigger_reset:
 
 function ./posaidon/death:
     remove_bossbar item
-    as @e[type=marker,tag=dnl.core,tag=dnl.posaidon] if score @s dnl.eid = #dnl.death_entity_id dnl.eid run kill @s
+    advancement grant @a[distance=..32] only dnl:story/structures/deep_oasis/posaidon
+    as @e[type=marker,tag=dnl.core,tag=dnl.posaidon] if score @s dnl.eid = #dnl.death_entity_id dnl.eid at @s run function ./posaidon/core/death:
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/posaidon/reward"}
+        kill @s
+
+loot_table ./posaidon/reward {
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:loot_table",
+                    "name": "dnl:item/forbidden_berries"
+                }
+            ]
+        }
+    ]
+}

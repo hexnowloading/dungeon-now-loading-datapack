@@ -21,7 +21,7 @@
               "entity": "this",
               "lore": [
                 {
-                  "translate": "Enhanced Emerald",
+                  "translate": "Trading Item",
                   "color": "#AAAAAA",
                   "italic": false
                 }
@@ -30,6 +30,16 @@
             {
               "function": "minecraft:set_nbt",
               "tag": "{CustomModelData: 4048006, dnl: {name: 'ominous_emerald', item: 1, id: 8006}}"
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{HideFlags:1}"
+            },
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:unbreaking": 1
+              }
             }
           ]
         }

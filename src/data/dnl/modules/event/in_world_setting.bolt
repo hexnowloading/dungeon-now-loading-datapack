@@ -12,5 +12,6 @@ def handler():
     @listener(on_server_load)
     def _on_server_load():
         execute function in_world_setting.generate_path('world_load'):
-            unless score #dnl.version dnl.version matches datapack_version:
+            unless score #dnl.version dnl.version matches datapack_version run function dnl:world_settings_load:
                 in_world_setting.trigger()
+                scoreboard players set #dnl.version dnl.version datapack_version

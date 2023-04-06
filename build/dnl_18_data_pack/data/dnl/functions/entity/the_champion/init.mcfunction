@@ -7,5 +7,5 @@ execute if score #dnl.global_lid dnl.lid matches 19683.. run scoreboard players 
 scoreboard players operation @s dnl.lid = #dnl.global_lid dnl.lid
 scoreboard players add #dnl.global_lid dnl.lid 1
 scoreboard players operation #dnl.the_champion.lid dnl.lid = @s dnl.lid
-execute as @e[type=marker, tag=dnl.core, tag=dnl.the_champion, distance=..30] run function dnl:entity/the_champion/core/copy
-execute unless entity @e[type=marker, tag=dnl.core, tag=dnl.the_champion, distance=..30] run function dnl:entity/the_champion/core/setup
+execute as @e[type=marker, tag=dnl.core, tag=dnl.the_champion, distance=..42] run function dnl:entity/the_champion/core/copy
+execute unless entity @e[type=marker, tag=dnl.core, tag=dnl.the_champion, distance=..42] run function dnl:entity/the_champion/core/setup

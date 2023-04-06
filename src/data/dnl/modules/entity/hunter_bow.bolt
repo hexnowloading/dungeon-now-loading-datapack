@@ -24,7 +24,6 @@ function ./hunter_bow/main:
     if entity @s[tag=!dnl.hunter_bow.init] run function ./hunter_bow/init:
         tag @s add dnl.hunter_bow.init
         loot replace entity @s weapon.mainhand loot dnl:item/broken_bow
-        tp @s ~ ~-1 ~
     
     ### Main ###
     if score #dnl.1s dnl.tick matches 1 run function ./hunter_bow/check_hand:

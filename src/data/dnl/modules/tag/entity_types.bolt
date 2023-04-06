@@ -212,3 +212,11 @@ entity_type_tag ../item_frames {
         "minecraft:glow_item_frame"
     ]
 }
+
+entity_type_tag ../invisible {
+    "description": "All item frames in 1.19.3",
+    "values": [
+        "minecraft:marker",
+        "minecraft:area_effect_cloud"
+    ]
+}

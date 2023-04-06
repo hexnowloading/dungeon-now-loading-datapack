@@ -65,8 +65,13 @@ def load():
 
     unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
 
+    advancement grant @a only dnl:story/general/new_start
+
+    say reloaded
+
 @listener(on_server_tick)
 def tick():
+    unless score #dnl.version dnl.version matches datapack_version run function dnl:world_settings_load
     if score #dnl.1s dnl.tick matches 20.. run scoreboard players reset #dnl.1s dnl.tick
     if score #dnl.10t dnl.tick matches 10.. run scoreboard players reset #dnl.10t dnl.tick
     if score #dnl.5t dnl.tick matches 5.. run scoreboard players reset #dnl.5t dnl.tick
@@ -76,14 +81,6 @@ def tick():
     as @e[type=#dnl:mobs_and_players] at @s run function ./tick/living
     as @e[type=#dnl:others] at @s run function ./tick/technical
     as @e[type=item] at @s run function ./util/item_entity/tick
-
-@listener(in_player_setting)
-def player_setting():
-    scoreboard players set @s dnl.version datapack_version
-
-@listener(in_world_setting)
-def world_setting():
-    scoreboard players set #dnl.version dnl.version datapack_version
 
 @listener(on_entity_player_tick)
 def entity_player_tick():

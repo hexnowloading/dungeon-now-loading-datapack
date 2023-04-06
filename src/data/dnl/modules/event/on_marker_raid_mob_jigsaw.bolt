@@ -1,0 +1,13 @@
+from reapermc:event_handler import Event, listener
+from ./on_marker_jigsaw import on_marker_jigsaw
+
+on_marker_raid_mob_jigsaw = Event('on_marker_raid_mob_jigsaw')
+
+@on_marker_raid_mob_jigsaw.handler
+def handler():
+
+    @listener(on_marker_jigsaw)
+    def _on_marker_jigsaw():
+        execute function on_marker_raid_mob_jigsaw.generate_path('marker_raid_mob_jigsaw'):
+            if entity @s[tag=dnl.raid_mob]:
+                on_marker_raid_mob_jigsaw.trigger()

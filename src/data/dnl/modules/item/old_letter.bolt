@@ -35,8 +35,29 @@ loot_table ../item/old_letter {
                             ]
                         },
                         {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Trading Item",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
                             "function": "minecraft:set_nbt",
                             "tag": nbt
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{HideFlags:1}"
+                        },
+                        {
+                            "function": "minecraft:set_enchantments",
+                            "enchantments": {
+                                "minecraft:unbreaking": 1
+                            }
                         }
                     ]
                 }

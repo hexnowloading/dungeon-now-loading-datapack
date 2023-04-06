@@ -13,3 +13,6 @@ tellraw @s {"translate": "Player Settings", "color": "gold"}
 tellraw @s [{"translate": "[ > ]", "color": "yellow", "hoverEvent": {"action": "show_text", "contents": [{"translate": "Click!", "color": "green"}]}, "clickEvent": {"action": "run_command", "value": "/function cmd:death_penalty"}}, {"translate": " Player Death Penalty", "color": "white"}]
 tellraw @s [{"translate": "[ > ]", "color": "yellow", "hoverEvent": {"action": "show_text", "contents": [{"translate": "Click!", "color": "green"}]}, "clickEvent": {"action": "run_command", "value": "/function cmd:modify_heart"}}, {"translate": " Modify Hearts", "color": "white"}]
 tellraw @s [{"translate": "[ > ]", "color": "yellow", "hoverEvent": {"action": "show_text", "contents": [{"translate": "Click!", "color": "green"}]}, "clickEvent": {"action": "run_command", "value": "/function cmd:marker_visibility"}}, {"translate": " Marker Visibility", "color": "white"}]
+tellraw @s {"translate": ""}
+tellraw @s {"translate": "Other Settings", "color": "gold"}
+tellraw @s [{"translate": "[ > ]", "color": "yellow", "hoverEvent": {"action": "show_text", "contents": [{"translate": "Click!", "color": "green"}]}, "clickEvent": {"action": "run_command", "value": "/function cmd:restore_default"}}, {"translate": " Restore Default", "color": "white"}]
