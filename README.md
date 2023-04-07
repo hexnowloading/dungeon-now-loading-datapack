@@ -10,4 +10,4 @@
  
 ---
 
-License - [MIT](https://github.com/reapermc/reapermc/blob/main/LICENSE)
+License - [MIT](https://github.com/hexnowloading/dungeon-now-loading-datapack/blob/main/LICENSE)
