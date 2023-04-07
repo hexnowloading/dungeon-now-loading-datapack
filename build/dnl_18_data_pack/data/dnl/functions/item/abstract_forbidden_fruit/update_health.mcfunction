@@ -29,6 +29,6 @@ playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=
 playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=64, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
 playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=81, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
 playsound minecraft:ui.toast.challenge_complete block @s[scores={dnl.max_health=100, dnl.time_since_death=2..}] ~ ~ ~ 1 1 1
-advancement grant @s only dnl:story/general/the_sinner
+execute if score @s dnl.max_health matches 1.. run advancement grant @s only dnl:story/general/the_sinner
 execute if score @s dnl.max_health matches 25.. run advancement grant @s only dnl:story/general/the_mortal_sinner
 execute if score @s dnl.max_health matches 100.. run advancement grant @s only dnl:story/general/the_cursed_sinner
