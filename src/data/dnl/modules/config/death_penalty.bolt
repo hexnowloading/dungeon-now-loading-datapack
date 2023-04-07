@@ -14,7 +14,6 @@ def entity_player_init():
     #  1 - casual
     #  2 - expert
     #  3 - hardcore
-    say player setting
     scoreboard players set @s dnl.death_penalty_level 1
 
 function f"{cmd}:death_penalty":

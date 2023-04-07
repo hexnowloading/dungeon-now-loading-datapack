@@ -42,7 +42,7 @@ add_summon cleric_z zombie_villager boss 64 0 0 flame {
             },
             {
                 buy:{id:"minecraft:emerald",Count:64b},
-                sell:{id:"minecraft:chest",Count:1b,tag:{display:{Name:'{"text":"Cleric Loot Box","color":"gold","italic":false}'},BlockEntityTag:{LootTable:"dnl:entity/cleric_z_villager/loot_box"}}}
+                sell:{id:"minecraft:chest",Count:1b,tag:{display:{Name:'{"translate":"Cleric Loot Box","color":"gold","italic":false}'},BlockEntityTag:{LootTable:"dnl:entity/cleric_z_villager/loot_box"}}}
             }
         ]
     }

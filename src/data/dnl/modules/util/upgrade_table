@@ -86,7 +86,7 @@ def marker_tick():
                 kill @s
             if entity @p[gamemode=!creative] run function ./diamond_upgrade_table/reset:
                 setblock ~ ~ ~ minecraft:smithing_table
-                tellraw @p {"text":"● You cannot mine this block! Fix the upgrade table by feeding 5 diamonds!","color":"red","italic":false}
+                tellraw @p {"translate":"● You cannot mine this block! Fix the upgrade table by feeding 5 diamonds!","color":"red","italic":false}
 
 
 

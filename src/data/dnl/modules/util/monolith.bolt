@@ -241,7 +241,7 @@ def add_monolith(result,recipe,range=8,height=7,depth=0):
                         store success score f"#dnl.monolith.ingredient_{i}_int_a" dnl.int run data get storage dnl:monolith/container f"{x.get_path()}"
                         store success score f"#dnl.monolith.ingredient_{i}_int_b" dnl.int run data get storage dnl:monolith/ingredients f"Ingredients[{i}].nbt"
                         if score f"#dnl.monolith.ingredient_{i}_int_a" dnl.int = f"#dnl.monolith.ingredient_{i}_int_b" dnl.int run scoreboard players set f"#dnl.monolith.ingredient_{i}_nbt" dnl.boolean 0
-                        # tellraw @p [{"score":{"name":f"#dnl.monolith.ingredient_{i}_int_a","objective":"dnl.int"},"color":"red","italic":false},{"text":" "},{"score":{"name":f"#dnl.monolith.ingredient_{i}_int_b","objective":"dnl.int"},"color":"blue","italic":false}]
+                        # tellraw @p [{"score":{"name":f"#dnl.monolith.ingredient_{i}_int_a","objective":"dnl.int"},"color":"red","italic":false},{"translate":" "},{"score":{"name":f"#dnl.monolith.ingredient_{i}_int_b","objective":"dnl.int"},"color":"blue","italic":false}]
                     else:
                         store success score f"#dnl.monolith.ingredient_{i}_nbt" dnl.boolean run data modify storage dnl:monolith/container f"{x.get_path()}" set from storage dnl:monolith/ingredients f"Ingredients[{i}].nbt"
 

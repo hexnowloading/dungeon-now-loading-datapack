@@ -67,8 +67,6 @@ def load():
 
     advancement grant @a only dnl:story/general/new_start
 
-    say reloaded
-
 @listener(on_server_tick)
 def tick():
     unless score #dnl.version dnl.version matches datapack_version run function dnl:world_settings_load

@@ -1,3 +1,12 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+
+@listener(on_server_load)
+def load():
+    if score #dnl.developer_mode dnl.boolean matches 1 run tellraw @a {"translate":"Datapack has been reloaded!","color":"gray","italic":false}
+
 cmd = ctx.meta.dnl.cmd_namespace
 
 function f"{cmd}:developer_mode":

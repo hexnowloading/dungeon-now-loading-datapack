@@ -13,7 +13,6 @@ def world_setting():
     #  1 - casual
     #  2 - expert
     #  3 - hardcore
-    say world death penalty level
     scoreboard players set #dnl.world_death_penalty_level dnl.int 0
 
 function f"{cmd}:world_death_penalty":

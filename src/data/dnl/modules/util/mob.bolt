@@ -221,7 +221,7 @@ macro add_summon_v2
 def load():
     scoreboard objectives add dnl.bossbar_id dummy
     for i in range(10):
-        bossbar add f"dnl:bossbar{i}" {"text":"Reserved","color":"aqua"}
+        bossbar add f"dnl:bossbar{i}" {"translate":"Reserved","color":"aqua"}
 
 macro set_bossbar
     name=brigadier:string{"type": "word"}

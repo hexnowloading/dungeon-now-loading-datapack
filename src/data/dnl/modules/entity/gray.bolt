@@ -13,7 +13,7 @@ add_summon gray wolf none 8 7 0 flame {
     Health:40f,
     Attributes:[{Name:generic.max_health,Base:40}],
     CollarColor:8b,
-    CustomName:'{"text":"Gray","color":"gray","bold":true,"italic":false}'
+    CustomName:'{"translate":"Gray","color":"gray","bold":true,"italic":false}'
 }
 
 @listener(on_entity_mob_tick)

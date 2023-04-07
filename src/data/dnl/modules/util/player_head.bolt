@@ -43,7 +43,7 @@ def add_checkpoint_player_head(player_name, player_message="", role="", name_col
     for x in wrapped_player_message:
         y = x.replace("'", "\\'")
         message_lines.append("'{\"translate\":\"" + y + "\",\"color\":\"gray\",\"italic\":false}'")
-    message_nbt = "display:{Name:'{\"text\":\"" + str(player_name) + "\\'s Head\",\"color\":\"" + str(name_color) + "\",\"italic\":false}',Lore:[" + ','.join(message_lines) + "]}"
+    message_nbt = "display:{Name:'{\"translate\":\"" + str(player_name) + "\\'s Head\",\"color\":\"" + str(name_color) + "\",\"italic\":false}',Lore:[" + ','.join(message_lines) + "]}"
 
     nbt = "{" + id_nbt + message_nbt + "}"
 
