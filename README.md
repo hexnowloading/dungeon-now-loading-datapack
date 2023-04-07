@@ -6,7 +6,7 @@
  
  ## Contribution
  
- Please make sure that any contributions are done inside the 'src', instead of directly editing the datapack and resourcepack (avoid editing anything inside the 'build' folder). All of the functions, advancements, and most loot tables are generated from the '.bolt' files inside 'modules' folder.
+ Please make sure that any contributions are done inside the `src`, instead of directly editing the datapack and resourcepack (avoid editing anything inside the `build` folder). All of the functions, advancements, and most loot tables are generated from the `.bolt` files inside `modules` folder.
  
 ---
 
