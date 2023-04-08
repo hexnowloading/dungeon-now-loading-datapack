@@ -307,7 +307,7 @@ def register_item_frames(recipe):
 
 def add_item_frame(item, base_item, id="false", bracket_nbt={}):
 
-    entity_type = "minecraft:snow_golem_spawn_egg"
+    entity_type = "minecraft:polar_bear_spawn_egg"
     entity_name = "Monolith Item Frame " + str(item).title().replace("_", " ").replace("Of","of") + " Spawn Egg"
     entity_nbt = "{EntityTag:{id:\"minecraft:marker\",Tags:[\"dnl.marker\",\"dnl.item_frame\",\"dnl.summon\",\"dnl." + str(item) + "\"]}}"
 

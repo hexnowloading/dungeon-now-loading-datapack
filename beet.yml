@@ -5,12 +5,12 @@ description: A dungeon made by Hex
 
 data_pack:
   load: [src]
-  zipped: false
+  zipped: true
   pack_format: 10
 
 resource_pack:
   load: [src]
-  zipped: false
+  zipped: true
   pack_format: 12
 
 output: 'build'

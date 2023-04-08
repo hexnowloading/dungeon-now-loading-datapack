@@ -13,6 +13,7 @@ from reapermc:api import
     listener
 
 add_summon guardian_ghast ghast boss 64 0 0 flame {
+    CustomNameVisible:0b,
     CustomName:'{"translate":"Guardian Ghast","italic":false}',
     DeathLootTable:"dnl:entity/guardian_ghast/death",
     Tags:["dnl.tick","dnl.mob","dnl.guardian_ghast"],
@@ -168,7 +169,6 @@ function ./guardian_ghast/particle/red:
     particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~-3 ~5 ~ 0 0 1.5 0.01 10 force
     particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~3 1.5 0 0 0.01 10 force
     particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~-3 1.5 0 0 0.01 10 force
-    data merge entity @s {CustomName:'{"translate":"Guardian Ghast R","italic":false}'}
     # particle minecraft:soul ~ ~ ~ 3 3 3 0.01 10 force
     # positioned ^1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
     # positioned ^-1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
@@ -178,7 +178,6 @@ function ./guardian_ghast/particle/blue:
     particle dust_color_transition 0.000 0.000 1.000 1 0.000 0.000 0.000 ~-3 ~5 ~ 0 0 1.5 0.01 10 force
     particle dust_color_transition 0.000 0.000 1.000 1 0.000 0.000 0.000 ~ ~5 ~3 1.5 0 0 0.01 10 force
     particle dust_color_transition 0.000 0.000 1.000 1 0.000 0.000 0.000 ~ ~5 ~-3 1.5 0 0 0.01 10 force
-    data merge entity @s {CustomName:'{"translate":"Guardian Ghast B","italic":false}'}
     # positioned ^1.5 ^2.5 ^2.5 run particle dust_color_transition 0.031 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
     # positioned ^-1.5 ^2.5 ^2.5 run particle dust_color_transition 0.031 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
 
@@ -187,14 +186,16 @@ function ./guardian_ghast/particle/yellow:
     particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~-3 ~5 ~ 0 0 1.5 0.01 10 force
     particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~3 1.5 0 0 0.01 10 force
     particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~-3 1.5 0 0 0.01 10 force
-    data merge entity @s {CustomName:'{"translate":"Guardian Ghast Y","italic":false}'}
     # positioned ^1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
     # positioned ^-1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
 
 function ./guardian_ghast/awoken:
     scoreboard players reset @s dnl.timer
     scoreboard players set @s dnl.health 12
-    data merge entity @s{Invulnerable:0b,NoAI:0b,Silent:0b}
+    # data merge entity @s{Invulnerable:0b,NoAI:0b,Silent:0b}
+    if entity @s[tag=dnl.guardian_ghast.red] run data merge entity @s {Invulnerable:0b,NoAI:0b,Silent:0b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast R","italic":false}'}
+    if entity @s[tag=dnl.guardian_ghast.blue] run data merge entity @s {Invulnerable:0b,NoAI:0b,Silent:0b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast B","italic":false}'}
+    if entity @s[tag=dnl.guardian_ghast.yellow] run data merge entity @s {Invulnerable:0b,NoAI:0b,Silent:0b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast Y","italic":false}'}
     tag @s remove dnl.guardian_ghast.awoken
     tag @s remove dnl.guardian_ghast.stunned
     tag @s remove dnl.guardian_ghast.stunned_long
@@ -210,13 +211,13 @@ function ./guardian_ghast/sleep:
     scoreboard players set @s dnl.phase 0
     scoreboard players set @s dnl.health 12
     scoreboard players reset @s dnl.timer
-    data merge entity @s{Invulnerable:1b,NoAI:1b,Silent:1b}
+    data merge entity @s{Invulnerable:1b,NoAI:1b,Silent:1b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast","italic":false}'}
 
 function ./guardian_ghast/stunned:
     scoreboard players add @s dnl.timer 1
     if score @s dnl.timer matches 1 run function ./guardian_ghast/stunned/init:
         playsound minecraft:entity.wither.hurt master @a ~ ~ ~ 4 0.1
-        data merge entity @s {Invulnerable:1b,NoAI:1b,Silent:1b}
+        data merge entity @s {Invulnerable:1b,NoAI:1b,Silent:1b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast","italic":false}'}
         scoreboard players operation #dnl.guardian_ghast.lid dnl.lid = @s dnl.lid
         as @e[type=marker,tag=dnl.core,tag=dnl.guardian_ghast] if score @s dnl.lid = #dnl.guardian_ghast.lid dnl.lid run tag @s add dnl.guardian_ghast.core.stunned
     if score @s dnl.timer matches 1.. run function ./guardian_ghast/stunned/particles:
@@ -225,7 +226,10 @@ function ./guardian_ghast/stunned:
     if score @s dnl.timer matches 160.. run function ./guardian_ghast/stunned/end: 
         playsound minecraft:entity.ghast.warn master @a ~ ~ ~ 4 0.8
         playsound minecraft:entity.lightning_bolt.thunder master @a ~ ~ ~ 4 1
-        data merge entity @s{Invulnerable:0b,NoAI:0b,Silent:0b}
+        # data merge entity @s{Invulnerable:0b,NoAI:0b,Silent:0b}
+        if entity @s[tag=dnl.guardian_ghast.red] run data merge entity @s {Invulnerable:0b,NoAI:0b,Silent:0b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast R","italic":false}'}
+        if entity @s[tag=dnl.guardian_ghast.blue] run data merge entity @s {Invulnerable:0b,NoAI:0b,Silent:0b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast B","italic":false}'}
+        if entity @s[tag=dnl.guardian_ghast.yellow] run data merge entity @s {Invulnerable:0b,NoAI:0b,Silent:0b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast Y","italic":false}'}
         scoreboard players set @s dnl.health 12
         tag @s remove dnl.guardian_ghast.stunned
         scoreboard players reset @s dnl.timer
@@ -234,7 +238,7 @@ function ./guardian_ghast/stunned_long:
     unless score @s dnl.timer matches 2.. run scoreboard players add @s dnl.timer 1
     if score @s dnl.timer matches 1 run function ./guardian_ghast/stunned_long/init:
         playsound minecraft:entity.wither.hurt master @a ~ ~ ~ 4 0.1
-        data merge entity @s {Invulnerable:1b,NoAI:1b,Silent:1b}
+        data merge entity @s {Invulnerable:1b,NoAI:1b,Silent:1b,CustomNameVisible:0b,CustomName:'{"translate":"Guardian Ghast","italic":false}'}
     if score @s dnl.timer matches 1.. run function ./guardian_ghast/stunned_long/particles:
         particle minecraft:reverse_portal ~ ~ ~ 3 3 3 0.01 20 force
         particle minecraft:soul ~ ~ ~ 3 3 3 0.01 10 force
