@@ -205,3 +205,23 @@ function ./abstract_forbidden_fruit/display_health:
     title @s[scores={dnl.max_health=98}] actionbar {"translate":" 2 ♥♥♥♥♥♥♥♥♡♡","color":"light_purple"}
     title @s[scores={dnl.max_health=99}] actionbar {"translate":" 1 ♥♥♥♥♥♥♥♥♥♡","color":"light_purple"}
     title @s[scores={dnl.max_health=100..}] actionbar {"translate":"---","color":"light_purple"}
+
+function ./abstract_forbidden_fruit/changed_dimension:
+    advancement revoke @s only dnl:item/abstract_forbidden_fruit/changed_dimension
+    function dnl:item/abstract_forbidden_fruit/update_health
+    effect give @s minecraft:instant_health 1 100 true
+
+advancement ./abstract_forbidden_fruit/changed_dimension {
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:changed_dimension",
+            "conditions": {
+                "from": "minecraft:the_end",
+                "to": "minecraft:overworld"
+            }
+        }
+    },
+    "rewards": {
+        "function": "dnl:item/abstract_forbidden_fruit/changed_dimension"
+    }
+}

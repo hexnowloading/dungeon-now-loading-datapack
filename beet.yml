@@ -5,13 +5,13 @@ description: A dungeon made by Hex
 
 data_pack:
   load: [src]
-  zipped: true
-  pack_format: 10
+  zipped: false
+  pack_format: 12
 
 resource_pack:
   load: [src]
-  zipped: true
-  pack_format: 12
+  zipped: false
+  pack_format: 9
 
 output: 'build'
 
@@ -32,11 +32,11 @@ meta:
       - dnl:*
   copy_files:
     resource_pack:
+      assets: "src/assets/*.*"
       assets/minecraft/optifine: "src/assets/minecraft/optifine/*.*"
       assets/minecraft/optifine/anim: "src/assets/minecraft/optifine/anim/*.*"
       assets/minecraft/optifine/cit/armor: "src/assets/minecraft/optifine/cit/armor/*.*"
       assets/minecraft/optifine/random/entity/ghast: "src/assets/minecraft/optifine/random/entity/ghast/*.*"
-      assets/minecraft/optifine/cem: "src/assets/minecraft/optifine/cem/*.*"
   dnl:
     namespace: 'dnl'
     cmd_namespace: 'cmd'
