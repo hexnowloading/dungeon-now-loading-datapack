@@ -6,12 +6,12 @@ description: A dungeon made by Hex
 data_pack:
   load: [src]
   zipped: false
-  pack_format: 12
+  pack_format: 10
 
 resource_pack:
   load: [src]
   zipped: false
-  pack_format: 9
+  pack_format: 12
 
 output: 'build'
 
@@ -29,6 +29,8 @@ pipeline:
 meta:
   bolt:
     entrypoint:
+      - dnl:*
+    endpoints:
       - dnl:*
   copy_files:
     resource_pack:
