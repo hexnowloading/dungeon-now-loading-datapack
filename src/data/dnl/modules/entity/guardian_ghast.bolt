@@ -13,6 +13,7 @@ from reapermc:api import
     listener
 
 add_summon guardian_ghast ghast boss 64 0 0 flame {
+    CustomName:'{"translate":"Guardian Ghast","italic":false}',
     DeathLootTable:"dnl:entity/guardian_ghast/death",
     Tags:["dnl.tick","dnl.mob","dnl.guardian_ghast"],
     NoAI:0b,
@@ -167,6 +168,7 @@ function ./guardian_ghast/particle/red:
     particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~-3 ~5 ~ 0 0 1.5 0.01 10 force
     particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~3 1.5 0 0 0.01 10 force
     particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~-3 1.5 0 0 0.01 10 force
+    data merge entity @s {CustomName:'{"translate":"Guardian Ghast R","italic":false}'}
     # particle minecraft:soul ~ ~ ~ 3 3 3 0.01 10 force
     # positioned ^1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
     # positioned ^-1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
@@ -176,6 +178,7 @@ function ./guardian_ghast/particle/blue:
     particle dust_color_transition 0.000 0.000 1.000 1 0.000 0.000 0.000 ~-3 ~5 ~ 0 0 1.5 0.01 10 force
     particle dust_color_transition 0.000 0.000 1.000 1 0.000 0.000 0.000 ~ ~5 ~3 1.5 0 0 0.01 10 force
     particle dust_color_transition 0.000 0.000 1.000 1 0.000 0.000 0.000 ~ ~5 ~-3 1.5 0 0 0.01 10 force
+    data merge entity @s {CustomName:'{"translate":"Guardian Ghast B","italic":false}'}
     # positioned ^1.5 ^2.5 ^2.5 run particle dust_color_transition 0.031 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
     # positioned ^-1.5 ^2.5 ^2.5 run particle dust_color_transition 0.031 0.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
 
@@ -184,6 +187,7 @@ function ./guardian_ghast/particle/yellow:
     particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~-3 ~5 ~ 0 0 1.5 0.01 10 force
     particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~3 1.5 0 0 0.01 10 force
     particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~5 ~-3 1.5 0 0 0.01 10 force
+    data merge entity @s {CustomName:'{"translate":"Guardian Ghast Y","italic":false}'}
     # positioned ^1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
     # positioned ^-1.5 ^2.5 ^2.5 run particle dust_color_transition 1.000 1.000 0.000 1 0.000 0.000 0.000 ~ ~ ~ 0 0 0 1 0 force
 

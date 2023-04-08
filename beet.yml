@@ -23,11 +23,20 @@ require:
 pipeline:
   - mecha
   - plugins.remove_empty_files
+  - beet.contrib.copy_files
+  - beet.contrib.worldgen
 
 meta:
   bolt:
     entrypoint:
       - dnl:*
+  copy_files:
+    resource_pack:
+      assets/minecraft/optifine: "src/assets/minecraft/optifine/*.*"
+      assets/minecraft/optifine/anim: "src/assets/minecraft/optifine/anim/*.*"
+      assets/minecraft/optifine/cit/armor: "src/assets/minecraft/optifine/cit/armor/*.*"
+      assets/minecraft/optifine/random/entity/ghast: "src/assets/minecraft/optifine/random/entity/ghast/*.*"
+      assets/minecraft/optifine/cem: "src/assets/minecraft/optifine/cem/*.*"
   dnl:
     namespace: 'dnl'
     cmd_namespace: 'cmd'

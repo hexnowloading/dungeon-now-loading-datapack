@@ -8,11 +8,11 @@ from reapermc:api import
     listener
 
 id = ctx.meta.item.heavy_iron_armor
-nbt = get_nbt("heavy_iron_armor", id)
-add_custom_model_data("heavy_iron_helmet", id, "iron_helmet")
-add_custom_model_data("heavy_iron_chestplate", id, "iron_chestplate")
-add_custom_model_data("heavy_iron_leggings", id, "iron_leggings")
-add_custom_model_data("heavy_iron_boots", id, "iron_boots")
+nbt = get_nbt("heavy_iron_armor", id, "false")
+# add_custom_model_data("heavy_iron_helmet", id, "iron_helmet")
+# add_custom_model_data("heavy_iron_chestplate", id, "iron_chestplate")
+# add_custom_model_data("heavy_iron_leggings", id, "iron_leggings")
+# add_custom_model_data("heavy_iron_boots", id, "iron_boots")
 # add_custom_model_data("heavy_iron_helmet", id, "diamond_helmet")
 # add_custom_model_data("heavy_iron_chestplate", id, "diamond_chestplate")
 # add_custom_model_data("heavy_iron_leggings", id, "diamond_leggings")
