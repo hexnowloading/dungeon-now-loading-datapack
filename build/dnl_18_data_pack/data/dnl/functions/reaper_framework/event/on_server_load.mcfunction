@@ -80,17 +80,6 @@ team add dnl.no_collision
 team modify dnl.no_collision collisionRule pushOwnTeam
 execute unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
 advancement grant @a only dnl:story/general/new_start
-scoreboard objectives add dnl.raidbar_id dummy
-bossbar add dnl:raidbar0 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar1 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar2 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar3 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar4 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar5 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar6 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar7 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar8 {"translate": "Reserved", "color": "aqua"}
-bossbar add dnl:raidbar9 {"translate": "Reserved", "color": "aqua"}
 data modify storage dnl:temp ItemName set value []
 scoreboard objectives add dnl.timer.shield dummy
 scoreboard objectives add dnl.eid dummy
@@ -106,3 +95,14 @@ scoreboard objectives add dnl.uuid3 dummy
 scoreboard objectives add dnl.pid dummy
 scoreboard objectives add dnl.bow dummy
 scoreboard objectives add dnl.return minecraft.custom:minecraft.leave_game
+scoreboard objectives add dnl.raidbar_id dummy
+bossbar add dnl:raidbar0 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar1 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar2 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar3 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar4 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar5 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar6 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar7 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar8 {"translate": "Reserved", "color": "aqua"}
+bossbar add dnl:raidbar9 {"translate": "Reserved", "color": "aqua"}
