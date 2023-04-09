@@ -1,0 +1,83 @@
+from reapermc:api import
+    listener
+
+from ../util/item import
+    get_nbt
+    arrow_load_data
+
+from ../event/on_projectile_load import on_projectile_load
+from ../event/on_projectile_land import on_projectile_land
+from ../event/on_marker_skill import on_marker_skill
+
+id = ctx.meta.item.torch_bow
+
+nbt = get_nbt("torch_bow", id, "false")
+
+loot_table ../item/torch_bow {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:bow",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Torch Wisp Bow",
+                                "color": "#FFAA00",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Luminate",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Places torch where the arrow lands.",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+@listener(on_projectile_load)
+def projectile_load():
+    if score #dnl.type dnl.bow matches id run function ./torch_bow/load:
+        arrow_load_data id 1200
+
+@listener(on_projectile_land)
+def projectile_land():
+    if score #dnl.type dnl.bow matches id at @s run function ./torch_bow/land:
+        align xyz positioned ~0.5 ~0.5 ~0.5 run summon minecraft:marker ~ ~ ~ {Tags:["dnl.skill","dnl.marker","dnl.torch_bow.luminate"]}
+        setblock ~ ~ ~ light[level=14] destroy
+
+@listener(on_marker_skill)
+def marker_skill():
+    if entity @s[tag=dnl.torch_bow.luminate] run function ./torch_bow/luminate_marker/main:
+        scoreboard players add @s dnl.timer 1
+        particle flame ~ ~ ~ 0 0 0 0.001 1 normal
+        for x in range(20):
+            flash_time = x * 5
+            if score @s dnl.timer matches flash_time run particle end_rod ~ ~ ~ 0.5 0.5 0.5 0.001 1 normal
+            if score @s dnl.timer matches flash_time run 
+        if score @s dnl.timer matches 100.. run function ./torch_bow/luminate_marker/end:
+            if block ~ ~ ~ minecraft:light run setblock ~ ~ ~ minecraft:air replace
+            kill @s
