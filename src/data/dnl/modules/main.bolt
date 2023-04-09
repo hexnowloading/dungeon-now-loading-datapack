@@ -79,6 +79,7 @@ def tick():
     as @e[type=#dnl:mobs_and_players] at @s run function ./tick/living
     as @e[type=#dnl:others] at @s run function ./tick/technical
     as @e[type=item] at @s run function ./util/item_entity/tick
+    as @e[type=falling_block, tag=dnl.tick] at @s run function ./util/falling_block_entity_listener
 
 @listener(on_entity_player_tick)
 def entity_player_tick():

@@ -6,5 +6,5 @@ on_player_mined_block = Event('on_player_mined_block')
 @on_player_mined_block.handler
 def handler():
     execute function on_player_mined_block.generate_path('player_mined_block'):
-        function ../util/pickaxes/listener:
+        function ../util/mined_block/listener:
             on_player_mined_block.trigger()       

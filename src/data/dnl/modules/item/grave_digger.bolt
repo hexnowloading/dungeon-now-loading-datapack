@@ -1,0 +1,114 @@
+from reapermc:api import
+    listener
+
+from ../util/item import
+    get_nbt
+    add_custom_model_data
+
+from ../event/on_player_mined_block import on_player_mined_block
+
+id = ctx.meta.item.grave_digger
+
+nbt = get_nbt("grave_digger", id, "false")
+
+loot_table ../item/grave_digger {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:iron_shovel",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Ancient Pickaxe",
+                                "color": "#FFAA00",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Unearthing",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Destorys 3 x 3 x 3 dirt type blocks.",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+@listener(on_player_mined_block)
+def player_mined_block():
+    if score @s dnl.mainhand matches id run function ./grave_digger/mined_block:
+        if score @s dnl.mined_grass_block matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_podzol matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_mycelium matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_dirt_path matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_dirt matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_coarse_dirt matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_rooted_dirt matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        if score @s dnl.mined_farmland matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function ./grave_digger/destroy_blocks
+        
+
+function ./grave_digger/destroy_blocks:
+    if block ~1 ~ ~ #dnl:item/grave_digger/minable run setblock ~1 ~ ~ air destroy
+    if block ~-1 ~ ~ #dnl:item/grave_digger/minable run setblock ~-1 ~ ~ air destroy
+    if block ~ ~ ~1 #dnl:item/grave_digger/minable run setblock ~ ~ ~1 air destroy
+    if block ~ ~ ~-1 #dnl:item/grave_digger/minable run setblock ~ ~ ~-1 air destroy
+    if block ~1 ~ ~-1 #dnl:item/grave_digger/minable run setblock ~1 ~ ~-1 air destroy
+    if block ~-1 ~ ~1 #dnl:item/grave_digger/minable run setblock ~-1 ~ ~1 air destroy
+    if block ~1 ~ ~1 #dnl:item/grave_digger/minable run setblock ~1 ~ ~1 air destroy
+    if block ~-1 ~ ~-1 #dnl:item/grave_digger/minable run setblock ~-1 ~ ~-1 air destroy
+    
+    if block ~ ~1 ~ #dnl:item/grave_digger/minable run setblock ~ ~1 ~ air destroy
+    if block ~1 ~1 ~ #dnl:item/grave_digger/minable run setblock ~1 ~1 ~ air destroy
+    if block ~-1 ~1 ~ #dnl:item/grave_digger/minable run setblock ~-1 ~1 ~ air destroy
+    if block ~ ~1 ~1 #dnl:item/grave_digger/minable run setblock ~ ~1 ~1 air destroy
+    if block ~ ~1 ~-1 #dnl:item/grave_digger/minable run setblock ~ ~1 ~-1 air destroy
+    if block ~1 ~1 ~-1 #dnl:item/grave_digger/minable run setblock ~1 ~1 ~-1 air destroy
+    if block ~-1 ~1 ~1 #dnl:item/grave_digger/minable run setblock ~-1 ~1 ~1 air destroy
+    if block ~1 ~1 ~1 #dnl:item/grave_digger/minable run setblock ~1 ~1 ~1 air destroy
+    if block ~-1 ~1 ~-1 #dnl:item/grave_digger/minable run setblock ~-1 ~1 ~-1 air destroy
+
+    if block ~ ~-1 ~ #dnl:item/grave_digger/minable run setblock ~ ~-1 ~ air destroy
+    if block ~1 ~-1 ~ #dnl:item/grave_digger/minable run setblock ~1 ~-1 ~ air destroy
+    if block ~-1 ~-1 ~ #dnl:item/grave_digger/minable run setblock ~-1 ~-1 ~ air destroy
+    if block ~ ~-1 ~1 #dnl:item/grave_digger/minable run setblock ~ ~-1 ~1 air destroy
+    if block ~ ~-1 ~-1 #dnl:item/grave_digger/minable run setblock ~ ~-1 ~-1 air destroy
+    if block ~1 ~-1 ~-1 #dnl:item/grave_digger/minable run setblock ~1 ~-1 ~-1 air destroy
+    if block ~-1 ~-1 ~1 #dnl:item/grave_digger/minable run setblock ~-1 ~-1 ~1 air destroy
+    if block ~1 ~-1 ~1 #dnl:item/grave_digger/minable run setblock ~1 ~-1 ~1 air destroy
+    if block ~-1 ~-1 ~-1 #dnl:item/grave_digger/minable run setblock ~-1 ~-1 ~-1 air destroy
+
+block_tag ./grave_digger/minable {
+    "description": "Dirt type blocks that can be mined with grave digger",
+    "values": [
+        "minecraft:grass_block",
+        "minecraft:podzol",
+        "minecraft:mycelium",
+        "minecraft:dirt_path",
+        "minecraft:dirt",
+        "minecraft:coarse_dirt",
+        "minecraft:rooted_dirt",
+        "minecraft:farmland"
+    ]
+}

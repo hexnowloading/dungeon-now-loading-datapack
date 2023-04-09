@@ -77,7 +77,6 @@ def marker_skill():
         for x in range(20):
             flash_time = x * 5
             if score @s dnl.timer matches flash_time run particle end_rod ~ ~ ~ 0.5 0.5 0.5 0.001 1 normal
-            if score @s dnl.timer matches flash_time run 
         if score @s dnl.timer matches 100.. run function ./torch_bow/luminate_marker/end:
             if block ~ ~ ~ minecraft:light run setblock ~ ~ ~ minecraft:air replace
             kill @s

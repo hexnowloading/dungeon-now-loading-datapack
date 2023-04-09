@@ -1,0 +1,13 @@
+{
+  "description": "Dirt type blocks that can be mined with grave digger",
+  "values": [
+    "minecraft:grass_block",
+    "minecraft:podzol",
+    "minecraft:mycelium",
+    "minecraft:dirt_path",
+    "minecraft:dirt",
+    "minecraft:coarse_dirt",
+    "minecraft:rooted_dirt",
+    "minecraft:farmland"
+  ]
+}

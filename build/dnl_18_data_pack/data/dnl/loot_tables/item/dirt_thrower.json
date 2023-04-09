@@ -1,0 +1,44 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond_shovel",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "entity": "this",
+              "name": {
+                "translate": "Dirt Thrower",
+                "color": "#FFAA00",
+                "italic": false
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "entity": "this",
+              "lore": [
+                {
+                  "translate": "Dirt Launcher",
+                  "color": "#AAAAAA",
+                  "italic": false
+                },
+                {
+                  "translate": "Launches a dirt block.",
+                  "color": "#555555",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl: {name: 'dirt_thrower', item: 1, id: 2004}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

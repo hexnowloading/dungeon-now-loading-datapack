@@ -1,0 +1,89 @@
+from reapermc:api import
+    listener
+
+from ../util/item import
+    get_nbt
+    add_custom_model_data
+
+from ../event/on_player_mined_block import on_player_mined_block
+from ../event/on_entity_falling_block_tick import on_entity_falling_block_tick
+
+id = ctx.meta.item.dirt_thrower
+
+nbt = get_nbt("dirt_thrower", id, "false")
+
+loot_table ../item/dirt_thrower {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:diamond_shovel",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "Dirt Thrower",
+                                "color": "#FFAA00",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Dirt Launcher",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "Launches a dirt block.",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+dirt_throwable_block_list = [
+    "grass_block",
+    "dirt",
+    "podzol",
+    "mycelium",
+    "dirt_path",
+    "coarse_dirt",
+    "rooted_dirt",
+    "farmland"
+
+]
+
+@listener(on_player_mined_block)
+def player_mined_block():
+    if score @s dnl.mainhand matches id run function ./dirt_thrower/mined_block:
+        for x in dirt_throwable_block_list:
+            if score @s f"dnl.mined_{x}" matches 1.. at @e[type=item,nbt={Age:0s},limit=1,sort=nearest] run function f"dnl:item/dirt_thrower/launch_{x}":
+                if entity @s[y_rotation=-180..-135] run summon falling_block ~ ~1 ~ {Tags:["dnl.tick","dnl.falling_block.dirt_thrower"],BlockState:{Name:f"minecraft:{x}"},Time:1,DropItem:1b,HurtEntities:1b,FallHurtMax:40,FallDistance:4f,FallHurtAmount:2f,Motion:[0.0,0.2,-0.8]}
+                if entity @s[y_rotation=-134..-45] run summon falling_block ~ ~1 ~ {Tags:["dnl.tick","dnl.falling_block.dirt_thrower"],BlockState:{Name:f"minecraft:{x}"},Time:1,DropItem:1b,HurtEntities:1b,FallHurtMax:40,FallDistance:4f,FallHurtAmount:2f,Motion:[0.8,0.2,0.0]}
+                if entity @s[y_rotation=-44..45] run summon falling_block ~ ~1 ~ {Tags:["dnl.tick","dnl.falling_block.dirt_thrower"],BlockState:{Name:f"minecraft:{x}"},Time:1,DropItem:1b,HurtEntities:1b,FallHurtMax:40,FallDistance:4f,FallHurtAmount:2f,Motion:[0.0,0.2,0.8]}
+                if entity @s[y_rotation=46..134] run summon falling_block ~ ~1 ~ {Tags:["dnl.tick","dnl.falling_block.dirt_thrower"],BlockState:{Name:f"minecraft:{x}"},Time:1,DropItem:1b,HurtEntities:1b,FallHurtMax:40,FallDistance:4f,FallHurtAmount:2f,Motion:[-0.8,0.2,0.0]}
+                if entity @s[y_rotation=135..180] run summon falling_block ~ ~1 ~ {Tags:["dnl.tick","dnl.falling_block.dirt_thrower"],BlockState:{Name:f"minecraft:{x}"},Time:1,DropItem:1b,HurtEntities:1b,FallHurtMax:40,FallDistance:4f,FallHurtAmount:2f,Motion:[0.0,0.2,-0.8]}
+                kill @e[type=item,nbt={Age:0s},limit=1,sort=nearest]
+
+@listener(on_entity_falling_block_tick)
+def entity_falling_block_tick():
+    if entity @s[tag=dnl.falling_block.dirt_thrower] run function ./dirt_thrower/falling_block/main:
+        if entity @e[type=#dnl:mobs_and_players,dx=0] run function ./dirt_thrower/falling_block/init:
+            data modify entity @s Motion[1] set value -1.0
+            tag @s remove dnl.tick

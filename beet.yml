@@ -53,6 +53,7 @@ meta:
     royal_ominous_crossbow: 7
     broken_bow: 8
     frost_watcher_bow: 9
+    torch_bow: 10
   
     ancient_axe: 1001
     ancient_sword: 1002
@@ -65,7 +66,9 @@ meta:
 
     ancient_pickaxe: 2001
     spawner_breaker: 2002
-    
+    grave_digger: 2003
+    dirt_thrower: 2004
+
     crown_of_olympus: 3001
     golem_heart_armor: 3002
     heavy_iron_armor: 3003

@@ -8,6 +8,6 @@ def handler():
 
     @listener(on_entity_player_tick)
     def _on_entity_player_tick():
-        if entity @s[tag=!dnl.init]:
-            tag @s add dnl.init
+        if entity @s[tag=!dnl.init.player]:
+            tag @s add dnl.init.player
             on_entity_player_init.trigger()

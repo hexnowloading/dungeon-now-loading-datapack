@@ -1,4 +1,4 @@
-execute if entity @s[tag=!dnl.init] run function dnl:config/death_penalty/nested_execute_0
+execute if entity @s[tag=!dnl.init.player] run function dnl:config/death_penalty/nested_execute_0
 execute if entity @s[tag=dnl.marker_visibility] at @e[type=#dnl:invisible] run function dnl:config/marker_visibility/init
 execute if score @s reaper_framework.event_handler.on_entity_player_join matches -1 run function dnl:reaper_framework/event_handler/on_entity_player_join/join
 execute if score @s reaper_framework.event_handler.on_entity_player_join matches 1.. run scoreboard players set @s reaper_framework.event_handler.on_entity_player_join -1
@@ -22,12 +22,28 @@ execute if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=fal
 execute if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=true}] run function dnl:util/entity_hit_matching/using_shield/true
 execute if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.horn_id dnl.int = @s dnl.offhand
 execute if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.horn_id dnl.int = @s dnl.mainhand
+execute if score @s dnl.mined_spawner matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_grass_block matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_podzol matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_mycelium matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_dirt_path matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_dirt matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_coarse_dirt matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_rooted_dirt matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_farmland matches 1.. run scoreboard players set @s dnl.mined_block 1
+execute if score @s dnl.mined_block matches 1.. if score @s dnl.mainhand matches 1.. run function dnl:util/mined_block/listener
+scoreboard players reset @s dnl.mined_spawner
+scoreboard players reset @s dnl.mined_grass_block
+scoreboard players reset @s dnl.mined_podzol
+scoreboard players reset @s dnl.mined_mycelium
+scoreboard players reset @s dnl.mined_dirt_path
+scoreboard players reset @s dnl.mined_dirt
+scoreboard players reset @s dnl.mined_coarse_dirt
+scoreboard players reset @s dnl.mined_rooted_dirt
+scoreboard players reset @s dnl.mined_farmland
+scoreboard players reset @s dnl.mined_block
 execute if score @s dnl.offhand_delay matches 1.. run scoreboard players remove @s dnl.offhand_delay 1
 execute unless score @s dnl.offhand_delay matches 1.. run scoreboard players reset @s dnl.offhand_used
-execute if score @s dnl.mined_spawner matches 1.. run scoreboard players set @s dnl.mined_block 1
-execute if score @s dnl.mined_block matches 1.. if score @s dnl.mainhand matches 1.. run function dnl:util/pickaxes/listener
-scoreboard players reset @s dnl.mined_spawner
-scoreboard players reset @s dnl.mined_block
 execute if score @s dnl.return matches 1.. run function dnl:util/projectiles/return
 execute unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run function dnl:util/projectiles/player_offhand
 execute unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run function dnl:util/projectiles/player_mainhand

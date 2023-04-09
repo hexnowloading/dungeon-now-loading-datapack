@@ -1,0 +1,44 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_shovel",
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "entity": "this",
+              "name": {
+                "translate": "Ancient Pickaxe",
+                "color": "#FFAA00",
+                "italic": false
+              }
+            },
+            {
+              "function": "minecraft:set_lore",
+              "entity": "this",
+              "lore": [
+                {
+                  "translate": "Unearthing",
+                  "color": "#AAAAAA",
+                  "italic": false
+                },
+                {
+                  "translate": "Destorys 3 x 3 x 3 dirt type blocks.",
+                  "color": "#555555",
+                  "italic": false
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{dnl: {name: 'grave_digger', item: 1, id: 2003}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

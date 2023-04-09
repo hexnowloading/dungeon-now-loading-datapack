@@ -1,0 +1,46 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../event/on_entity_player_tick import
+    on_entity_player_tick
+
+mined_block_list = []
+def add_mined_block(block_type):
+    mined_block_list.append(block_type)
+
+add_mined_block("spawner")
+add_mined_block("grass_block")
+add_mined_block("podzol")
+add_mined_block("mycelium")
+add_mined_block("dirt_path")
+add_mined_block("dirt")
+add_mined_block("coarse_dirt")
+add_mined_block("rooted_dirt")
+add_mined_block("farmland")
+
+@listener(on_server_load)
+def load():
+    for x in mined_block_list:
+        scoreboard objectives add f"dnl.mined_{x}" f"minecraft.mined:minecraft.{x}"
+
+    # scoreboard objectives ...
+    # scoreboard objectives ...
+
+    scoreboard objectives add dnl.mined_block dummy
+
+@listener(on_entity_player_tick)
+def entity_player_tick():
+    for y in mined_block_list:
+        if score @s f"dnl.mined_{y}" matches 1.. run scoreboard players set @s dnl.mined_block 1
+    # if score ...
+    # if score ...
+
+    if score @s dnl.mined_block matches 1.. if score @s dnl.mainhand matches 1.. run function ./mined_block/listener
+
+    for z in mined_block_list:
+        scoreboard players reset @s f"dnl.mined_{z}"
+    # scoreboard players ...
+    # scoreboard players ...
+
+    scoreboard players reset @s dnl.mined_block

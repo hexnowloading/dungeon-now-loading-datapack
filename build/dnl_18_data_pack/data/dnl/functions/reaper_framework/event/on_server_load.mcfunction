@@ -87,6 +87,14 @@ execute unless score #loaded dnl.eid = #loaded dnl.eid run function dnl:util/ent
 scoreboard objectives add dnl.item_entity dummy
 scoreboard objectives add dnl.item_entity_tier dummy
 scoreboard objectives add dnl.mined_spawner minecraft.mined:minecraft.spawner
+scoreboard objectives add dnl.mined_grass_block minecraft.mined:minecraft.grass_block
+scoreboard objectives add dnl.mined_podzol minecraft.mined:minecraft.podzol
+scoreboard objectives add dnl.mined_mycelium minecraft.mined:minecraft.mycelium
+scoreboard objectives add dnl.mined_dirt_path minecraft.mined:minecraft.dirt_path
+scoreboard objectives add dnl.mined_dirt minecraft.mined:minecraft.dirt
+scoreboard objectives add dnl.mined_coarse_dirt minecraft.mined:minecraft.coarse_dirt
+scoreboard objectives add dnl.mined_rooted_dirt minecraft.mined:minecraft.rooted_dirt
+scoreboard objectives add dnl.mined_farmland minecraft.mined:minecraft.farmland
 scoreboard objectives add dnl.mined_block dummy
 scoreboard objectives add dnl.uuid0 dummy
 scoreboard objectives add dnl.uuid1 dummy

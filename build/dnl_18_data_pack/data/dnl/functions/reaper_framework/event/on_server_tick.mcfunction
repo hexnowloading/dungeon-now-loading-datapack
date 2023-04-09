@@ -9,3 +9,4 @@ scoreboard players add #dnl.5t dnl.tick 1
 execute as @e[type=#dnl:mobs_and_players] at @s run function dnl:tick/living
 execute as @e[type=#dnl:others] at @s run function dnl:tick/technical
 execute as @e[type=item] at @s run function dnl:util/item_entity/tick
+execute as @e[type=falling_block, tag=dnl.tick] at @s run function dnl:util/falling_block_entity_listener
