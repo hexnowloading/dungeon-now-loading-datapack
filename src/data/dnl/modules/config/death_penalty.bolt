@@ -1,14 +1,12 @@
 from reapermc:api import
     listener
 
-from ../api import
-    in_player_setting
-    on_entity_player_init
+from ../event/on_player_init import on_player_init
 
 cmd = ctx.meta.dnl.cmd_namespace
 
-@listener(on_entity_player_init)
-def entity_player_init():
+@listener(on_player_init)
+def player_init():
     # Default Death Penalty Level
     #  0 - peaceful
     #  1 - casual

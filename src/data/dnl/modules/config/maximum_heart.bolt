@@ -1,20 +1,20 @@
 from reapermc:api import
     listener
 
-from ../api import
-    on_entity_player_join
-    in_world_setting
+from ../event/on_server_init import on_server_init
+
+from ../event/on_player_init import on_player_init
 
 cmd = ctx.meta.dnl.cmd_namespace
 
-@listener(in_world_setting)
-def world_setting():
+@listener(on_server_init)
+def server_init():
     scoreboard players set #dnl.world_maximum_heart dnl.int 10
     scoreboard players set #dnl.world_maximum_heart_piece dnl.int 100
 
-@listener(on_entity_player_join)
-def player_join():
-    
+@listener(on_player_init)
+def player_init():
+    scoreboard players set @s dnl.max_health 0
     if score @s dnl.max_health > #dnl.world_maximum_heart_piece dnl.int run function ./maximum_heart/update_health
 
 function f"{cmd}:maximum_heart":

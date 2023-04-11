@@ -2,11 +2,6 @@ from reapermc:api import
     listener
     on_server_load
 
-from ../api import
-    on_entity_technical_tick
-    on_entity_player_tick
-    on_entity_player_init
-    on_entity_marker_tick
 
 @listener(on_server_load)
 def load():

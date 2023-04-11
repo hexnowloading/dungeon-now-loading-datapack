@@ -2,6 +2,11 @@ from reapermc:api import
     listener
     on_server_load
 
+from ../event/on_server_init import on_server_init
+
+@listener(on_server_init)
+def server_init():
+    scoreboard players set #dnl.developer_mode dnl.boolean 0
 
 @listener(on_server_load)
 def load():

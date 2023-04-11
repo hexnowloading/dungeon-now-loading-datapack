@@ -1,0 +1,29 @@
+from ../api import
+    on_entity_mob_tick
+    on_entity_hurt_target
+    on_entity_hurt_attacker
+    on_marker_core
+    add_summon
+    set_bossbar
+    remove_bossbar
+    add_death_event
+    assign_lid
+    assign_equipment
+from reapermc:api import
+    listener
+
+add_summon test_skeleton skeleton none 16 0 0 flame {
+    Tags:["dnl.mob","dnl.tick","dnl.test_skeleton"],
+    PersistenceRequired:1b
+}
+
+@listener(on_entity_mob_tick)
+def entity_mob_tick():
+    if entity @s[tag=dnl.test_skeleton] run function ./test_skeleton/main
+
+function ./test_skeleton/main:
+    ### Init ###
+    say hi
+    loot replace entity @s weapon.mainhand loot dnl:item/ancient_bow_red
+    assign_equipment mainhand set
+    tag @s remove dnl.tick

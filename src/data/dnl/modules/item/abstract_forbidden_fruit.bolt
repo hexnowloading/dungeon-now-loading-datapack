@@ -1,17 +1,10 @@
 from ../api import
     on_player_respawn
-    on_entity_player_init
-    on_entity_player_join
     
 from reapermc:api import
     listener
 
-
 cmd = ctx.meta.dnl.cmd_namespace
-
-@listener(on_entity_player_init)
-def entity_player_init():
-    unless score @s dnl.max_health matches 0.. run scoreboard players set @s dnl.max_health 0
 
 @listener(on_player_respawn)
 def player_respawn():

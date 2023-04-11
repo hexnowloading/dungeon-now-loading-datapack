@@ -3,7 +3,6 @@ from reapermc:api import
 
 from ../api import
     on_entity_player_tick
-    on_entity_player_init
 
 cmd = ctx.meta.dnl.cmd_namespace
 
@@ -57,9 +56,9 @@ function ./marker_visibility/off_set:
 @listener(on_entity_player_tick)
 def entity_player_tick():
     # if entity @s[tag=dnl.marker_visibility] at @e[type=marker,tag=dnl.marker,distance=..16] run particle end_rod ~ ~ ~ 0 0 0 0.001 1 normal @s
-    if entity @s[tag=dnl.marker_visibility] at @e[type=#dnl:invisible] run function ./marker_visibility/init
+    if entity @s[tag=dnl.marker_visibility] at @e[type=#dnl:invisible] run function ./marker_visibility/enable
 
-function ./marker_visibility/init:
+function ./marker_visibility/enable:
     particle poof ~ ~ ~ 0 0 0 0.001 1 force @s
     particle end_rod ~ ~ ~ 0 0 0 0.001 1 force @s
     # if entity @e[type=#dnl:invisible,tag=dnl.height_adjusted] run particle dust 0.541 0.020 1.000 1 ~ ~ ~ 0 0 0 1 1 normal

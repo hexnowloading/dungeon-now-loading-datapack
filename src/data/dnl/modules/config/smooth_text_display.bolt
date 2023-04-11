@@ -1,5 +1,11 @@
 from reapermc:api import
-    sleep
+    listener
+
+from ../event/on_server_init import on_server_init
+
+@listener(on_server_init)
+def server_init():
+    gamerule sendCommandFeedback true
 
 cmd = ctx.meta.dnl.cmd_namespace
 

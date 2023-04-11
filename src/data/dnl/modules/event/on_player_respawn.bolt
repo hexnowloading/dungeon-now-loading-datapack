@@ -9,6 +9,5 @@ def handler():
 
     @listener(on_entity_player_tick)
     def _on_entity_player_tick():
-        execute function on_player_respawn.generate_path('player_respawn'):
-            if score @s dnl.time_since_death matches 1:
-                on_player_respawn.trigger()
+        if score @s dnl.time_since_death matches 1:
+            on_player_respawn.trigger()

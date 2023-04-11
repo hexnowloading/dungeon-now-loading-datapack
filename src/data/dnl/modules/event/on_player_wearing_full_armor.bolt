@@ -5,6 +5,6 @@ on_player_wearing_full_armor = Event('on_player_wearing_full_armor')
 
 @on_player_wearing_full_armor.handler
 def handler():
-    execute function on_player_wearing_full_armor.generate_path('wearing_full_armor'):
-        function ../util/armor/wearing_full_armor_listener:
-            on_player_wearing_full_armor.trigger()
+    function ../util/armor/wearing_full_armor_listener:
+        scoreboard players operation #dnl.full_armor_id dnl.int = @s dnl.head
+        on_player_wearing_full_armor.trigger()

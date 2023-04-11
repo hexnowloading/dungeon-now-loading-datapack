@@ -97,6 +97,12 @@ def projectile_load():
             tag @s add dnl.arrow_trail
         if score #dnl.flaming_tears dnl.boolean matches 0 run function ./ancient_bow_red/has_no_ammo:
             arrow_load_remove_unluck
+        # say check
+        # if entity @e[type=!player,tag=dnl.this] run function ./ancient_bow_red/load_mobs:
+        #     arrow_load_data id 1200
+        #     tag @s add dnl.flaming_tears
+        #     tag @s add dnl.arrow_trail
+        #     say mob loaded
 
 @listener(on_projectile_land)
 def projectile_land():

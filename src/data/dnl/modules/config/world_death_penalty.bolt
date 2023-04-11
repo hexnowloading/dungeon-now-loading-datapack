@@ -1,13 +1,12 @@
 from reapermc:api import
     listener
 
-from ../api import
-    in_world_setting
+from ../event/on_server_init import on_server_init
 
 cmd = ctx.meta.dnl.cmd_namespace
 
-@listener(in_world_setting)
-def world_setting():
+@listener(on_server_init)
+def server_init():
     # Default Death Penalty Level
     #  0 - peaceful
     #  1 - casual

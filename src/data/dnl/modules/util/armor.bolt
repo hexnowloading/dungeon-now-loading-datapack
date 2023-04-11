@@ -7,23 +7,8 @@ from ../api import
 
 @listener(on_entity_player_tick)
 def entity_player_tick():
-    if score @s dnl.head matches 1.. run function ./armor/wearing_helmet:
-        scoreboard players operation #dnl.helmet_id dnl.int = @s dnl.head
-        function ./armor/wearing_helmet_listener
-    if score @s dnl.chest matches 1.. run function ./armor/wearing_chestplate:
-        scoreboard players operation #dnl.chestplate_id dnl.int = @s dnl.chest
-        function ./armor/wearing_chestplate_listener
-    if score @s dnl.leg matches 1.. run function ./armor/wearing_leggings:
-        scoreboard players operation #dnl.leggings_id dnl.int = @s dnl.leg
-        function ./armor/wearing_leggings_listener
-    if score @s dnl.feet matches 1.. run function ./armor/wearing_boots:
-        scoreboard players operation #dnl.boots_id dnl.int = @s dnl.feet
-        function ./armor/wearing_boots_listener
-    if score @s dnl.head = @s dnl.chest if score @s dnl.head = @s dnl.leg if score @s dnl.head = @s dnl.feet run function ./armor/wearing_full_armor:
-        scoreboard players operation #dnl.full_armor_id dnl.int = @s dnl.head
-        function ./armor/wearing_full_armor_listener 
-    scoreboard players reset #dnl.helmet_id dnl.int
-    scoreboard players reset #dnl.chestplate_id dnl.int
-    scoreboard players reset #dnl.leggings_id dnl.int
-    scoreboard players reset #dnl.boots_id dnl.int
-    scoreboard players reset #dnl.full_armor_id dnl.int
+    if score @s dnl.head matches 1.. run function ./armor/wearing_helmet_listener
+    if score @s dnl.chest matches 1.. run function ./armor/wearing_chestplate_listener
+    if score @s dnl.leg matches 1.. run function ./armor/wearing_leggings_listener
+    if score @s dnl.feet matches 1.. run function ./armor/wearing_boots_listener
+    if score @s dnl.head = @s dnl.chest if score @s dnl.head = @s dnl.leg if score @s dnl.head = @s dnl.feet run function ./armor/wearing_full_armor_listener

@@ -1,36 +1,8 @@
 from reapermc:event_handler import Event, listener
-from reapermc:flag_handler import Flag
-from ../api import
-    on_entity_player_tick
 
 on_player_use_horn = Event('on_player_use_horn')
 
 @on_player_use_horn.handler
 def handler():
-    execute function on_player_use_horn.generate_path('use_horn'):
-        advancement revoke @s only ./on_player_use_horn
-        if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.use_horn dnl.int = @s dnl.offhand
-        if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.use_horn dnl.int = @s dnl.mainhand
-        if score #dnl.use_horn dnl.int matches 1..:
-            on_player_use_horn.trigger()
-
-advancement ./on_player_use_horn {
-    "criteria": {
-        "requirement": {
-            "trigger": "minecraft:using_item",
-            "conditions": {
-                "item": {
-                    "items": [
-                        "minecraft:goat_horn"
-                    ]
-                }
-            }
-        }
-    },
-    "rewards": {
-        "function": "reaper_framework:__internal__/event_handler/on_player_use_horn/use_horn"
-    }
-}
-
-
-
+    function ../util/goat_horn_listener:
+        on_player_use_horn.trigger()

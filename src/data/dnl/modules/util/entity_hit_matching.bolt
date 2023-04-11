@@ -232,21 +232,44 @@ advancement ./entity_hit_matching/on_hit {
                 }
             }
         },
+        "not_magic": {
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "is_magic": false
+                    }
+                }
+            }
+        },
+        "is_projectile": {
+            "trigger": "minecraft:player_hurt_entity",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "is_projectile": true
+                    }
+                }
+            }
+        },
         "not_projectile": {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "damage": {
                     "type": {
-                        "is_magic": false,
                         "is_projectile": false
                     }
                 }
             }
-        }
+        },
     },
     "requirements": [
         [
+            "is_projectile",
             "not_projectile" 
+        ],
+        [
+            "not_magic" 
         ],
         [
             "bit_0_0",
@@ -585,6 +608,26 @@ advancement ./entity_hit_matching/on_hurt {
                     "blocked": false
                 }
             }
+        },
+        "is_projectile": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "is_projectile": true
+                    }
+                }
+            }
+        },
+        "not_projectile": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "is_projectile": false
+                    }
+                }
+            }
         }
     },
     "requirements": [
@@ -636,6 +679,10 @@ advancement ./entity_hit_matching/on_hurt {
         [
             "blocked_true",
             "blocked_false"
+        ],
+        [
+            "is_projectile",
+            "not_projectile"
         ]
     ],
     "rewards": {
@@ -753,6 +800,7 @@ function ./entity_hit_matching/on_hit/find_target_id:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
     scoreboard players set #target_id dnl.eid 0
+    scoreboard players reset #dnl.is_projectile dnl.boolean
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_1=true}}] run scoreboard players add #target_id dnl.eid 1
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_2=true}}] run scoreboard players add #target_id dnl.eid 2
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_1=true}}] run scoreboard players add #target_id dnl.eid 3
@@ -771,6 +819,7 @@ function ./entity_hit_matching/on_hit/find_target_id:
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_2=true}}] run scoreboard players add #target_id dnl.eid 4374
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_1=true}}] run scoreboard players add #target_id dnl.eid 6561
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_2=true}}] run scoreboard players add #target_id dnl.eid 13122
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={is_projectile=true}}] run scoreboard players set #dnl.is_projectile dnl.boolean 1
 
 function ./entity_hit_matching/on_hit/reward:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
@@ -783,7 +832,8 @@ function ./entity_hit_matching/on_hit/reward:
     execute as @e[type=#dnl:mobs_and_players] if score @s dnl.eid = #target_id dnl.eid run function ./entity_hit_matching/on_hit_target_data:
         # store result score #dnl.weapon_id.target dnl.int run data get entity @s HandItems[0].tag.dnl.id (Uncomment this when it needs to detect the weapon id when hurt for mobs.)
         scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
-        function ./entity_hit_matching/on_hit_target_listener
+        if score #dnl.is_projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
+        unless score #dnl.is_projectile dnl.boolean matches 1 run function ./entity_hit_matching/on_hit_target_listener
     function ./entity_hit_matching/on_hit_attacker_listener
     scoreboard players reset #dnl.weapon_id.attacker dnl.int
     scoreboard players reset #dnl.shield_id.target dnl.int
@@ -793,6 +843,7 @@ function ./entity_hit_matching/on_hurt/find_target_id:
     ## AUTHOR: Picarrow, CloudWolf, nphhpn
 
     scoreboard players set #target_id dnl.eid 0
+    scoreboard players reset #dnl.is_projectile dnl.boolean
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_1=true}}] run scoreboard players add #target_id dnl.eid 1
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_2=true}}] run scoreboard players add #target_id dnl.eid 2
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_1=true}}] run scoreboard players add #target_id dnl.eid 3
@@ -811,6 +862,7 @@ function ./entity_hit_matching/on_hurt/find_target_id:
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_2=true}}] run scoreboard players add #target_id dnl.eid 4374
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_1=true}}] run scoreboard players add #target_id dnl.eid 6561
     execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_2=true}}] run scoreboard players add #target_id dnl.eid 13122
+    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={is_projectile=true}}] run scoreboard players set #dnl.is_projectile dnl.boolean 1
     
     scoreboard players set #dnl.blocked dnl.boolean 0
     if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked_true=true}}] run scoreboard players set #dnl.blocked dnl.boolean 1
@@ -833,7 +885,8 @@ function ./entity_hit_matching/on_hurt/reward:
     execute as @e[type=#dnl:hurt_targets] if score @s dnl.eid = #target_id dnl.eid run function ./entity_hit_matching/on_hurt_id_check:
         store result score #dnl.weapon_id.attacker dnl.int run data get entity @s HandItems[0].tag.dnl.id
         function ./entity_hit_matching/on_hurt_attacker_listener
-    function ./entity_hit_matching/on_hurt_target_listener
+    if score #dnl.is_projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
+    unless score #dnl.is_projectile dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt_target_listener
     scoreboard players reset #dnl.weapon_id.target dnl.int
     scoreboard players reset #dnl.weapon_id.attacker dnl.int
     scoreboard players reset #dnl.shield_id.target dnl.int

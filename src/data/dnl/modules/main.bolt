@@ -2,13 +2,13 @@ from reapermc:api import
     listener
     on_server_load
     on_server_tick
+    on_player_tick
 
 from ./api import
-    in_player_setting
-    in_world_setting
     on_entity_player_tick
     on_entity_living_tick
     on_entity_technical_tick
+    on_player_load
 
 datapack_version = ctx.meta.dnl.datapack_version
 
@@ -69,41 +69,63 @@ def load():
 
 @listener(on_server_tick)
 def tick():
-    unless score #dnl.version dnl.version matches datapack_version run function dnl:world_settings_load
+    unless score #dnl.server_init dnl.boolean matches 1 run function dnl:util/server_init_listener 
+    unless score #dnl.version dnl.int matches datapack_version run function dnl:util/server_update_listener
     if score #dnl.1s dnl.tick matches 20.. run scoreboard players reset #dnl.1s dnl.tick
     if score #dnl.10t dnl.tick matches 10.. run scoreboard players reset #dnl.10t dnl.tick
     if score #dnl.5t dnl.tick matches 5.. run scoreboard players reset #dnl.5t dnl.tick
     scoreboard players add #dnl.1s dnl.tick 1
     scoreboard players add #dnl.10t dnl.tick 1
     scoreboard players add #dnl.5t dnl.tick 1
-    as @e[type=#dnl:mobs_and_players] at @s run function ./tick/living
+    as @e[type=#dnl:mobs,tag=!dnl.entity.init] at @s run function ./entity/init
+    as @e[type=#dnl:mobs,tag=dnl.mob] at @s run function ./tick/living
+    as @e[type=#dnl:mobs,scores={dnl.effect=1..}] at @s run function dnl:util/entity_effect/main
     as @e[type=#dnl:others] at @s run function ./tick/technical
     as @e[type=item] at @s run function ./util/item_entity/tick
+    as @e[type=minecraft:arrow] at @s run function dnl:util/projectiles/tick_arrow
+    as @e[type=minecraft:firework_rocket] at @s run function dnl:util/projectiles/tick_firework
+    as @e[type=#dnl:item_frames, tag=dnl.tick] at @s run function dnl:util/entity_item_frame_tick_listener
+    as @e[type=minecraft:tnt] at @s run function dnl:util/entity_tnt_tick_listener
+    as @e[type=snowball] at @s run function dnl:util/entity_snowball_tick_listener
 
-@listener(on_entity_player_tick)
-def entity_player_tick():
-    store result score @s dnl.offhand run data get entity @s Inventory[{Slot:-106b}].tag.dnl.id
-    store result score @s dnl.mainhand run data get entity @s SelectedItem.tag.dnl.id
-    store result score @s dnl.head run data get entity @s Inventory[{Slot:103b}].tag.dnl.id
-    store result score @s dnl.chest run data get entity @s Inventory[{Slot:102b}].tag.dnl.id
-    store result score @s dnl.leg run data get entity @s Inventory[{Slot:101b}].tag.dnl.id
-    store result score @s dnl.feet run data get entity @s Inventory[{Slot:100b}].tag.dnl.id
+@listener(on_player_load)
+def player_load():
+    execute if score #loaded dnl.eid matches 1 unless score @s dnl.eid = @s dnl.eid run function dnl:util/entity_hit_matching/id/assign
+    
+@listener(on_player_tick)
+def player_tick():
+    if entity @s[tag=!dnl.player.init] run function dnl:util/player_init_listener
+    data modify storage dnl:player Player set from entity @s {}
+    store result score @s dnl.offhand run data get storage dnl:player Player.Inventory[{Slot:-106b}].tag.dnl.id
+    store result score @s dnl.mainhand run data get storage dnl:player Player.SelectedItem.tag.dnl.id
+    store result score @s dnl.head run data get storage dnl:player Player.Inventory[{Slot:103b}].tag.dnl.id
+    store result score @s dnl.chest run data get storage dnl:player Player.Inventory[{Slot:102b}].tag.dnl.id
+    store result score @s dnl.leg run data get storage dnl:player Player.Inventory[{Slot:101b}].tag.dnl.id
+    store result score @s dnl.feet run data get storage dnl:player Player.Inventory[{Slot:100b}].tag.dnl.id
+    function dnl:util/entity_player_tick_listener
+    if score @s dnl.effect matches 1.. run function dnl:util/entity_effect/main
 
 @listener(on_entity_living_tick)
 def entity_living_tick():
-    execute if score #loaded dnl.eid matches 1 unless score @s dnl.eid = @s dnl.eid run function dnl:util/entity_hit_matching/id/assign
-    if entity @s[tag=dnl.mob, tag=dnl.tick] run function dnl:util/entity_mob_tick_listener
-    if entity @s[type=player] run function dnl:util/entity_player_tick_listener
-    if score @s dnl.effect matches 1.. run function dnl:util/entity_effect/main
-    if entity @s[tag=dnl.mob] if score @s dnl.mainhand matches 1..127 run function dnl:util/projectiles/tick_skeleton
-    if entity @s[nbt={ActiveEffects:[{Id:26}]}] run function dnl:util/projectiles/arrow_hit_entity
+    if entity @s[tag=dnl.tick] run function dnl:util/entity_mob_tick_listener
+    if entity @s[type=#dnl:arrow_shooters] if score @s dnl.mainhand matches 1..127 run function dnl:util/projectiles/tick_skeleton
 
 @listener(on_entity_technical_tick)
 def entity_technical_tick():
-    if entity @s[type=snowball] run function dnl:util/entity_snowball_tick_listener
-    if entity @s[type=tnt] run function dnl:util/entity_tnt_tick_listener
+    # if entity @s[type=#dnl:item_frames, tag=dnl.tick] run function dnl:util/entity_item_frame_tick_listener
+
+    # if entity @s[type=snowball] run function dnl:util/entity_snowball_tick_listener
+    # if entity @s[type=tnt] run function dnl:util/entity_tnt_tick_listener
     if entity @s[tag=dnl.mob, tag=dnl.tick] run function dnl:util/technical_mob_tick_listener
     if entity @s[type=marker, tag=dnl.marker] run function dnl:util/entity_marker_tick_listener
+
+    # if entity @s[type=minecraft:arrow] run function dnl:util/projectiles/tick_arrow
+    # if entity @s[type=minecraft:firework_rocket] run function dnl:util/projectiles/tick_firework
+
+function ./entity/init:
+    tag @s add dnl.entity.init
+    execute if score #loaded dnl.eid matches 1 unless score @s dnl.eid = @s dnl.eid run function dnl:util/entity_hit_matching/id/assign
+
 
 function ./util/assign_id:
     execute if score #next_id dnl.eid matches 19683.. run function ./entity_hit_matching/set_defaults

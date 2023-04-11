@@ -1,0 +1,9 @@
+from reapermc:event_handler import Event, listener
+
+on_player_init = Event('on_player_init')
+
+@on_player_init.handler
+def handler():
+    function ../util/player_init_listener:
+        tag @s add dnl.player.init
+        on_player_init.trigger()
