@@ -6,8 +6,10 @@ from ../api import
     on_entity_technical_tick
     on_entity_living_tick
     on_entity_player_tick
-    on_entity_player_init
     on_entity_marker_tick
+    on_player_load
+
+from ../event/on_player_init import on_player_init
 
 @listener(on_server_load)
 def load():
@@ -19,30 +21,58 @@ def load():
     scoreboard objectives add dnl.bow dummy
     scoreboard objectives add dnl.return minecraft.custom:minecraft.leave_game
 
-@listener(on_entity_technical_tick)
-def entity_technical_tick():
-    if entity @s[type=minecraft:arrow] run function ./projectiles/tick_arrow
-    if entity @s[type=minecraft:firework_rocket] run function ./projectiles/tick_firework
-
 @listener(on_entity_player_tick)
 def entity_player_tick():
     if score @s dnl.return matches 1.. run function ./projectiles/return
-    unless score #dnl.has_bow_crossbow dnl.boolean matches 1 if score @s dnl.offhand matches 1.. run function ./projectiles/player_offhand:
-        scoreboard players operation @s dnl.bow = @s dnl.offhand
-        scoreboard players reset #dnl.projectiles.saved_mainhand dnl.boolean
-        scoreboard players reset #dnl.projectiles.saved_offhand dnl.boolean
-        scoreboard players set #dnl.projectiles.saved_offhand dnl.boolean 1
-    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run function ./projectiles/player_mainhand:
-        scoreboard players operation @s dnl.bow = @s dnl.mainhand
-        scoreboard players reset #dnl.projectiles.saved_mainhand dnl.boolean
-        scoreboard players reset #dnl.projectiles.saved_offhand dnl.boolean
-        scoreboard players set #dnl.projectiles.saved_mainhand dnl.boolean 1
-    unless score @s dnl.offhand_used matches 1.. unless score @s dnl.mainhand matches 1..127 if predicate ./projectiles/has_bow_crossbow run scoreboard players reset @s dnl.bow
-    unless score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1.. run scoreboard players reset @s dnl.bow
-    scoreboard players reset #dnl.has_bow_crossbow dnl.boolean
+    if score @s dnl.offhand matches 1..127 run function ./projectiles/player_offhand
+    unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 1..127 run function ./projectiles/player_mainhand
+    # if score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1..127 run function ./projectiles/player_offhand
+    # unless score @s dnl.offhand_used matches 1.. unless score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1.. run scoreboard players reset @s dnl.bow
+    unless score @s dnl.offhand_used matches 1.. unless score @s dnl.mainhand matches 1..127 run scoreboard players reset @s dnl.bow
+    # unless score @s dnl.offhand matches 1.. unless score @s dnl.mainhand matches 1.. run scoreboard players reset @s dnl.bow
+    # scoreboard players reset #dnl.has_bow_crossbow dnl.boolean
 
-@listener(on_entity_player_init)
-def entity_player_init():
+# advancement ./projectiles/shot_crossbow {
+#     "criteria": {
+#         "shot_crossbow": {
+#             "trigger": "minecraft:shot_crossbow",
+#             "conditions": {
+#                 "item": {
+#                     "items": [
+#                         "minecraft:crossbow"
+#                     ]
+#                 }
+#             }
+#         }
+#     },
+#     "requirements": [
+#         [
+#             "shot_crossbow"
+#         ]
+#     ],
+#     "rewards": {
+#         "function": "dnl:util/projectiles/shot_crossbow"
+#     }
+# }
+
+# function ./projectiles/shot_crossbow:
+#     if score @s dnl.offhand matches 1..127 unless predicate ./projectiles/has_crossbow run function ./projectiles/player_offhand
+#     if score @s dnl.mainhand matches 1..127 run function ./projectiles/player_mainhand
+
+function ./projectiles/player_offhand:
+    scoreboard players operation @s dnl.bow = @s dnl.offhand
+    scoreboard players reset #dnl.projectiles.saved_mainhand dnl.boolean
+    scoreboard players reset #dnl.projectiles.saved_offhand dnl.boolean
+    scoreboard players set #dnl.projectiles.saved_offhand dnl.boolean 1
+
+function ./projectiles/player_mainhand:
+    scoreboard players operation @s dnl.bow = @s dnl.mainhand
+    scoreboard players reset #dnl.projectiles.saved_mainhand dnl.boolean
+    scoreboard players reset #dnl.projectiles.saved_offhand dnl.boolean
+    scoreboard players set #dnl.projectiles.saved_mainhand dnl.boolean 1
+
+@listener(on_player_load)
+def player_load():
     function ./projectiles/entity_init
 
 @listener(on_entity_marker_tick)
@@ -144,6 +174,9 @@ function ./projectiles/tick_skeleton:
         function ./projectiles/entity_init
     scoreboard players operation @s dnl.bow = @s dnl.mainhand
 
+function ./projectiles/arrow_hit_entity_schedule:
+    as @e[type=#dnl:mobs_and_players,nbt={ActiveEffects:[{Id:26}]}] run function ./projectiles/arrow_hit_entity
+
 function ./projectiles/arrow_hit_entity:
     store result score #dnl.pid dnl.bow run data get entity @s ActiveEffects[{Id:27}].Amplifier
     as @e[scores={dnl.pid=1..}] if score @s dnl.pid = #dnl.pid dnl.bow run tag @s add dnl.this
@@ -173,14 +206,13 @@ predicate ./projectiles/in_ground {
 }
 
 
-predicate ./projectiles/has_bow_crossbow {
+predicate ./projectiles/has_crossbow {
     "condition": "minecraft:entity_properties",
     "entity": "this",
     "predicate": {
         "equipment": {
             "mainhand": {
                 "items": [
-                    "minecraft:bow",
                     "minecraft:crossbow"
                 ]
             }

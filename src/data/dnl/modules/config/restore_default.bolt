@@ -2,7 +2,14 @@ from reapermc:api import
     listener
     on_server_load
 
+
+from ../event/on_server_init import on_server_init
+
 cmd = ctx.meta.dnl.cmd_namespace
+
+@listener(on_server_init)
+def world_setting():
+    scoreboard players set #dnl.restore_default.left_setting dnl.boolean 0
 
 function f"{cmd}:restore_default":
     tag @s add dnl.player_opening_setting

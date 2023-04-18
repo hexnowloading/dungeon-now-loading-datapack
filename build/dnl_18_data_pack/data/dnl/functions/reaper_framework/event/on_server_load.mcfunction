@@ -28,7 +28,6 @@ bossbar add dnl:bossbar7 {"translate": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar8 {"translate": "Reserved", "color": "aqua"}
 bossbar add dnl:bossbar9 {"translate": "Reserved", "color": "aqua"}
 execute if score #dnl.developer_mode dnl.boolean matches 1 run tellraw @a {"translate": "Datapack has been reloaded!", "color": "gray", "italic": false}
-function dnl:reaper_framework/event_handler/in_world_setting/world_load
 scoreboard objectives add dnl.timer.hastening dummy
 scoreboard objectives add dnl.timer.lightning_storm dummy
 scoreboard objectives add dnl.timer.pumpkin_curse dummy
@@ -80,6 +79,7 @@ team add dnl.no_collision
 team modify dnl.no_collision collisionRule pushOwnTeam
 execute unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
 advancement grant @a only dnl:story/general/new_start
+<<<<<<< HEAD
 data modify storage dnl:temp ItemName set value []
 scoreboard objectives add dnl.timer.shield dummy
 scoreboard objectives add dnl.eid dummy
@@ -103,6 +103,9 @@ scoreboard objectives add dnl.uuid3 dummy
 scoreboard objectives add dnl.pid dummy
 scoreboard objectives add dnl.bow dummy
 scoreboard objectives add dnl.return minecraft.custom:minecraft.leave_game
+=======
+function dnl:reaper_framework/event_handler/on_player_load/player_load
+>>>>>>> a1dde3255285d0bce3ff6e196bc63438eea1e671
 scoreboard objectives add dnl.raidbar_id dummy
 bossbar add dnl:raidbar0 {"translate": "Reserved", "color": "aqua"}
 bossbar add dnl:raidbar1 {"translate": "Reserved", "color": "aqua"}

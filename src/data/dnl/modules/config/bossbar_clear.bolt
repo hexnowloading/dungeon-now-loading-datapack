@@ -1,9 +1,6 @@
 from reapermc:api import
     listener
 
-from ../api import
-    in_player_setting
-
 cmd = ctx.meta.dnl.cmd_namespace
 
 function f"{cmd}:bossbar_clear":

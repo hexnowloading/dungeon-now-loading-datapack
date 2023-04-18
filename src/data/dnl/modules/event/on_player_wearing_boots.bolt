@@ -5,6 +5,6 @@ on_player_wearing_boots = Event('on_player_wearing_boots')
 
 @on_player_wearing_boots.handler
 def handler():
-    execute function on_player_wearing_boots.generate_path('wearing_boots'):
-        function ../util/armor/wearing_boots_listener:
-            on_player_wearing_boots.trigger()
+    function ../util/armor/wearing_boots_listener:
+        scoreboard players operation #dnl.boots_id dnl.int = @s dnl.feet
+        on_player_wearing_boots.trigger()

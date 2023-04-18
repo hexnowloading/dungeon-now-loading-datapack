@@ -1,0 +1,11 @@
+from reapermc:event_handler import Event, listener
+
+on_server_update = Event('on_server_update')
+
+datapack_version = ctx.meta.dnl.datapack_version
+
+@on_server_update.handler
+def handler():
+    function ../util/server_init_listener:
+        scoreboard players set #dnl.version dnl.int datapack_version
+        on_server_update.trigger()

@@ -1,0 +1,9 @@
+from reapermc:event_handler import Event, listener
+
+on_server_init = Event('on_server_init')
+
+@on_server_init.handler
+def handler():
+    function ../util/server_init_listener:
+        scoreboard players set #dnl.server_init dnl.boolean 1
+        on_server_init.trigger()

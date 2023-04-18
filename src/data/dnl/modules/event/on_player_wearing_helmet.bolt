@@ -5,6 +5,6 @@ on_player_wearing_helmet = Event('on_player_wearing_helmet')
 
 @on_player_wearing_helmet.handler
 def handler():
-    execute function on_player_wearing_helmet.generate_path('wearing_helmet'):
-        function ../util/armor/wearing_helmet_listener:
-            on_player_wearing_helmet.trigger()
+    function ../util/armor/wearing_helmet_listener:
+        scoreboard players operation #dnl.helmet_id dnl.int = @s dnl.head
+        on_player_wearing_helmet.trigger()
