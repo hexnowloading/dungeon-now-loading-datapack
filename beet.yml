@@ -1,5 +1,5 @@
 name: dnl
-version: '18'
+version: '19'
 author: HexNowLoading
 description: A dungeon made by Hex
 
@@ -40,7 +40,7 @@ meta:
   dnl:
     namespace: 'dnl'
     cmd_namespace: 'cmd'
-    datapack_version: 18
+    datapack_version: 19
   item:
     ancient_bow: 1
     ancient_bow_red: 2
