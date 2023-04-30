@@ -5,626 +5,38 @@ from reapermc:api import
 from ../api import
     on_entity_living_tick
     on_entity_player_tick
+    on_entity_marker_tick
 
-@listener(on_server_load)
-def load():
-    data modify storage dnl:temp ItemName set value []
-    scoreboard objectives add dnl.timer.shield dummy
-    ## AUTHOR: Picarrow, CloudWolf, nphhpn
-    scoreboard objectives add dnl.eid dummy
-    execute unless score #loaded dnl.eid = #loaded dnl.eid run function ./entity_hit_matching/set_defaults
+from ../event/on_entity_arrow_tick import on_entity_arrow_tick
 
 advancement ./entity_hit_matching/on_hit {
     "criteria": {
-        "bit_0_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.0_0\"]}"
-                }
-            }
-        },
-        "bit_1_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.1_0\"]}"
-                }
-            }
-        },
-        "bit_2_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.2_0\"]}"
-                }
-            }
-        },
-        "bit_3_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.3_0\"]}"
-                }
-            }
-        },
-        "bit_4_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.4_0\"]}"
-                }
-            }
-        },
-        "bit_5_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.5_0\"]}"
-                }
-            }
-        },
-        "bit_6_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.6_0\"]}"
-                }
-            }
-        },
-        "bit_7_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.7_0\"]}"
-                }
-            }
-        },
-        "bit_8_0": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.8_0\"]}"
-                }
-            }
-        },
-        "bit_0_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.0_1\"]}"
-                }
-            }
-        },
-        "bit_1_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.1_1\"]}"
-                }
-            }
-        },
-        "bit_2_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.2_1\"]}"
-                }
-            }
-        },
-        "bit_3_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.3_1\"]}"
-                }
-            }
-        },
-        "bit_4_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.4_1\"]}"
-                }
-            }
-        },
-        "bit_5_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.5_1\"]}"
-                }
-            }
-        },
-        "bit_6_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.6_1\"]}"
-                }
-            }
-        },
-        "bit_7_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.7_1\"]}"
-                }
-            }
-        },
-        "bit_8_1": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.8_1\"]}"
-                }
-            }
-        },
-        "bit_0_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.0_2\"]}"
-                }
-            }
-        },
-        "bit_1_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.1_2\"]}"
-                }
-            }
-        },
-        "bit_2_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.2_2\"]}"
-                }
-            }
-        },
-        "bit_3_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.3_2\"]}"
-                }
-            }
-        },
-        "bit_4_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.4_2\"]}"
-                }
-            }
-        },
-        "bit_5_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.5_2\"]}"
-                }
-            }
-        },
-        "bit_6_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.6_2\"]}"
-                }
-            }
-        },
-        "bit_7_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.7_2\"]}"
-                }
-            }
-        },
-        "bit_8_2": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "entity": {
-                    "nbt": "{Tags:[\"dnl.8_2\"]}"
-                }
-            }
-        },
-        "not_magic": {
+        "generic": {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "damage": {
                     "type": {
-                        "is_magic": false
+                        "tags": [
+                            {
+                                "id": "minecraft:is_projectile",
+                                "expected": false
+                            }
+                        ]
                     }
                 }
             }
         },
-        "is_projectile": {
+        "projectile": {
             "trigger": "minecraft:player_hurt_entity",
             "conditions": {
                 "damage": {
                     "type": {
-                        "is_projectile": true
-                    }
-                }
-            }
-        },
-        "not_projectile": {
-            "trigger": "minecraft:player_hurt_entity",
-            "conditions": {
-                "damage": {
-                    "type": {
-                        "is_projectile": false
-                    }
-                }
-            }
-        },
-    },
-    "requirements": [
-        [
-            "is_projectile",
-            "not_projectile" 
-        ],
-        [
-            "not_magic" 
-        ],
-        [
-            "bit_0_0",
-            "bit_0_1",
-            "bit_0_2"
-        ],
-        [
-            "bit_1_0",
-            "bit_1_1",
-            "bit_1_2"
-        ],
-        [
-            "bit_2_0",
-            "bit_2_1",
-            "bit_2_2"
-        ],
-        [
-            "bit_3_0",
-            "bit_3_1",
-            "bit_3_2"
-        ],
-        [
-            "bit_4_0",
-            "bit_4_1",
-            "bit_4_2"
-        ],
-        [
-            "bit_5_0",
-            "bit_5_1",
-            "bit_5_2"
-        ],
-        [
-            "bit_6_0",
-            "bit_6_1",
-            "bit_6_2"
-        ],
-        [
-            "bit_7_0",
-            "bit_7_1",
-            "bit_7_2"
-        ],
-        [
-            "bit_8_0",
-            "bit_8_1",
-            "bit_8_2"
-        ]
-    ],
-    "rewards": {
-        "function": "dnl:util/entity_hit_matching/on_hit/reward"
-    }
-}
-advancement ./entity_hit_matching/on_hurt {
-    "criteria": {
-        "bit_0_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.0_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_1_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.1_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_2_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.2_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_3_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.3_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_4_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.4_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_5_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.5_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_6_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.6_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_7_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.7_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_8_0": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.8_0\"]}"
-                    }
-                }
-            }
-        },
-        "bit_0_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.0_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_1_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.1_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_2_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.2_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_3_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.3_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_4_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.4_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_5_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.5_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_6_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.6_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_7_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.7_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_8_1": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.8_1\"]}"
-                    }
-                }
-            }
-        },
-        "bit_0_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.0_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_1_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.1_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_2_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.2_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_3_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.3_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_4_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.4_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_5_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.5_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_6_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.6_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_7_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.7_2\"]}"
-                    }
-                }
-            }
-        },
-        "bit_8_2": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "source_entity": {
-                        "nbt": "{Tags:[\"dnl.8_2\"]}"
-                    }
-                }
-            }
-        },
-        "blocked_true": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "blocked": true
-                }
-            }
-        },
-        "blocked_false": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "blocked": false
-                }
-            }
-        },
-        "is_projectile": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "type": {
-                        "is_projectile": true
-                    }
-                }
-            }
-        },
-        "not_projectile": {
-            "trigger": "minecraft:entity_hurt_player",
-            "conditions": {
-                "damage": {
-                    "type": {
-                        "is_projectile": false
+                        "tags": [
+                            {
+                                "id": "minecraft:is_projectile",
+                                "expected": true
+                            }
+                        ]
                     }
                 }
             }
@@ -632,57 +44,74 @@ advancement ./entity_hit_matching/on_hurt {
     },
     "requirements": [
         [
-            "bit_0_0",
-            "bit_0_1",
-            "bit_0_2"
+            "generic",
+            "projectile"
+        ]
+    ],
+    "rewards": {
+        "function": "dnl:util/entity_hit_matching/on_hit/reward"
+    }
+}
+
+advancement ./entity_hit_matching/on_hurt {
+    "criteria": {
+        "entity_type": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "source_entity": {
+                        "type": "#dnl:mobs"
+                    }
+                }
+            }
+        },
+        "generic": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "tags": [
+                            {
+                                "id": "minecraft:is_projectile",
+                                "expected": false
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "projectile": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "type": {
+                        "tags": [
+                            {
+                                "id": "minecraft:is_projectile",
+                                "expected": true
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "blocked": {
+            "trigger": "minecraft:entity_hurt_player",
+            "conditions": {
+                "damage": {
+                    "blocked": true
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "generic",
+            "projectile",
+            "blocked"
         ],
         [
-            "bit_1_0",
-            "bit_1_1",
-            "bit_1_2"
-        ],
-        [
-            "bit_2_0",
-            "bit_2_1",
-            "bit_2_2"
-        ],
-        [
-            "bit_3_0",
-            "bit_3_1",
-            "bit_3_2"
-        ],
-        [
-            "bit_4_0",
-            "bit_4_1",
-            "bit_4_2"
-        ],
-        [
-            "bit_5_0",
-            "bit_5_1",
-            "bit_5_2"
-        ],
-        [
-            "bit_6_0",
-            "bit_6_1",
-            "bit_6_2"
-        ],
-        [
-            "bit_7_0",
-            "bit_7_1",
-            "bit_7_2"
-        ],
-        [
-            "bit_8_0",
-            "bit_8_1",
-            "bit_8_2"
-        ],
-        [
-            "blocked_true",
-            "blocked_false"
-        ],
-        [
-            "is_projectile",
-            "not_projectile"
+            "entity_type"
         ]
     ],
     "rewards": {
@@ -796,101 +225,63 @@ function ./entity_hit_matching/id/remove_tags:
     tag @s remove dnl.8_1
     tag @s remove dnl.8_2
 
-function ./entity_hit_matching/on_hit/find_target_id:
-    ## AUTHOR: Picarrow, CloudWolf, nphhpn
-
-    scoreboard players set #target_id dnl.eid 0
-    scoreboard players reset #dnl.is_projectile dnl.boolean
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_1=true}}] run scoreboard players add #target_id dnl.eid 1
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_0_2=true}}] run scoreboard players add #target_id dnl.eid 2
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_1=true}}] run scoreboard players add #target_id dnl.eid 3
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_1_2=true}}] run scoreboard players add #target_id dnl.eid 6
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_2_1=true}}] run scoreboard players add #target_id dnl.eid 9
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_2_2=true}}] run scoreboard players add #target_id dnl.eid 18
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_3_1=true}}] run scoreboard players add #target_id dnl.eid 27
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_3_2=true}}] run scoreboard players add #target_id dnl.eid 54
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_4_1=true}}] run scoreboard players add #target_id dnl.eid 81
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_4_2=true}}] run scoreboard players add #target_id dnl.eid 162
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_5_1=true}}] run scoreboard players add #target_id dnl.eid 243
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_5_2=true}}] run scoreboard players add #target_id dnl.eid 486
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_6_1=true}}] run scoreboard players add #target_id dnl.eid 729
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_6_2=true}}] run scoreboard players add #target_id dnl.eid 1458
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_1=true}}] run scoreboard players add #target_id dnl.eid 2187
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_7_2=true}}] run scoreboard players add #target_id dnl.eid 4374
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_1=true}}] run scoreboard players add #target_id dnl.eid 6561
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={bit_8_2=true}}] run scoreboard players add #target_id dnl.eid 13122
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={is_projectile=true}}] run scoreboard players set #dnl.is_projectile dnl.boolean 1
-
 function ./entity_hit_matching/on_hit/reward:
-    ## AUTHOR: Picarrow, CloudWolf, nphhpn
+    ### Damage Type ###
+    scoreboard players reset #dnl.ehm.generic dnl.boolean
+    scoreboard players reset #dnl.ehm.projectile dnl.boolean
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={generic=true}}] run scoreboard players set #dnl.ehm.generic dnl.boolean 1
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hit={projectile=true}}] run scoreboard players set #dnl.ehm.projectile dnl.boolean 1
 
-    function ./entity_hit_matching/on_hit/find_target_id
-    advancement revoke @s only dnl:util/entity_hit_matching/on_hit
-    tag @s add dnl.this
+    ### Player Data ###
     scoreboard players operation #dnl.weapon_id.attacker dnl.int = @s dnl.mainhand
-    function ./entity_hit_matching/on_pre_hit_attacker_listener
-    execute as @e[type=#dnl:mobs_and_players] if score @s dnl.eid = #target_id dnl.eid run function ./entity_hit_matching/on_hit_target_data:
-        # store result score #dnl.weapon_id.target dnl.int run data get entity @s HandItems[0].tag.dnl.id (Uncomment this when it needs to detect the weapon id when hurt for mobs.)
-        scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
-        if score #dnl.is_projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
-        unless score #dnl.is_projectile dnl.boolean matches 1 run function ./entity_hit_matching/on_hit_target_listener
-    function ./entity_hit_matching/on_hit_attacker_listener
-    scoreboard players reset #dnl.weapon_id.attacker dnl.int
-    scoreboard players reset #dnl.shield_id.target dnl.int
-    tag @s remove dnl.this
 
-function ./entity_hit_matching/on_hurt/find_target_id:
-    ## AUTHOR: Picarrow, CloudWolf, nphhpn
-
-    scoreboard players set #target_id dnl.eid 0
-    scoreboard players reset #dnl.is_projectile dnl.boolean
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_1=true}}] run scoreboard players add #target_id dnl.eid 1
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_0_2=true}}] run scoreboard players add #target_id dnl.eid 2
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_1=true}}] run scoreboard players add #target_id dnl.eid 3
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_1_2=true}}] run scoreboard players add #target_id dnl.eid 6
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_2_1=true}}] run scoreboard players add #target_id dnl.eid 9
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_2_2=true}}] run scoreboard players add #target_id dnl.eid 18
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_3_1=true}}] run scoreboard players add #target_id dnl.eid 27
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_3_2=true}}] run scoreboard players add #target_id dnl.eid 54
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_4_1=true}}] run scoreboard players add #target_id dnl.eid 81
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_4_2=true}}] run scoreboard players add #target_id dnl.eid 162
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_5_1=true}}] run scoreboard players add #target_id dnl.eid 243
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_5_2=true}}] run scoreboard players add #target_id dnl.eid 486
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_6_1=true}}] run scoreboard players add #target_id dnl.eid 729
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_6_2=true}}] run scoreboard players add #target_id dnl.eid 1458
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_1=true}}] run scoreboard players add #target_id dnl.eid 2187
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_7_2=true}}] run scoreboard players add #target_id dnl.eid 4374
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_1=true}}] run scoreboard players add #target_id dnl.eid 6561
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={bit_8_2=true}}] run scoreboard players add #target_id dnl.eid 13122
-    execute if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={is_projectile=true}}] run scoreboard players set #dnl.is_projectile dnl.boolean 1
-    
-    scoreboard players set #dnl.blocked dnl.boolean 0
-    if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked_true=true}}] run scoreboard players set #dnl.blocked dnl.boolean 1
+    ### Entity Hit Matching ###
+    tag @s add dnl.ehm.attacker
+    as @e[type=#dnl:mobs,nbt={HurtTime:10s}] at @s run function ./entity_hit_matching/find_hit_target:
+        scoreboard players reset #dnl.ehm.attacked dnl.boolean
+        on attacker if entity @s[tag=dnl.ehm.attacker] run scoreboard players set #dnl.ehm.attacked dnl.boolean 1
+        if score #dnl.ehm.attacked dnl.boolean matches 1 run function ./entity_hit_matching/on_hit_target:
+            scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
+            if score #dnl.ehm.generic dnl.boolean matches 1 run function ./entity_hit_matching/on_hit_target_listener
+            if score #dnl.ehm.projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
+    if score #dnl.ehm.generic dnl.boolean matches 1 run function ./entity_hit_matching/on_hit_attacker_listener
+    tag @s remove dnl.ehm.attacker
+    advancement revoke @s only dnl:util/entity_hit_matching/on_hit
 
 function ./entity_hit_matching/on_hurt/reward:
-    ## AUTHOR: Picarrow, CloudWolf, nphhpn
-    function ./entity_hit_matching/on_hurt/find_target_id
-    advancement revoke @s only dnl:util/entity_hit_matching/on_hurt
-    tag @s add dnl.player
-    if score #dnl.blocked dnl.boolean matches 1 run function ./entity_hit_matching/get_shield:
-        if score @s dnl.offhand matches 6001..7000 run scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
-        unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 6001..7000 run scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.mainhand
-        scoreboard players operation #dnl.shield_timer dnl.int = @s dnl.timer.shield
+    ### Damage Type ###
+    scoreboard players reset #dnl.ehm.generic dnl.boolean
+    scoreboard players reset #dnl.ehm.projectile dnl.boolean
+    scoreboard players reset #dnl.ehm.blocked dnl.boolean
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={generic=true}}] run scoreboard players set #dnl.ehm.generic dnl.boolean 1
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={projectile=true}}] run scoreboard players set #dnl.ehm.projectile dnl.boolean 1
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked=true}}] run scoreboard players set #dnl.ehm.blocked dnl.boolean 1
+
+    ### Player Data ###
+    scoreboard players operation #dnl.weapon_id.target dnl.int = @s dnl.mainhand
     if score @s dnl.head matches 1.. run scoreboard players operation #dnl.helmet_id dnl.int = @s dnl.head
     if score @s dnl.chest matches 1.. run scoreboard players operation #dnl.chestplate_id dnl.int = @s dnl.chest
     if score @s dnl.leg matches 1.. run scoreboard players operation #dnl.leggings_id dnl.int = @s dnl.leg
     if score @s dnl.feet matches 1.. run scoreboard players operation #dnl.boots_id dnl.int = @s dnl.feet
     if score @s dnl.head = @s dnl.chest if score @s dnl.head = @s dnl.leg if score @s dnl.head = @s dnl.feet run scoreboard players operation #dnl.full_armor_id dnl.int = @s dnl.head
-    scoreboard players operation #dnl.weapon_id.target dnl.int = @s dnl.mainhand
-    execute as @e[type=#dnl:hurt_targets] if score @s dnl.eid = #target_id dnl.eid run function ./entity_hit_matching/on_hurt_id_check:
+
+    ### Shield ###
+    if score #dnl.ehm.blocked dnl.boolean matches 1 run function ./entity_hit_matching/get_shield:
+        if score @s dnl.offhand matches 6001..7000 run scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.offhand
+        unless score @s dnl.offhand_used matches 1.. if score @s dnl.mainhand matches 6001..7000 run scoreboard players operation #dnl.shield_id.target dnl.int = @s dnl.mainhand
+        scoreboard players operation #dnl.shield_timer dnl.int = @s dnl.shield.timer
+
+    ### Entity Hit Matching ###
+    tag @s add dnl.ehm.target
+    on attacker at @s run function ./entity_hit_matching/on_hurt_target:
         store result score #dnl.weapon_id.attacker dnl.int run data get entity @s HandItems[0].tag.dnl.id
-        function ./entity_hit_matching/on_hurt_attacker_listener
-    if score #dnl.is_projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
-    unless score #dnl.is_projectile dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt_target_listener
-    scoreboard players reset #dnl.weapon_id.target dnl.int
-    scoreboard players reset #dnl.weapon_id.attacker dnl.int
-    scoreboard players reset #dnl.shield_id.target dnl.int
-    tag @s remove dnl.player
+        if score #dnl.ehm.generic dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt_attacker_listener
+    if score #dnl.ehm.generic dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt_target_listener
+    if score #dnl.ehm.projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
+    tag @s remove dnl.ehm.target
+    advancement revoke @s only dnl:util/entity_hit_matching/on_hurt
+
+### Shield ###
 
 advancement ./entity_hit_matching/using_shield {
     "criteria": {
@@ -910,13 +301,7 @@ advancement ./entity_hit_matching/using_shield {
 @listener(on_entity_player_tick)
 def entity_player_tick():
     if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=false}] run function ./entity_hit_matching/using_shield/false:
-        scoreboard players reset @s dnl.timer.shield
+        scoreboard players reset @s dnl.shield.timer
     if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=true}] run function ./entity_hit_matching/using_shield/true:
-        scoreboard players add @s dnl.timer.shield 1
+        scoreboard players add @s dnl.shield.timer 1
         advancement revoke @s only dnl:util/entity_hit_matching/using_shield
-
-# function ./entity_hit_matching/on_hurt/shield_timer:
-#     scoreboard players add @s dnl.timer.shield 1
-#     advancement 
-
-

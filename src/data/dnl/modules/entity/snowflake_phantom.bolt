@@ -1,0 +1,86 @@
+from ../event/on_entity_mob_tick import on_entity_mob_tick
+from ../event/on_entity_falling_block_tick import on_entity_falling_block_tick
+from ../util/mob import add_summon, assign_lid
+from ../util/death import add_death_event
+
+from reapermc:api import listener
+
+# add_summon snowflake_phantom phantom none 32 0 0 flame {
+#     DeathLootTable:"dnl:entity/snowflake_phantom/death",
+#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_phantom"],
+#     PersistenceRequired:1b,
+#     Passengers:[
+#         {
+#             id:"minecraft:block_display",
+#             Tags:["dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.chain"],
+#             block_state:{Name:"minecraft:chain",Properties:{axis:"y"}},
+#             transformation:{
+#                 left_rotation:[0f,0f,0f,1f],
+#                 right_rotation:[0f,0f,0f,1f],
+#                 translation:[-0.5f,-1f,-0.5f],
+#                 scale:[1f,1f,1f]
+#             }
+#         },
+#         {
+#             id:"minecraft:block_display",
+#             Tags:["dnl.display","dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.ice"],
+#             block_state:{Name:"minecraft:ice"},
+#             transformation:{
+#                 left_rotation:[0f,0f,0f,1f],
+#                 right_rotation:[0f,0f,0f,1f],
+#                 translation:[-0.5f,-2f,-0.5f],
+#                 scale:[1f,1f,1f]
+#             }
+#         }
+#     ]
+# }
+
+@listener(on_entity_mob_tick)
+def entity_mob_tick():
+    if entity @s[tag=dnl.snowflake_phantom] run function ./snowflake_phantom/main
+
+function ./snowflake_phantom/main:
+    unless entity @s[tag=dnl.snowflake_phantom.init] run function ./snowflake_phantom/init:
+        tag @s add dnl.snowflake_phantom.init
+        assign_lid
+        scoreboard players operation #dnl.snowflake_phantom.lid dnl.lid = @s dnl.lid
+        on passengers run scoreboard players operation @s dnl.lid = #dnl.snowflake_phantom.lid dnl.lid
+
+    unless entity @s[tag=dnl.snowflake_phantom.ice_drop_cooldown] if score #dnl.1s dnl.tick matches 1 positioned ~-4 ~-30 ~-4 if entity @a[dx=9,dy=25,dz=9] at @s run function ./snowflake_phantom/drop_ice/drop:
+        summon falling_block ~ ~-2 ~ {BlockState:{Name:"minecraft:ice"},Time:1,DropItem:1b,HurtEntities:1b,Tags:["dnl.falling_block","dnl.tick","dnl.snowflake_phantom_drop_ice"]}
+        scoreboard players operation #dnl.snowflake_phantom.lid dnl.lid = @s dnl.lid
+        as @e[type=block_display,tag=dnl.snowflake_phantom_display.ice] if score @s dnl.lid = #dnl.snowflake_phantom.lid dnl.lid run kill @s
+        tag @s add dnl.snowflake_phantom.ice_drop_cooldown
+    
+    if entity @s[tag=dnl.snowflake_phantom.ice_drop_cooldown] run function ./snowflake_phantom/drop_ice/cooldown:
+        scoreboard players add @s dnl.timer 1
+        if score @s dnl.timer matches 60.. run function ./snowflake_phantom/drop_ice/restock:
+            summon block_display ~ ~ ~ {Tags:["dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.ice","dnl.this"],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.5f,-2f,-0.5f],scale:[1f,1f,1f]},block_state:{Name:"minecraft:ice"}}
+            scoreboard players operation @e[type=block_display,tag=dnl.this] dnl.lid = @s dnl.lid
+            ride @e[type=block_display,tag=dnl.this,limit=1] mount @s
+            tag @e[tag=dnl.this] remove dnl.this
+            particle dust 0.710 1.000 0.973 1 ~ ~-1.5 ~ 0.5 0.5 0.5 1 10 force
+            scoreboard players reset @s dnl.timer
+            tag @s remove dnl.snowflake_phantom.ice_drop_cooldown
+
+@listener(on_entity_falling_block_tick)
+def entity_falling_block_tick():
+    if entity @s[tag=dnl.snowflake_phantom_drop_ice] run function ./snowflake_phantom/drop_ice/main
+
+function ./snowflake_phantom/drop_ice/main:
+    particle end_rod ~ ~ ~ 0 0 0 1 0 normal
+    particle dust 0.710 1.000 0.973 1 ~ ~ ~ 0.5 0.5 0.5 1 10 force
+    unless block ~ ~-1 ~ minecraft:air positioned ~ ~-1 ~ run function ./snowflake_phantom/drop_ice/impact:
+        tag @s add dnl.this
+        as @e[type=!phantom,distance=..5] run damage @s 10 minecraft:freeze by @e[tag=dnl.this,limit=1]
+        tag @s remove dnl.this
+        particle block ice ~ ~ ~ 5 1 5 0.01 50 normal
+        playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1 1
+        kill @s
+
+add_death_event("snowflake_phantom")
+
+function ./snowflake_phantom/death:
+    as @e[type=block_display,tag=dnl.snowflake_phantom_display] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function ./snowflake_phantom/drop_ice_on_death:
+        if entity @s[tag=dnl.snowflake_phantom_display.ice] run summon falling_block ~ ~-2 ~ {BlockState:{Name:"minecraft:ice"},Time:1,DropItem:1b,HurtEntities:1b,Tags:["dnl.falling_block","dnl.tick","dnl.snowflake_phantom_drop_ice"]} 
+        kill @s

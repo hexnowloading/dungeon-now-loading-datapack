@@ -35,6 +35,8 @@ def load():
     scoreboard objectives add dnl.phase dummy
     scoreboard objectives add dnl.move dummy
     scoreboard objectives add dnl.var dummy
+    scoreboard objectives add dnl.hurt.timer dummy
+    scoreboard objectives add dnl.animation.timer dummy
 
     scoreboard objectives add dnl.max_health dummy
     scoreboard objectives add dnl.time_since_death minecraft.custom:minecraft.time_since_death
@@ -51,8 +53,11 @@ def load():
     scoreboard objectives add dnl.chest.timer dummy
     scoreboard objectives add dnl.leg.timer dummy
     scoreboard objectives add dnl.feet.timer dummy
+    scoreboard objectives add dnl.shield.timer dummy
     scoreboard objectives add dnl.offhand_used dummy
     scoreboard objectives add dnl.offhand_delay dummy
+
+    scoreboard objectives add dnl.stat.obtained_material dummy
 
     scoreboard players set #dnl.1 dnl.constant 1
     scoreboard players set #dnl.8 dnl.constant 8
@@ -63,6 +68,7 @@ def load():
     team add dnl.no_collision
     team modify dnl.no_collision collisionRule pushOwnTeam
 
+    unless score #loaded dnl.eid = #loaded dnl.eid run function ./entity_hit_matching/set_defaults
     unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0
 
     advancement grant @a only dnl:story/general/new_start
@@ -81,12 +87,14 @@ def tick():
     as @e[type=#dnl:mobs,tag=dnl.mob] at @s run function ./tick/living
     as @e[type=#dnl:mobs,scores={dnl.effect=1..}] at @s run function dnl:util/entity_effect/main
     as @e[type=#dnl:others] at @s run function ./tick/technical
+    as @e[type=#dnl:display_entities,tag=dnl.tick] at @s run function dnl:util/entity_display_tick_listener
     as @e[type=item] at @s run function ./util/item_entity/tick
-    as @e[type=minecraft:arrow] at @s run function dnl:util/projectiles/tick_arrow
+    as @e[type=#minecraft:arrows] at @s run function dnl:util/entity_arrow_tick_listener
     as @e[type=minecraft:firework_rocket] at @s run function dnl:util/projectiles/tick_firework
     as @e[type=#dnl:item_frames, tag=dnl.tick] at @s run function dnl:util/entity_item_frame_tick_listener
     as @e[type=minecraft:tnt] at @s run function dnl:util/entity_tnt_tick_listener
     as @e[type=snowball] at @s run function dnl:util/entity_snowball_tick_listener
+    as @e[type=falling_block, tag=dnl.tick] at @s run function dnl:util/entity_falling_block_tick_listener
 
 @listener(on_player_load)
 def player_load():

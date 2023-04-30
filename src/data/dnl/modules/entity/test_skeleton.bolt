@@ -23,7 +23,6 @@ def entity_mob_tick():
 
 function ./test_skeleton/main:
     ### Init ###
-    say hi
-    loot replace entity @s weapon.mainhand loot dnl:item/ancient_bow_red
+    loot replace entity @s weapon.mainhand loot dnl:item/ancient_bow_yellow
     assign_equipment mainhand set
     tag @s remove dnl.tick

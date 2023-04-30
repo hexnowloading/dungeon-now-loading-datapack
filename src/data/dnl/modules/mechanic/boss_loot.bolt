@@ -1,0 +1,65 @@
+
+### Tier 1 Dungoen ###
+
+loot_table ./boss_loot/easy {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:diamond",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": 3
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+
+### Tier 2 Dungeon ###
+loot_table ./boss_loot/normal {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:diamond",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": 6
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+### Tier 3 Dungeon ###
+loot_table ./boss_loot/hard {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:diamond",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_count",
+                            "count": 12
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

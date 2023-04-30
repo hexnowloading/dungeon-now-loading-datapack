@@ -1,0 +1,9 @@
+from reapermc:event_handler import Event, listener
+
+on_entity_falling_block_tick = Event('on_entity_falling_block_tick')
+
+@on_entity_falling_block_tick.handler
+def handler():
+    execute function on_entity_falling_block_tick.generate_path('entity_falling_block_tick'):
+        function ../util/entity_falling_block_tick_listener:
+            on_entity_falling_block_tick.trigger()

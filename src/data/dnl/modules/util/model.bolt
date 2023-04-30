@@ -1,126 +1,14 @@
-from bolt_expressions import Scoreboard, Data
-from nbtlib import Float, Byte, String
 from beet.contrib.vanilla import Vanilla
-from bolt.contrib.defer import Defer
 
-macro custom_damage
-    amount=brigadier:integer:
-        effect give @s[type=#dnl:undeads] minecraft:instant_health 1 amount.value true
-        effect give @s[type=!#dnl:undeads] minecraft:instant_damage 1 amount.value true
-
-macro arrow_load_data
-    amplifier=brigadier:integer
-    life=brigadier:integer:
-        data merge entity @s {life:life.value,Color:-1,CustomPotionEffects:[{Id:26b,Amplifier:Byte(amplifier.value),Duration:10000,ShowParticles:0b}]}
-
-macro arrow_load_remove_unluck:
-    scoreboard players set #dnl.remove_unluck dnl.boolean 1
-
-macro arrow_land_break:
-    particle crit ~ ~ ~ 0 0 0 1 10 normal
-    particle item arrow ~ ~ ~ 0.1 0.1 0.1 0.2 10 normal
-    particle ash ~ ~ ~ 0 0 0 1 10 normal
-
-macro arrow_land_remain:
-    data remove entity @s {CustomPotionEffects:[{Id:26b}]}
-    data remove entity @s {CustomPotionEffects:[{Id:27b}]}
-
-# macro arrow_land
-#     type=brigadier:string{"type": "word"}:
-#         if type.value == "remain":
-#             data remove entity @s {CustomPotionEffects:[{Id:26b}]}
-#             data remove entity @s {CustomPotionEffects:[{Id:27b}]}
-#         elif type.value == "break":
-#             particle crit ~ ~ ~ 0 0 0 1 10 normal
-#             particle item arrow ~ ~ ~ 0.1 0.1 0.1 0.2 10 normal
-#             particle ash ~ ~ ~ 0 0 0 1 10 normal
-
-macro advancement_consume_item
-        namespace=brigadier:string{"type": "word"}
-        name=brigadier:string{"type": "word"}
-        base=brigadier:string{"type": "word"}:
-    advancement f"{namespace.value}:item/{name.value}" {
-        "criteria": {
-            "requirement": {
-                "trigger": "minecraft:consume_item",
-                "conditions": {
-                    "item": {
-                        "items": [
-                            f"minecraft:{base.value}"
-                        ],
-                        "nbt": f"{{{namespace.value}.{name.value}:1b}}"
-                    }
-                }
-            }
-        },
-        "rewards": {
-            "function": f"{namespace.value}:item/{name.value}/trigger"
-        }
-    }
-
-macro predicate_consume_item
-        namespace=brigadier:string{"type": "word"}
-        name=brigadier:string{"type": "word"}
-        base=brigadier:string{"type": "word"}:
-    predicate f"{namespace.value}:item/{name.value}" {
-        "condition": "minecraft:entity_properties",
-        "entity": "this",
-        "predicate": {
-            "equipment": {
-                "mainhand": {
-                    "items": [
-                        f"minecraft:{base.value}"
-                    ],
-                    "nbt": f"{{{namespace.value}.{name.value}:1b}}"
-                }
-            }
-        }
-    }
-
-def add_armor_predicate(item, id, material):
-    nbt = "{dnl:{id:" + str(id) + "}}" 
-    predicate f"dnl:item/{item}" {
-    "condition": "minecraft:entity_properties",
-      "entity": "this",
-      "predicate": {
-            "equipment": {
-                "head": {
-                    "items": [
-                        f"minecraft:{material}_helmet"
-                    ],
-                    "nbt": nbt
-                },
-                "chest": {
-                    "items": [
-                        f"minecraft:{material}_chestplate"
-                    ],
-                    "nbt": nbt
-                },
-                "legs": {
-                    "items": [
-                        f"minecraft:{material}_leggings"
-                    ],
-                    "nbt": nbt
-                },
-                "feet": {
-                    "items": [
-                        f"minecraft:{material}_boots"
-                    ],
-                    "nbt": nbt
-                }
-            }
-        }
-    }
-
-def get_cmd(id):
+def get_model_cmd(id):
     abs_id = abs(id)
 
     if abs_id < 10000:
-        num = str(4040000 + abs_id)
+        num = str(3030000 + abs_id)
     elif abs_id < 100000:
-        num = str ("40") + str(abs_id)
+        num = str ("30") + str(abs_id)
     elif abs_id < 1000000:
-        num = str ("4") + str(abs_id)
+        num = str ("3") + str(abs_id)
     elif abs_id < 10000000:
         num = str(abs_id)
 
@@ -131,33 +19,21 @@ def get_cmd(id):
 
     return cmd
 
-def get_nbt(item, id, has_cmd="true", type="none", subtype="none"):
-    cmd_tag = ""
-    if has_cmd == "true":
-        cmd = get_cmd(id)
-        cmd_tag = "CustomModelData: " + cmd + ", "
-    else:
-        cmd_tag = ""
-    unconvertable = ", unconvertable: 1"
+def get_model_nbt(item, id):
+    cmd = get_model_cmd(id)
+    cmd_tag = "CustomModelData: " + cmd + ", "
     name = "name: '" + str(item) + "'"
     is_item = ", item: 1"
     item_id = ", id: " + str(id)
-    nbt_tag1 = ""
-    if type != "none":
-        nbt_tag1 = ", " + str(type) + ": 1"
-    nbt_tag2 = ""
-    if subtype != "none":
-        nbt_tag2 = ", " + str(subtype) + ": 1"
-         
-    nbt = "{" + cmd_tag + "dnl: {" + name + is_item + item_id + nbt_tag1 + nbt_tag2 + "}}"
+    nbt = "{" + cmd_tag + "dnl: {" + name + is_item + item_id + "}}"
     return nbt
 
 # ---- #
 vanilla = ctx.inject(Vanilla)
 models_jar = vanilla.mount("assets/minecraft/models/item")
 
-def add_custom_model_data(custom_item_name, id, base_item, custom_model="false"):
-    model_path = f"dnl:item/{custom_item_name}"
+def add_model_custom_model_data(custom_item_name, id, base_item, custom_model):
+    model_path = f"dnl:mob/{custom_item_name}"
 
     base_item_location = f"minecraft:item/{base_item}"
     
@@ -169,7 +45,7 @@ def add_custom_model_data(custom_item_name, id, base_item, custom_model="false")
         existing_model = models_jar.assets.models[base_item_location].copy()
         models[base_item_location] = existing_model
 
-    cmd_id = int(get_cmd(id))
+    cmd_id = int(get_model_cmd(id))
 
     if base_item == "bow":
         pulling_0_path = f"dnl:item/{custom_item_name}/pulling_0"
@@ -210,7 +86,6 @@ def add_custom_model_data(custom_item_name, id, base_item, custom_model="false")
                 {"predicate": {"custom_model_data": cmd_id}, "model": model_path},
             ]
         }
-        
     if custom_model == "false":
         if base_item == "bow":
             model model_path {
@@ -337,38 +212,3 @@ def add_custom_model_data(custom_item_name, id, base_item, custom_model="false")
                     "layer0": model_path
                 }
             }
-        
-
-# def rp_create_models(item_name, id, type):
-#     cmd = get_cmd(id)
-#     item_resource_location = minecraft:item/ + item_name
-#     item_path = "item/" + item_name
-#     base_resource_location = minecraft:item/ + type
-#     if 
-#         type == "wooden_sword" or 
-#         type == "stone_sword" or 
-#         type == "iron_sword" or 
-#         type == "diamond_sword" or 
-#         type == "netherite_sword":
-#             model item_resource_location {
-#                 "parent": "minecraft:item/handheld",
-#                 "textures": {
-#                     "layer0": item_resource_location
-#                 }
-#             }
-#             merge model base_resource_location {
-#                 "parent": "minecraft:item/handheld",
-#                 "textures": {
-#                     "layer0": base_resource_location
-#                 },
-#                 "overrides": [
-#                     {"predicate": {"custom_model_data": cmd}, "model": item_path},
-#                 ]
-#             }
-#     if type == "bow":
-#         model item_resource_location {
-#             "parent": "minecraft:item/handheld",
-#             "textures": {
-#                 "layer0": item_resource_location
-#             }
-#         }

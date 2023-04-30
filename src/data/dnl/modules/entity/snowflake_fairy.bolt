@@ -1,0 +1,131 @@
+from ../event/on_entity_mob_tick import on_entity_mob_tick
+from ../event/on_entity_hurt_target import on_entity_hurt_target
+from ../event/on_entity_hurt_attacker import on_entity_hurt_attacker
+from ../event/on_entity_hit_target import on_entity_hit_target
+from ../util/mob import add_summon, assign_lid
+from ../util/death import add_death_event
+from ../util/model import add_model_custom_model_data
+from ../util/rng import rng, outcome
+from reapermc:api import listener
+
+id_idle = ctx.meta.mob.snowflake_fairy.idle
+id_hurt = ctx.meta.mob.snowflake_fairy.hurt
+
+add_model_custom_model_data("snowflake_fairy/idle", id_idle, "snowball", "true")
+add_model_custom_model_data("snowflake_fairy/hurt", id_hurt, "snowball", "true")
+
+# add_summon snowflake_fairy vex none 32 0 0 flame {
+#     DeathLootTable:"dnl:entity/snowflake_fairy/death",
+#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_fairy"],
+#     PersistenceRequired:1b,
+#     Silent:1b,
+#     NoAI:0b,
+#     ActiveEffects:[{Id:14,Amplifier:0b,Duration:-1,ShowParticles:0b}],
+#     Passengers:[
+#         {
+#             id:"minecraft:item_display",
+#             Tags:["dnl.display","dnl.display_item","dnl.snowflake_fairy_display","dnl.snowflake_fairy_display.body"],
+#             brightness:{sky:15,block:15},
+#             billboard:"center",
+#             item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_idle}},
+#             transformation:{
+#                 left_rotation:[0f,0f,0f,1f],
+#                 right_rotation:[0f,0f,0f,1f],
+#                 translation:[0f,0f,0f],
+#                 scale:[1f,1f,1f]
+#             }
+#         }
+#     ]
+# }
+
+@listener(on_entity_mob_tick)
+def entity_mob_tick():
+    if entity @s[tag=dnl.snowflake_fairy] run function ./snowflake_fairy/main
+
+function ./snowflake_fairy/main:
+    particle dust 0.710 1.000 0.973 1 ~ ~0.4 ~ 0.2 0.2 0.2 1 1 normal
+    unless entity @s[tag=dnl.snowflake_fairy.init] run function ./snowflake_fairy/init:
+        tag @s add dnl.snowflake_fairy.init
+        tag @s add dnl.snowflake_fairy.animation.idle
+        assign_lid
+        scoreboard players operation #dnl.snowflake_fairy.lid dnl.lid = @s dnl.lid
+        on passengers run scoreboard players operation @s dnl.lid = #dnl.snowflake_fairy.lid dnl.lid
+    # if entity @s[nbt={HurtTime:10s}] run function ./snowflake_fairy/hurt/start:
+    #     tag @s add dnl.snowflake_fairy.hurt
+    #     playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1.5 1
+    #     particle block ice ~ ~0.4 ~ 0.2 0.2 0.2 0.01 20 normal
+    #     on passengers run data modify entity @s item.tag.CustomModelData set value id_hurt
+    if entity @s[tag=dnl.snowflake_fairy.hurt] run function ./snowflake_fairy/hurt/time:
+        scoreboard players add @s dnl.hurt.timer 1
+        if score @s dnl.hurt.timer matches 10.. run function ./snowflake_fairy/hurt/end:
+            tag @s remove dnl.snowflake_fairy.hurt
+            scoreboard players reset @s dnl.hurt.timer
+            on passengers run data modify entity @s item.tag.CustomModelData set value id_idle
+        
+    ### Animations ###
+    if entity @s[tag=dnl.snowflake_fairy.animation.idle] run function ./snowflake_fairy/animation/idle:
+        scoreboard players add @s dnl.animation.timer 1
+        # Right Tilt
+        if score @s dnl.animation.timer matches 1 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 6 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0.131f,1f]}}
+        if score @s dnl.animation.timer matches 11 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0.195f,1f]}}
+        if score @s dnl.animation.timer matches 16 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0.259f,1f]}}
+        if score @s dnl.animation.timer matches 26 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0.195f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 31 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0.131f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+
+        # Left Tilt
+        if score @s dnl.animation.timer matches 36 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 41 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,-0.131f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 46 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,-0.195f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 51 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,-0.259f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 61 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,-0.195f,1f]}}
+        if score @s dnl.animation.timer matches 66 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,-0.131f,1f]}}
+        
+        if score @s dnl.animation.timer matches 71 run function ./snowflake_fairy/animation/idle/end:
+            
+            rng 1 2
+
+            outcome 1:
+                say yes
+            outcome 2:
+                say no
+
+
+            outcome 3:
+                tag @s remove dnl.snowflake_fairy.animation.idle
+            outcome 3:
+                tag @s add dnl.snowflake_fairy.animation.spin
+            scoreboard players reset @s dnl.animation.timer
+    if entity @s[tag=dnl.snowflake_fairy.animation.spin] run function ./snowflake_fairy/animation/spin:
+        scoreboard players add @s dnl.animation.timer 1
+        if score @s dnl.animation.timer matches 1 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0.995f,0.1f]}}
+        if score @s dnl.animation.timer matches 6 on passengers run data merge entity @s {start_interpolation:0,interpolation_duration:5,transformation:{translation:[0f,0f,0f],left_rotation:[0f,0f,0f,1f],scale:[1f,1f,1f],right_rotation:[0f,0f,0f,1f]}}
+        if score @s dnl.animation.timer matches 11 run function ./snowflake_fairy/animation/spin/end:
+            tag @s remove dnl.snowflake_fairy.animation.spin
+            tag @s add dnl.snowflake_fairy.animation.idle
+            scoreboard players reset @s dnl.animation.timer
+
+@listener(on_entity_hit_target)
+def entity_hit_target():
+    if entity @s[tag=dnl.snowflake_fairy] run function ./snowflake_fairy/hit_target:
+        tag @s add dnl.snowflake_fairy.hurt
+        playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1.5 1
+        particle block ice ~ ~0.4 ~ 0.2 0.2 0.2 0.01 20 normal
+        on passengers run data modify entity @s item.tag.CustomModelData set value id_hurt
+
+@listener(on_entity_hurt_attacker)
+def entity_hurt_attacker():
+    if entity @s[tag=dnl.snowflake_fairy] run scoreboard players set #dnl.snowflake_fairy.hurt_target dnl.boolean 1
+
+@listener(on_entity_hurt_target)
+def entity_hurt_target():
+    if score #dnl.snowflake_fairy.hurt_target dnl.boolean matches 1 run function ./snowflake_fairy/hurt_target:
+        effect give @s minecraft:slowness 6 3
+        scoreboard players reset #dnl.snowflake_fairy.hurt_target dnl.boolean
+
+add_death_event("snowflake_fairy")
+
+function ./snowflake_fairy/death:
+    playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1 1
+    particle block ice ~ ~0.4 ~ 0.2 0.2 0.2 0.01 20 normal
+    as @e[type=item_display,tag=dnl.snowflake_fairy_display] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run kill @s

@@ -1,0 +1,56 @@
+from ../util/item import get_nbt, add_custom_model_data
+
+id = ctx.meta.item.snowflake_bow
+
+nbt = get_nbt("snowflake_bow", id)
+
+add_custom_model_data("snowflake_bow", id, "bow", "true")
+
+loot_table ../item/snowflake_bow {
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "minecraft:bow",
+                    "functions": [
+                        {
+                            "function": "minecraft:set_name",
+                            "entity": "this",
+                            "name": {
+                                "translate": "[WIP] Snowflake Bow",
+                                "color": "#FFAA00",
+                                "italic": false
+                            }
+                        },
+                        {
+                            "function": "minecraft:set_lore",
+                            "entity": "this",
+                            "lore": [
+                                {
+                                    "translate": "Arrow Strength",
+                                    "color": "#AAAAAA",
+                                    "italic": false
+                                },
+                                {
+                                    "translate": "x1.5 Arrow Damage",
+                                    "color": "#555555",
+                                    "italic": false
+                                }
+                            ]
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": nbt
+                        },
+                        {
+                            "function": "minecraft:set_nbt",
+                            "tag": "{dnl:{lvl:1}}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

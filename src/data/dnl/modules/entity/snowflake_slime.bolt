@@ -1,0 +1,75 @@
+from reapermc:api import listener
+from ../util/mob import add_summon, assign_lid
+from ../util/death import add_death_event
+from ../event/on_entity_mob_tick import on_entity_mob_tick
+from ../event/on_entity_display_tick import on_entity_display_tick
+from ../util/model import add_model_custom_model_data
+
+id_ice_spike = ctx.meta.mob.snowflake_slime.ice_spike
+
+add_model_custom_model_data("snowflake_slime/ice_spike", id_ice_spike, "snowball", "true")
+
+# add_summon snowflake_slime slime none 32 0 0 flame {
+#     CustomName:'{"translate":"ice","italic":false}',
+#     DeathLootTable:"dnl:entity/snowflake_slime/death",
+#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_slime"],
+#     PersistenceRequired:1b,
+#     Silent:1b,
+#     NoAI:0b,
+#     ArmorItems:[{id:"minecraft:iron_boots",Count:1b,tag:{Enchantments:[{id:"minecraft:frost_walker",lvl:1s}],AttributeModifiers:[{AttributeName:"generic.armor",Name:"generic.armor",Amount:0,Operation:0,UUID:[I;1951448891,-377074395,-1413275577,1816482829],Slot:"feet"},{AttributeName:"generic.armor_toughness",Name:"generic.armor_toughness",Amount:0,Operation:0,UUID:[I;-162049297,2109622826,-2090077120,-2084635637],Slot:"feet"}]}},{},{},{}],
+#     Passengers:[
+#         {
+#             id:"minecraft:marker",
+#             Tags:["dnl.marker","dnl.custom_name_disabler"]
+#         }
+#     ]
+# }
+
+@listener(on_entity_mob_tick)
+def entity_mob_tick():
+    if entity @s[tag=dnl.snowflake_slime] run function ./snowflake_slime/main
+
+function ./snowflake_slime/main:
+    unless entity @s[tag=dnl.snowflake_slime.init] run function ./snowflake_slime/init:
+        tag @s add dnl.snowflake_slime.init
+        effect give @s minecraft:speed infinite 5 true
+        assign_lid
+        scoreboard players operation #dnl.snowflake_slime.lid dnl.lid = @s dnl.lid
+        on passengers run scoreboard players operation @s dnl.lid = #dnl.snowflake_slime.lid dnl.lid
+
+    if score #dnl.1s dnl.tick matches 1 run function ./snowflake_slime/ice_path:
+        store success score #dnl.snowflake_slime.is_ice_spike dnl.boolean run execute if entity @e[type=item_display,tag=dnl.snowflake_slime_ice_spike,distance=..0.1]
+        if score #dnl.snowflake_slime.is_ice_spike dnl.boolean matches 0 if entity @s[nbt={OnGround:1b}] run function ./snowflake_slime/summon_ice_spike:
+            summon item_display ~ ~ ~ {
+                Tags:["dnl.display","dnl.display_item","dnl.tick","dnl.snowflake_slime_ice_spike"],
+                item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_ice_spike}},
+                transformation:{
+                    left_rotation:[0f,0f,0f,1f],
+                    right_rotation:[0f,0f,0f,1f],
+                    translation:[0f,0.5f,0f],
+                    scale:[1f,1f,1f]
+                }
+            }
+
+@listener(on_entity_display_tick)
+def entity_display_tick():
+    if entity @s[tag=dnl.snowflake_slime_ice_spike] run function ./snowflake_slime/ice_spike/main
+
+function ./snowflake_slime/ice_spike/main:
+    scoreboard players add @s dnl.timer 1
+    scoreboard players reset #dnl.snowflake_slime.ice_spike_damage dnl.boolean
+    if entity @p[distance=..0.3] as @p run function ./snowflake_slime/ice_spkie/damage:
+        damage @s 5 minecraft:freeze at ~ ~ ~
+        scoreboard players set #dnl.snowflake_slime.ice_spike_damage dnl.boolean 1
+    if score @s dnl.timer matches 100.. run function ./snowflake_slime/ice_spike/kill
+    if score #dnl.snowflake_slime.ice_spike_damage dnl.boolean matches 1 run function ./snowflake_slime/ice_spike/kill
+
+function ./snowflake_slime/ice_spike/kill:
+    particle block ice ~ ~0.4 ~ 0.2 0.2 0.2 0.01 20 normal 
+    kill @s
+    
+
+add_death_event("snowflake_slime")
+
+function ./snowflake_slime/death:
+    as @e[type=marker,tag=dnl.custom_name_disabler] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run kill @s

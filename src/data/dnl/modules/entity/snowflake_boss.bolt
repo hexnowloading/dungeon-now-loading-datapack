@@ -1,0 +1,58 @@
+from ../event/on_entity_mob_tick import on_entity_mob_tick
+from ../event/on_entity_hurt_target import on_entity_hurt_target
+from ../event/on_entity_hurt_attacker import on_entity_hurt_attacker
+from ../event/on_entity_hit_target import on_entity_hit_target
+from ../util/mob import add_summon, assign_lid
+from ../util/death import add_death_event
+from ../util/model import add_model_custom_model_data
+from ../util/rng import rng, outcome
+from reapermc:api import listener
+
+id_idle = ctx.meta.mob.snowflake_boss.idle
+
+add_model_custom_model_data("snowflake_boss/idle", id_idle, "snowball", "true")
+
+
+# add_summon snowflake_boss phantom none 32 0 0 flame {
+#     DeathLootTable:"dnl:entity/snowflake_boss/death",
+#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_boss"],
+#     PersistenceRequired:1b,
+#     Silent:1b,
+#     NoAI:0b,
+#     ActiveEffects:[{Id:14,Amplifier:0b,Duration:-1,ShowParticles:0b}],
+#     Passengers:[
+#         {
+#             id:"minecraft:item_display",
+#             Tags:["dnl.display","dnl.display_item","dnl.snowflake_boss_display","dnl.snowflake_boss_display.body"],
+#             brightness:{sky:15,block:15},
+#             billboard:"vertical",
+#             item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_idle}},
+#             transformation:{
+#                 left_rotation:[0f,0f,0f,1f],
+#                 right_rotation:[0f,0f,0f,1f],
+#                 translation:[0f,0f,0f],
+#                 scale:[3f,3f,3f]
+#             }
+#         }
+#     ]
+# }
+
+@listener(on_entity_mob_tick)
+def entity_mob_tick():
+    if entity @s[tag=dnl.snowflake_boss] run function ./snowflake_boss/main
+
+function ./snowflake_boss/main:
+    particle dust 0.710 1.000 0.973 1 ~ ~0.4 ~ 0.2 0.2 0.2 1 1 normal
+    unless entity @s[tag=dnl.snowflake_boss.init] run function ./snowflake_boss/init:
+        tag @s add dnl.snowflake_boss.init
+        tag @s add dnl.snowflake_boss.animation.idle
+        assign_lid
+        scoreboard players operation #dnl.snowflake_boss.lid dnl.lid = @s dnl.lid
+        on passengers run scoreboard players operation @s dnl.lid = #dnl.snowflake_boss.lid dnl.lid
+
+add_death_event("snowflake_boss")
+
+function ./snowflake_boss/death:
+    playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1 1
+    particle block ice ~ ~0.4 ~ 0.2 0.2 0.2 0.01 20 normal
+    as @e[type=item_display,tag=dnl.snowflake_boss_display] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run kill @s

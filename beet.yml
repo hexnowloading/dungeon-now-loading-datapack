@@ -34,9 +34,11 @@ meta:
     resource_pack:
       assets: "src/assets/*.*"
       assets/minecraft/optifine: "src/assets/minecraft/optifine/*.*"
+      assets/dnl/optifine: "src/assets/dnl/optifine/*.*"
       assets/minecraft/optifine/anim: "src/assets/minecraft/optifine/anim/*.*"
       assets/minecraft/optifine/cit/armor: "src/assets/minecraft/optifine/cit/armor/*.*"
       assets/minecraft/optifine/random/entity/ghast: "src/assets/minecraft/optifine/random/entity/ghast/*.*"
+      assets/minecraft/optifine/random/entity/slime: "src/assets/minecraft/optifine/random/entity/slime/*.*"
   dnl:
     namespace: 'dnl'
     cmd_namespace: 'cmd'
@@ -51,7 +53,8 @@ meta:
     royal_ominous_crossbow: 7
     broken_bow: 8
     frost_watcher_bow: 9
-  
+    snowflake_bow: 10
+
     ancient_axe: 1001
     ancient_sword: 1002
     fleshbone_sword: 1003
@@ -124,3 +127,11 @@ meta:
     music_disc_jack_and_lantern: 9006
 
     death_star: 9999
+  mob:
+    snowflake_fairy:
+      idle: 3030001
+      hurt: 3030002
+    snowflake_slime:
+      ice_spike: 3030011
+    snowflake_boss:
+      idle: 3030021

@@ -104,6 +104,15 @@ entity_type_tag ../others {
     ]
 }
 
+entity_type_tag ../display_entities {
+    "description": "In use non living entities in 1.19.3",
+    "values": [
+        "minecraft:block_display",
+        "minecraft:item_display",
+        "minecraft:text_display"
+    ]
+}
+
 entity_type_tag ../ticking_entities {
     "description": "All mob entities in 1.19.3",
     "values": [

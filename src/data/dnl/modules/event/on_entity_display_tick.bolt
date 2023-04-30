@@ -1,0 +1,9 @@
+from reapermc:event_handler import Event, listener
+
+on_entity_display_tick = Event('on_entity_display_tick')
+
+@on_entity_display_tick.handler
+def handler():
+    execute function on_entity_display_tick.generate_path('entity_display_tick'):
+        function ../util/entity_display_tick_listener:
+            on_entity_display_tick.trigger()

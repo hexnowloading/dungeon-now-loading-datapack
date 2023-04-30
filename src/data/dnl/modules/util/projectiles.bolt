@@ -10,13 +10,10 @@ from ../api import
     on_player_load
 
 from ../event/on_player_init import on_player_init
+from ../event/on_entity_arrow_tick import on_entity_arrow_tick
 
 @listener(on_server_load)
 def load():
-    scoreboard objectives add dnl.uuid0 dummy
-    scoreboard objectives add dnl.uuid1 dummy
-    scoreboard objectives add dnl.uuid2 dummy
-    scoreboard objectives add dnl.uuid3 dummy
     scoreboard objectives add dnl.pid dummy
     scoreboard objectives add dnl.bow dummy
     scoreboard objectives add dnl.return minecraft.custom:minecraft.leave_game
@@ -73,21 +70,13 @@ function ./projectiles/player_mainhand:
 
 @listener(on_player_load)
 def player_load():
-    function ./projectiles/entity_init
+    function ./projectiles/pid
 
 @listener(on_entity_marker_tick)
 def entity_marker_tick():
     if entity @s[tag=dnl.entity_effect] run function ./projectiles/entity_effect:
         scoreboard players set @s dnl.effect 1
         tag @s remove dnl.entity_effect
-
-function ./projectiles/entity_init:
-    store result score @s dnl.uuid0 run data get entity @s UUID[0]
-    store result score @s dnl.uuid1 run data get entity @s UUID[1]
-    store result score @s dnl.uuid2 run data get entity @s UUID[2]
-    store result score @s dnl.uuid3 run data get entity @s UUID[3]
-
-    function ./projectiles/pid
 
 function ./projectiles/pid:
     scoreboard players add #dnl.system dnl.pid 1
@@ -107,18 +96,14 @@ function ./projectiles/return:
     scoreboard players reset @s dnl.return
     function ./projectiles/pid
 
-function ./projectiles/tick_arrow:
+@listener(on_entity_arrow_tick)
+def entity_arrow_tick():
     if entity @s[tag=!dnl.init] run function ./projectiles/arrow_init:
         tag @s add dnl.init
 
-        store result score #dnl.search dnl.uuid0 run data get entity @s Owner[0]
-        store result score #dnl.search dnl.uuid1 run data get entity @s Owner[1]
-        store result score #dnl.search dnl.uuid2 run data get entity @s Owner[2]
-        store result score #dnl.search dnl.uuid3 run data get entity @s Owner[3]
-
         scoreboard players set #dnl.type dnl.bow 0
         scoreboard players set #dnl.remove_unluck dnl.boolean 0
-        as @e[type=#dnl:arrow_shooters] if score @s dnl.uuid0 = #dnl.search dnl.uuid0 if score @s dnl.uuid1 = #dnl.search dnl.uuid1 if score @s dnl.uuid2 = #dnl.search dnl.uuid2 if score @s dnl.uuid3 = #dnl.search dnl.uuid3 run function ./projectiles/owner:
+        on origin run function ./projectiles/owner:
             scoreboard players operation #dnl.type dnl.bow = @s dnl.bow
             scoreboard players operation #dnl.pid dnl.bow = @s dnl.pid
 
@@ -147,14 +132,9 @@ function ./projectiles/tick_firework:
     if entity @s[tag=!dnl.init] run function ./projectiles/firework_init:
         tag @s add dnl.init
         if predicate ./projectiles/firework_shot_from_crossbow run function ./projectiles/firework_set_data:
-            store result score #dnl.search dnl.uuid0 run data get entity @s Owner[0]
-            store result score #dnl.search dnl.uuid1 run data get entity @s Owner[1]
-            store result score #dnl.search dnl.uuid2 run data get entity @s Owner[2]
-            store result score #dnl.search dnl.uuid3 run data get entity @s Owner[3]
-
             scoreboard players set #dnl.type dnl.bow 0
 
-            as @e[type=#dnl:firework_shooters] if score @s dnl.uuid0 = #dnl.search dnl.uuid0 if score @s dnl.uuid1 = #dnl.search dnl.uuid1 if score @s dnl.uuid2 = #dnl.search dnl.uuid2 if score @s dnl.uuid3 = #dnl.search dnl.uuid3 run function ./projectiles/firework_owner:
+            on origin run function ./projectiles/firework_owner:
                 scoreboard players operation #dnl.type dnl.bow = @s dnl.bow
             
             if score #dnl.type dnl.bow matches 1.. run function ./projectiles/save_firework:
@@ -171,7 +151,7 @@ function ./projectiles/tick_firework:
 function ./projectiles/tick_skeleton:
     if entity @s[tag=!dnl.skeleton.init] run function ./projectiles/init_skeleton:
         tag @s add dnl.skeleton.init
-        function ./projectiles/entity_init
+        function ./projectiles/pid
     scoreboard players operation @s dnl.bow = @s dnl.mainhand
 
 function ./projectiles/arrow_hit_entity_schedule:
