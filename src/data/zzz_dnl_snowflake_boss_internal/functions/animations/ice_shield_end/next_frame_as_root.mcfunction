@@ -1,0 +1,1 @@
+function zzz_dnl_snowflake_boss_internal:animations/ice_shield_end/tick_animation

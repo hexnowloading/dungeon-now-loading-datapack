@@ -1,0 +1,14 @@
+from reapermc:api import
+    listener
+
+from ../event/on_entity_display_tick import on_entity_display_tick
+from ../event/on_entity_snowball_tick import on_entity_snowball_tick
+
+@listener(on_entity_display_tick)
+def entity_display_tick():
+    if entity @s[tag=dnl.special_projectile] run function ./snowball/check_vehical
+
+function ./snowball/check_vehical:
+    scoreboard players reset #dnl.snowball.hit dnl.boolean
+    store success score #dnl.snowball.hit dnl.boolean on vehicle run execute if entity @s[tag=dnl.special_projectile]
+    unless score #dnl.snowball.hit dnl.boolean matches 1 run function ./snowball/special_projectile_hit_listener

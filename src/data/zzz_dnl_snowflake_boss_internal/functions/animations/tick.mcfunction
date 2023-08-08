@@ -1,0 +1,9 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.idle] run function zzz_dnl_snowflake_boss_internal:animations/idle/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.wake_up] run function zzz_dnl_snowflake_boss_internal:animations/wake_up/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.teleport] run function zzz_dnl_snowflake_boss_internal:animations/teleport/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.body_smash] run function zzz_dnl_snowflake_boss_internal:animations/body_smash/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.icicle_missile] run function zzz_dnl_snowflake_boss_internal:animations/icicle_missile/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.ice_spike] run function zzz_dnl_snowflake_boss_internal:animations/ice_spike/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.ice_shield] run function zzz_dnl_snowflake_boss_internal:animations/ice_shield/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.ice_shield_start] run function zzz_dnl_snowflake_boss_internal:animations/ice_shield_start/tick
+execute if entity @s[tag=aj.dnl_snowflake_boss.animation.ice_shield_end] run function zzz_dnl_snowflake_boss_internal:animations/ice_shield_end/tick

@@ -1,0 +1,2 @@
+execute as @e[type=#dnl_snowflake_boss_ice_spike:aj_root,tag=aj.dnl_snowflake_boss_ice_spike.root] run function zzz_dnl_snowflake_boss_ice_spike_internal:remove/as_root
+kill @e[tag=aj.dnl_snowflake_boss_ice_spike.rig_entity]

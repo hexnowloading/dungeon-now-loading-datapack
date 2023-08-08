@@ -1,0 +1,2 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.body] run data modify entity @s {} merge value {transformation:[-6f,0f,7.347880794884119e-16f,0f,0f,6f,0f,-2.09375f,-7.347880794884119e-16f,0f,-6f,0f,0f,0f,0f,1f],start_interpolation:0}
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.shield] run data modify entity @s {} merge value {transformation:[-8.423450216497079f,-0.8444999265442511f,4.789397080078904f,0f,0f,9.578794160157805f,1.6889998530885022f,-2.40625f,-4.863281250000001f,1.4627167797628275f,-8.295479080318685f,0f,0f,0f,0f,1f],start_interpolation:0}

@@ -44,17 +44,19 @@ macro add_summon
         @listener(on_marker_spawner)
         def marker_spawner():
             if range_type == "spherical":
-                if entity @s[tag=f"dnl.{name.value}"] if entity @p[distance=f"..{range.value}"] at @s run function f"dnl:util/mob/spawner/{name.value}":
+                unless entity @s[tag=dnl.mob_spawner.used] if entity @s[tag=f"dnl.{name.value}"] if entity @p[distance=f"..{range.value}"] at @s run function f"dnl:util/mob/spawner/{name.value}":
                     particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
                     particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal
                     function f"dnl:summon/{name.value}"
-                    kill @s
+                    if score #dnl.test_mode dnl.boolean matches 1 run tag @s add dnl.mob_spawner.used
+                    unless score #dnl.test_mode dnl.boolean matches 1 run kill @s
             elif range_type == "cubical":
-                if entity @s[tag=f"dnl.{name.value}"] positioned ~-range.value ~-depth.value ~-range.value if entity @p[dx=width,dy=height.value,dz=width] at @s run function f"dnl:util/mob/spawner/{name.value}":
+                unless entity @s[tag=dnl.mob_spawner.used] if entity @s[tag=f"dnl.{name.value}"] positioned ~-range.value ~-depth.value ~-range.value if entity @p[dx=width,dy=height.value,dz=width] at @s run function f"dnl:util/mob/spawner/{name.value}":
                     particle poof ~ ~ ~ 0.5 1 0.5 0.001 20 normal
                     particle par.value ~ ~ ~ 0.5 1 0.5 0.001 10 normal
                     function f"dnl:summon/{name.value}"
-                    kill @s
+                    if score #dnl.test_mode dnl.boolean matches 1 run tag @s add dnl.mob_spawner.used
+                    unless score #dnl.test_mode dnl.boolean matches 1 run kill @s
 
         @listener(on_marker_jigsaw)
         def marker_jigsaw():
@@ -347,11 +349,14 @@ macro remove_bossbar
     if type.value == "item":
         store result score #dnl.death_bossbar_id dnl.int run data get entity @s Item.tag.dnl.bossbar_id
         for i in range(10):
-            if score #dnl.death_bossbar_id dnl.int matches i run function f"dnl:util/mob/bossbar/remove_{i}":
-                scoreboard players set f"#dnl.bossbar{i}" dnl.boolean 0
-                as @a run bossbar set f"dnl:bossbar{i}" visible false
+            if score #dnl.death_bossbar_id dnl.int matches i run function f"dnl:util/mob/bossbar/remove_{i}"
     elif type.value == "this":
         function ./mob/bossbar/remove_by_range
+
+for i in range(10):
+    function f"dnl:util/mob/bossbar/remove_{i}":
+        scoreboard players set f"#dnl.bossbar{i}" dnl.boolean 0
+        as @a run bossbar set f"dnl:bossbar{i}" visible false
 
 macro assign_lid:
     if score #dnl.global_lid dnl.lid matches 19683.. run scoreboard players set #dnl.global_lid dnl.lid 0

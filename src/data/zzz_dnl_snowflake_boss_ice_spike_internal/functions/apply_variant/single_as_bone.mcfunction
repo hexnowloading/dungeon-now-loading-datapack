@@ -1,0 +1,1 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss_ice_spike.bone.spike] run data modify entity @s item.tag.CustomModelData set value 133

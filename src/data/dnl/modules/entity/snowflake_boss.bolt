@@ -2,57 +2,982 @@ from ../event/on_entity_mob_tick import on_entity_mob_tick
 from ../event/on_entity_hurt_target import on_entity_hurt_target
 from ../event/on_entity_hurt_attacker import on_entity_hurt_attacker
 from ../event/on_entity_hit_target import on_entity_hit_target
+from ../event/on_entity_display_tick import on_entity_display_tick
+from ../event/on_special_projectile_hit import on_special_projectile_hit
+from ../event/on_marker_core import on_marker_core
 from ../util/mob import add_summon, assign_lid
 from ../util/death import add_death_event
 from ../util/model import add_model_custom_model_data
 from ../util/rng import rng, outcome
-from reapermc:api import listener
+from nbtlib import Float
+from reapermc:api import Event, listener
+import math
 
-id_idle = ctx.meta.mob.snowflake_boss.idle
+from ../api import
+    set_bossbar
+    remove_bossbar
 
-add_model_custom_model_data("snowflake_boss/idle", id_idle, "snowball", "true")
+id_icicle_projectile = ctx.meta.mob.snowflake_boss.icicle_projectile
+id_ice_spike = ctx.meta.mob.snowflake_boss.ice_spike
+id_flake_type_a = ctx.meta.mob.snowflake_boss.flake_type_a
+id_flake_type_b = ctx.meta.mob.snowflake_boss.flake_type_b
+id_blank = ctx.meta.util.blank
 
+add_model_custom_model_data("snowflake_boss/icicle_projectile", id_icicle_projectile, "snowball", "true")
+add_model_custom_model_data("snowflake_boss/ice_spike", id_ice_spike, "snowball", "true")
+add_model_custom_model_data("snowflake_boss/flake/type_a", id_flake_type_a, "snowball", "true")
+add_model_custom_model_data("snowflake_boss/flake/type_b", id_flake_type_b, "snowball", "true")
 
-# add_summon snowflake_boss phantom none 32 0 0 flame {
-#     DeathLootTable:"dnl:entity/snowflake_boss/death",
-#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_boss"],
-#     PersistenceRequired:1b,
-#     Silent:1b,
-#     NoAI:0b,
-#     ActiveEffects:[{Id:14,Amplifier:0b,Duration:-1,ShowParticles:0b}],
-#     Passengers:[
-#         {
-#             id:"minecraft:item_display",
-#             Tags:["dnl.display","dnl.display_item","dnl.snowflake_boss_display","dnl.snowflake_boss_display.body"],
-#             brightness:{sky:15,block:15},
-#             billboard:"vertical",
-#             item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_idle}},
-#             transformation:{
-#                 left_rotation:[0f,0f,0f,1f],
-#                 right_rotation:[0f,0f,0f,1f],
-#                 translation:[0f,0f,0f],
-#                 scale:[3f,3f,3f]
-#             }
-#         }
-#     ]
-# }
+add_summon snowflake_boss slime boss 35 0 0 flame {
+    CustomNameVisible:0b,
+    CustomName:'{"translate":"Frozen Void","color":"aqua","bold":false,"italic":false}',
+    DeathLootTable:"dnl:entity/snowflake_boss/death",
+    Tags:["dnl.mob","dnl.boss","dnl.tick","dnl.snowflake_mob","dnl.snowflake_boss"],
+    PersistenceRequired:1b,
+    Silent:1b,
+    Size:16,
+    Glowing:0b,
+    NoAI:1b,
+    Invulnerable:1b,
+    NoGravity:1b,
+    ActiveEffects:[{Id:14,Amplifier:0b,Duration:-1,ShowParticles:0b}]
+}
+
+boss_range = 35
+
+@listener(on_marker_core)
+def marker_core():
+    if entity @s[tag=dnl.snowflake_boss] run function ./snowflake_boss/core/main:
+        ### Start ###
+        if entity @s[tag=dnl.start] if score #dnl.1s dnl.tick matches 1 run function ./snowflake_boss/core/start:
+            scoreboard players operation #dnl.snowflake_boss.core.lid dnl.lid = @s dnl.lid
+            unless entity @a[distance=f"..{boss_range}"] run tag @s add dnl.reset
+        
+        ### Reset ###
+        if entity @s[tag=dnl.reset] run function ./snowflake_boss/core/reset:
+            scoreboard players operation #dnl.snowflake_boss.core.lid dnl.lid = @s dnl.lid
+            as @e[type=slime,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid run tag @s add dnl.reset
+            tag @s remove dnl.start
+            tag @s remove dnl.reset
+            positioned ~ ~-1 ~ run function ../spawner/snowflake_boss
 
 @listener(on_entity_mob_tick)
 def entity_mob_tick():
     if entity @s[tag=dnl.snowflake_boss] run function ./snowflake_boss/main
 
 function ./snowflake_boss/main:
-    particle dust 0.710 1.000 0.973 1 ~ ~0.4 ~ 0.2 0.2 0.2 1 1 normal
+    ### Init ###
     unless entity @s[tag=dnl.snowflake_boss.init] run function ./snowflake_boss/init:
         tag @s add dnl.snowflake_boss.init
-        tag @s add dnl.snowflake_boss.animation.idle
+
+        ### Scoreboard ###
+        scoreboard objectives add dnl.snowflake_boss.state.burning.fire_tick dummy
+
+        scoreboard objectives add dnl.snowflake_boss.ability.count dummy
+        
+        scoreboard objectives add dnl.snowflake_boss.ability.teleport.timer dummy
+        scoreboard objectives add dnl.snowflake_boss.ability.body_smash.timer dummy
+        scoreboard objectives add dnl.snowflake_boss.ability.icicle_missile.timer dummy
+        scoreboard objectives add dnl.snowflake_boss.ability.ice_spike.timer dummy
+        scoreboard objectives add dnl.snowflake_boss.ability.ice_shield.timer dummy
+        scoreboard objectives add dnl.snowflake_boss.ability.ice_shield.count dummy
+        scoreboard objectives add dnl.snowflake_boss.ability.blizzard.timer dummy
+        
+        scoreboard players set @s dnl.snowflake_boss.ability.teleport.timer -1
+        scoreboard players set @s dnl.snowflake_boss.ability.body_smash.timer -1
+        scoreboard players set @s dnl.snowflake_boss.ability.icicle_missile.timer -1
+        scoreboard players set @s dnl.snowflake_boss.ability.ice_spike.timer -1
+        scoreboard players set @s dnl.snowflake_boss.ability.ice_shield.timer -1
+        scoreboard players set @s dnl.snowflake_boss.ability.blizzard.timer -1
+
+        ### Status Effects ###
+        effect give @s minecraft:absorption infinite 249 true
+        effect give @s minecraft:speed infinite 10 true
+        
+        ### Animations ###
+        function dnl_snowflake_boss:summon/sleep
+        ride @e[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root,tag=!dnl.snowflake_boss_display.mounted,limit=1,sort=nearest] mount @s
+        on passengers run tag @s add dnl.snowflake_boss_display.mounted
+        on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/wake_up/play   
+
+        ### Prepare Arena ###
+        fill ~40 ~ ~40 ~-40 ~ ~-40 minecraft:ice replace minecraft:water
+        fill ~40 ~1 ~40 ~-40 ~1 ~-40 minecraft:air replace minecraft:powder_snow
+
+        ### Data ###
+        scoreboard players set @s dnl.phase 0
+        scoreboard players set @s dnl.timer -1
         assign_lid
         scoreboard players operation #dnl.snowflake_boss.lid dnl.lid = @s dnl.lid
         on passengers run scoreboard players operation @s dnl.lid = #dnl.snowflake_boss.lid dnl.lid
+        on passengers run scoreboard players set @s dnl.animation.timer -1
+        ### Link ID Existing The Champion Core Marker ###
+        as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss,distance=f"..{boss_range}"] run function ./snowflake_boss/core/copy:
+            scoreboard players operation @s dnl.lid = #dnl.snowflake_boss.lid dnl.lid
+            tag @s add dnl.start
+
+        ### Summon and Link ID The Champion Core Marker ###
+        unless entity @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss,distance=f"..{boss_range}"] run function ./snowflake_boss/core/setup:
+            summon marker ~ ~ ~ {Tags:["dnl.marker","dnl.core","dnl.snowflake_boss","dnl.start","dnl.core.new_marker"]}
+            scoreboard players operation @e[type=marker,tag=dnl.core.new_marker] dnl.lid = @s dnl.lid
+            tag @e[type=marker,tag=dnl.core.new_marker] remove dnl.core.new_marker
+
+    ### Bossbar ###
+    data modify storage dnl:boss Boss set from entity @s {}
+    store result score @s dnl.health run data get storage dnl:boss Boss.AbsorptionAmount 1
+    scoreboard players operation @s dnl.health -= #dnl.700 dnl.constant
+    set_bossbar snowflake_boss purple notched_10 300 sphere 35 0 0
+
+    ### Reset ###
+    if entity @s[tag=dnl.reset] run function ./snowflake_boss/reset:
+        data modify entity @s DeathLootTable set value "minecraft:empty" 
+        remove_bossbar this
+        particle poof ~ ~ ~ 0.3 1 0.3 0.0001 5 normal
+        data modify entity @s Size set value 0
+        tp @s ~ ~-1000 ~
+        on passengers run function dnl_snowflake_boss:remove/this
+        as @e[type=stray,tag=dnl.snowflake_boss_minion,distance=..64] at @s run function ./snowflake_boss/kill_minions:
+            tp @s ~ -1000 ~
+            kill @s
+        kill @s
+    
+    ### Hurt ###
+    if data storage dnl:boss {Boss:{HurtTime:10s}} run function ./snowflake_boss/hurt/start:
+        unless entity @s[tag=dnl.snowflake_boss.ability.ice_shield.active] run function ./snowflake_boss/hurt/actually_hurt:
+            tag @s add dnl.snowflake_boss.hurt
+            playsound minecraft:block.amethyst_cluster.hit master @a ~ ~ ~ 4 0.1 0
+            on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/hurt
+            store result score @s dnl.snowflake_boss.state.burning.fire_tick run data get storage dnl:boss Boss.Fire
+        if entity @s[tag=dnl.snowflake_boss.ability.ice_shield.active] run function ./snowflake_boss/hurt/actually_unhurt:
+            playsound minecraft:block.iron_trapdoor.open master @a ~ ~ ~ 4 0.1 0
+    if entity @s[tag=dnl.snowflake_boss.hurt] run function ./snowflake_boss/hurt/time:
+        scoreboard players add @s dnl.hurt.timer 1
+        if score @s dnl.hurt.timer matches 10.. run function ./snowflake_boss/hurt/end:
+            tag @s remove dnl.snowflake_boss.hurt
+            scoreboard players reset @s dnl.hurt.timer
+            on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/recover
+            if score @s dnl.snowflake_boss.state.burning.fire_tick matches 1.. run function ./snowflake_boss/hurt/burn_damage:
+                if score @s dnl.snowflake_boss.state.burning.fire_tick matches 1.. run damage @s 1 minecraft:on_fire at ~ ~ ~
+                if score @s dnl.snowflake_boss.state.burning.fire_tick matches 50.. run damage @s 5 minecraft:on_fire at ~ ~ ~
+                if score @s dnl.snowflake_boss.state.burning.fire_tick matches 100.. run damage @s 10 minecraft:on_fire at ~ ~ ~
+                if score @s dnl.snowflake_boss.state.burning.fire_tick matches 150.. run damage @s 15 minecraft:on_fire at ~ ~ ~
+                data modify entity @s Fire set value 0
+                particle minecraft:flame ~ ~4.08 ~ 0 0 0 0.5 100 force
+                playsound minecraft:entity.generic.extinguish_fire master @a ~ ~ ~ 4 1 0
+                scoreboard players reset @s dnl.snowflake_boss.state.burning.fire_tick
+
+    ### Player Debuffs ###
+    if score #dnl.1s dnl.tick matches 1 as @a[distance=f"..{boss_range}"] run function ../effect/hypothermia/apply
+
+    ### Death ###
+    if score @s dnl.health matches ..0 run function ./snowflake_boss/death
+    
+    ### Behaviour ###
+    if score @s dnl.phase matches 0 run function ./snowflake_boss/behaviour/phase_0/main
+
+    if score @s dnl.phase matches 1 run function ./snowflake_boss/behaviour/phase_1/main
+
+    if score @s dnl.phase matches 2 run function ./snowflake_boss/behaviour/phase_2/main
+
+    if score @s dnl.phase matches 3 run function ./snowflake_boss/behaviour/phase_3/main
+
+    ### Abilities ###
+    if entity @s[tag=dnl.snowflake_boss.ability.destructive] run function ./snowflake_boss/ability/destructive/main
+    if entity @s[tag=dnl.snowflake_boss.ability.teleport_center] run function ./snowflake_boss/ability/teleport_center/main
+    if entity @s[tag=dnl.snowflake_boss.ability.teleport_target] run function ./snowflake_boss/ability/teleport_target/main
+    if entity @s[tag=dnl.snowflake_boss.ability.teleport_random] run function ./snowflake_boss/ability/teleport_random/main
+    if entity @s[tag=dnl.snowflake_boss.ability.teleport_rim] run function ./snowflake_boss/ability/teleport_rim/main
+    if entity @s[tag=dnl.snowflake_boss.ability.body_smash] run function ./snowflake_boss/ability/body_smash/main
+    if entity @s[tag=dnl.snowflake_boss.ability.icicle_missile] run function ./snowflake_boss/ability/icicle_missile/main
+    if entity @s[tag=dnl.snowflake_boss.ability.ice_spike] run function ./snowflake_boss/ability/ice_spike/main
+    if entity @s[tag=dnl.snowflake_boss.ability.ice_shield] run function ./snowflake_boss/ability/ice_shield/main
+    if entity @s[tag=dnl.snowflake_boss.ability.blizzard] run function ./snowflake_boss/ability/blizzard/main
+
+#########################################################################################################################################################################################
+####################################################################################### Behaviour #######################################################################################
+#########################################################################################################################################################################################
+
+### Phase 0 ###
+
+def ease_out(current_time, start_value, end_value, duration, exponent=2):
+    t = current_time / duration
+    return (end_value - start_value) * (1 - math.pow(1 - t, exponent)) + start_value
+
+def animation_wake_up(name, start_time, start_value, end_value, duration, exponent):
+    for i in range(duration):
+        y = ease_out(i, start_value, end_value, duration, exponent) - ease_out(i-1, start_value, end_value, duration, exponent)
+        x = start_time + i
+        if score @s name matches x run tp @s ~ ~y ~
+
+function ./snowflake_boss/behaviour/phase_0/main:
+    timer = 'dnl.timer'
+    scoreboard players add @s dnl.timer 1
+    
+    animation_wake_up(timer, 30, 0, 10, 10, 4)
+    animation_wake_up(timer, 40, 0, -3, 10, 2)
+    animation_wake_up(timer, 50, 0, 2, 10, 2)
+    animation_wake_up(timer, 60, 0, -1, 10, 2)
+
+    ### Particle ###
+    if score @s dnl.timer matches 9..18 run particle minecraft:snowflake ~ ~2.4 ~ 3 3 3 0.001 20 force
+    if score @s dnl.timer matches 9..18 run particle block blue_ice ~ ~1.5 ~ 3 0 3 0.001 40 force
+    if score @s dnl.timer matches 80 run particle minecraft:snowflake ~ ~4.08 ~ 0 0 0 1 100 force
+
+    ### Sound Effet ###
+    if score @s dnl.timer matches 30 run playsound minecraft:entity.wither.break_block master @a ~ ~ ~ 4 1 0
+    if score @s dnl.timer matches 80 run playsound minecraft:entity.wither.spawn master @a ~ ~ ~ 4 2 0
+
+    ### State ###
+    if score @s dnl.timer matches 80 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/default
+    if score @s dnl.timer matches 80 run data modify entity @s Invulnerable set value 0
+    if score @s dnl.timer matches 120 run scoreboard players add @s dnl.phase 1
+    if score @s dnl.timer matches 120 run scoreboard players set @s dnl.timer -1
+
+### Phase 1 ###
+
+function ./snowflake_boss/behaviour/phase_1/main:
+    # scoreboard players add @s dnl.timer 1
+    ### Init ###
+    unless entity @s[tag=dnl.snowflake_boss.phase_1.init] run function ./snowflake_boss/behaviour/phase_1/init:
+        tag @s add dnl.snowflake_boss.phase_1.init
+        on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    ### Particle ###
+    particle minecraft:snowflake ~ ~4.08 ~ 3 3 3 0.001 20 force
+
+    ### Abilities ###
+    unless score @s dnl.snowflake_boss.ability.count matches 1.. if score @s dnl.health matches 151.. run function ./snowflake_boss/behaviour/phase_1/choose_ability
+    unless score @s dnl.snowflake_boss.ability.count matches 1.. if score @s dnl.health matches ..150 run function ./snowflake_boss/behaviour/phase_1/choose_shield
+
+function ./snowflake_boss/behaviour/phase_1/choose_ability:
+    rng 1 5
+    outcome 1:
+        tag @s add dnl.snowflake_boss.ability.body_smash
+    outcome 2:
+        tag @s add dnl.snowflake_boss.ability.icicle_missile
+    outcome 3:
+        tag @s add dnl.snowflake_boss.ability.ice_spike
+    outcome 4:
+        function ./snowflake_boss/behaviour/phase_1/choose_teleport
+
+function ./snowflake_boss/behaviour/phase_1/choose_teleport:
+    rng 1 4
+    outcome 1:
+        tag @s add dnl.snowflake_boss.ability.teleport_center
+    outcome 2:
+        tag @s add dnl.snowflake_boss.ability.teleport_target
+    outcome 3:
+        tag @s add dnl.snowflake_boss.ability.teleport_random
+    outcome 4:
+        tag @s add dnl.snowflake_boss.ability.teleport_rim
+
+function ./snowflake_boss/behaviour/phase_1/choose_shield:
+    tag @s add dnl.snowflake_boss.ability.ice_shield
+
+### Phase 2 ###
+function ./snowflake_boss/behaviour/phase_2/main:
+
+    ### Particle ###
+    particle minecraft:snowflake ~ ~4.08 ~ 3 3 3 0.001 20 force
+
+    ### Abilities ###
+    if entity @s[tag=dnl.snowflake_boss.phase_2.default] unless score @s dnl.snowflake_boss.ability.count matches 1.. run function ./snowflake_boss/behaviour/phase_2/choose_ability
+    
+    if score @s dnl.health matches ..30 run function ./snowflake_boss/behaviour/phase_2/phase_change:
+        effect give @s minecraft:resistance infinite 10 true
+        scoreboard players add @s dnl.phase 1
+
+    ### Init ###
+    unless entity @s[tag=dnl.snowflake_boss.phase_2.init] run function ./snowflake_boss/behaviour/phase_2/init:
+        tag @s add dnl.snowflake_boss.phase_2.init
+        tag @s add dnl.snowflake_boss.ability.blizzard
+        tag @s add dnl.snowflake_boss.phase_2.default
+
+function ./snowflake_boss/behaviour/phase_2/choose_ability:
+    rng 1 9
+    outcome 1..3:
+        tag @s add dnl.snowflake_boss.ability.body_smash
+    outcome 4..6:
+        tag @s add dnl.snowflake_boss.ability.icicle_missile
+    outcome 7..9:
+        tag @s add dnl.snowflake_boss.ability.ice_spike
+    outcome 10..11:
+        function ./snowflake_boss/behaviour/phase_2/choose_teleport
+    outcome 12:
+        tag @s add dnl.snowflake_boss.ability.ice_shield
+
+function ./snowflake_boss/behaviour/phase_2/choose_teleport:
+    rng 1 4
+    outcome 1:
+        tag @s add dnl.snowflake_boss.ability.teleport_center
+    outcome 2:
+        tag @s add dnl.snowflake_boss.ability.teleport_target
+    outcome 3:
+        tag @s add dnl.snowflake_boss.ability.teleport_random
+    outcome 4:
+        tag @s add dnl.snowflake_boss.ability.teleport_rim
+
+### Phase 3 ###
+function ./snowflake_boss/behaviour/phase_3/main:
+    
+    ### Particle ###
+    particle minecraft:snowflake ~ ~4.08 ~ 3 3 3 0.001 20 force
+
+    ### Abilities ###
+    unless score @s dnl.snowflake_boss.ability.count matches 1.. run function ./snowflake_boss/behaviour/phase_3/choose_ability:
+        tag @s add dnl.snowflake_boss.ability.blizzard
+        tag @s add dnl.snowflake_boss.ability.ice_shield
+        
+
+#########################################################################################################################################################################################
+####################################################################################### Abilities #######################################################################################
+#########################################################################################################################################################################################
+def target_random():
+    tag @a remove dnl.snowflake_boss.target
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run tag @a[distance=f"..{boss_range}",limit=1,sort=random] add dnl.snowflake_boss.target
+
+def target_all():
+    tag @a remove dnl.snowflake_boss.target
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run tag @a[distance=f"..{boss_range}"] add dnl.snowflake_boss.target
+ 
+
+### Destructive ###
+function ./snowflake_boss/ability/destructive/main:
+    store success score #dnl.snowflake_boss.breaked_block dnl.boolean run fill ~3 ~3 ~3 ~-3 ~-3 ~-3 minecraft:water replace #minecraft:ice
+    if score #dnl.snowflake_boss.breaked_block dnl.boolean matches 1 run playsound minecraft:block.glass.break master @a ~ ~ ~ 4 1 0
+    store success score #dnl.snowflake_boss.breaked_block dnl.boolean run fill ~3 ~3 ~3 ~-3 ~-3 ~-3 minecraft:air replace minecraft:powder_snow
+    if score #dnl.snowflake_boss.breaked_block dnl.boolean matches 1 run playsound minecraft:block.powder_snow.break master @a ~ ~ ~ 4 1 0
+
+### Teleport to Center ###
+function ./snowflake_boss/ability/teleport_center/main:
+    timer = 'dnl.snowflake_boss.ability.teleport.timer'
+    scoreboard players add @s timer 1
+
+    ### Sound Effect ###
+    if score @s timer matches 4 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+    if score @s timer matches 16 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/teleport/play
+    if score @s timer matches 8 unless entity @s[tag=dnl.snowflake_boss.ability.blizzard] run function ./snowflake_boss/ability/teleport_center/teleport
+    if score @s timer matches 8 if entity @s[tag=dnl.snowflake_boss.ability.blizzard] run function ./snowflake_boss/ability/teleport_center/teleport_highest
+    if score @s timer matches 20 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 20 run tag @s remove dnl.snowflake_boss.ability.teleport_center
+    if score @s timer matches 20 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 20 run scoreboard players set @s timer -1
+
+function ./snowflake_boss/ability/teleport_center/teleport:
+    tag @s add dnl.this
+    rng 1 2
+    outcome 1:
+        as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run tp @e[tag=dnl.this] ~ ~10 ~
+    outcome 2:
+        as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run tp @e[tag=dnl.this] ~ ~20 ~
+    tag @s remove dnl.this
+
+function ./snowflake_boss/ability/teleport_center/teleport_highest:
+    tag @s add dnl.this
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run tp @e[tag=dnl.this] ~ ~30 ~
+    tag @s remove dnl.this
+
+### Teleport to Target ###
+function ./snowflake_boss/ability/teleport_target/main:
+    timer = 'dnl.snowflake_boss.ability.teleport.timer'
+    scoreboard players add @s timer 1
+
+    ### Sound Effect ###
+    if score @s timer matches 4 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+    if score @s timer matches 16 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/teleport/play
+    if score @s timer matches 8 run function ./snowflake_boss/ability/teleport_target/teleport
+    if score @s timer matches 20 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 20 run tag @s remove dnl.snowflake_boss.ability.teleport_target
+    if score @s timer matches 20 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 20 run scoreboard players set @s timer -1
+
+function ./snowflake_boss/ability/teleport_target/teleport:
+    target_random()
+    rng 1 2
+    outcome 1:
+        unless entity @s[tag=dnl.snowflake_boss.ability.body_smash] at @p[tag=dnl.snowflake_boss.target] run tp @s ~ ~10 ~
+    outcome 2:
+        unless entity @s[tag=dnl.snowflake_boss.ability.body_smash] at @p[tag=dnl.snowflake_boss.target] run tp @s ~ ~20 ~
+    if entity @s[tag=dnl.snowflake_boss.ability.body_smash] at @p[tag=dnl.snowflake_boss.target] positioned over motion_blocking run tp @s ~ ~20 ~
+
+### Teleport Random ###
+function ./snowflake_boss/ability/teleport_random/main:
+    timer = 'dnl.snowflake_boss.ability.teleport.timer'
+    scoreboard players add @s timer 1
+
+    ### Sound Effect ###
+    if score @s timer matches 4 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+    if score @s timer matches 16 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/teleport/play
+    if score @s timer matches 8 run function ./snowflake_boss/ability/teleport_random/teleport
+    if score @s timer matches 20 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 20 run tag @s remove dnl.snowflake_boss.ability.teleport_random
+    if score @s timer matches 20 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 20 run scoreboard players set @s timer -1
+
+function ./snowflake_boss/ability/teleport_random/teleport:
+    tag @s add dnl.this
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run spreadplayers ~ ~ 1 25 false @e[tag=dnl.this]
+    tag @s remove dnl.this
+    rng 1 2
+    outcome 1:
+        at @s run tp @s ~ ~10 ~
+    outcome 2:
+        at @s run tp @s ~ ~20 ~
+
+### Teleport Rim ###
+function ./snowflake_boss/ability/teleport_rim/main:
+    timer = 'dnl.snowflake_boss.ability.teleport.timer'
+    scoreboard players add @s timer 1
+
+    ### Sound Effect ###
+    if score @s timer matches 4 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+    if score @s timer matches 16 run playsound minecraft:entity.enderman.teleport master @a ~ ~ ~ 4 0.1 0
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/teleport/play
+    if score @s timer matches 8 run function ./snowflake_boss/ability/teleport_rim/teleport
+    if score @s timer matches 20 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 20 run tag @s remove dnl.snowflake_boss.ability.teleport_rim
+    if score @s timer matches 20 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 20 run scoreboard players set @s timer -1
+
+function ./snowflake_boss/ability/teleport_rim/teleport:
+    target_random()
+    tag @s add dnl.this
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s facing entity @p[tag=dnl.snowflake_boss.target] eyes rotated ~ 0 positioned ^ ^ ^-30 positioned over motion_blocking run function ./snowflake_boss/ability/teleport_rim/direction:
+        as @e[tag=dnl.this] facing entity @p[tag=dnl.snowflake_boss.target] eyes run tp @s ~ ~10 ~ ~ 0
+        as @e[tag=dnl.this] on passengers facing entity @p[tag=dnl.snowflake_boss.target] eyes run tp @s ~ ~ ~ ~ 0
+    tag @s remove dnl.this
+
+### Body Smash ###
+function ./snowflake_boss/ability/body_smash/main:
+    
+    timer = 'dnl.snowflake_boss.ability.body_smash.timer'
+    damage_absolute = 4
+    damage_physical = 10 + damage_absolute
+
+    scoreboard players add @s timer 1
+
+    ### Damage ###
+    if score @s timer matches 65 run tag @s add dnl.this
+    if score @s timer matches 65 positioned ~-4.08 ~ ~-4.08 as @a[dx=8.16,dy=8.16,dz=8.16] run damage @s damage_absolute dnl:absolute by @e[tag=dnl.this,limit=1]
+    if score @s timer matches 65 positioned ~-4.08 ~ ~-4.08 as @a[dx=8.16,dy=8.16,dz=8.16] run damage @s damage_physical dnl:physical by @e[tag=dnl.this,limit=1]
+    if score @s timer matches 65 run tag @s add dnl.remove
+
+    ### Particle ###
+    if score @s timer matches 65 run particle minecraft:poof ~ ~ ~ 4 0 4 0.5 100 force
+    if score @s timer matches 65 run particle minecraft:explosion ~ ~ ~ 5 0 5 0.5 20 force
+
+    ### Sound Effect ###
+    if score @s timer matches 65 run playsound minecraft:entity.generic.explode master @a ~ ~ ~ 4 1 0
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 run tag @s add dnl.snowflake_boss.ability.destructive
+    if score @s timer matches 0 run tag @s add dnl.snowflake_boss.ability.teleport_target
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/body_smash/play
+    animation_wake_up(timer, 60, 0, -18, 10, 3)
+    if score @s timer matches 100 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 100 run tag @s remove dnl.snowflake_boss.ability.destructive
+    if score @s timer matches 120 run tag @s add dnl.snowflake_boss.ability.teleport_random
+    if score @s timer matches 150 run tag @s remove dnl.snowflake_boss.ability.body_smash
+    if score @s timer matches 150 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 150 run scoreboard players set @s timer -1
+
+### Icicle Missile ###
+function ./snowflake_boss/ability/icicle_missile/main:
+    
+    timer = 'dnl.snowflake_boss.ability.icicle_missile.timer'
+    
+    scoreboard players add @s timer 1
+
+    ### Particle ###
+    if score @s timer matches 90 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^ ^9 ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 90 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^ ^9 ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 95 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^6.36396 ^-6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 95 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^6.36396 ^-6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 100 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^-9 ^ ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 100 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^-9 ^ ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 105 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^6.36396 ^6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 105 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^6.36396 ^6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 110 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^ ^-9 ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 110 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^ ^-9 ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 115 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^-6.36396 ^6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 115 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^-6.36396 ^6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 120 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^9 ^ ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 120 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^9 ^ ^ 0.5 0.5 0.5 0.1 100 force
+
+    if score @s timer matches 125 positioned ~ ~4.08 ~ run particle minecraft:snowflake ^-6.36396 ^-6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+    if score @s timer matches 125 positioned ~ ~4.08 ~ run particle minecraft:end_rod ^-6.36396 ^-6.36396 ^ 0.5 0.5 0.5 0.1 100 force
+
+    ### Sound Effect ###
+    if score @s timer matches 37..44 run playsound minecraft:block.amethyst_block.resonate master @a ~ ~ ~ 4 1 0
+
+    ### Summon Missiles ###
+    if score @s timer matches 90 positioned ~ ~4.08 ~ positioned ^ ^9 ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 95 positioned ~ ~4.08 ~ positioned ^6.36396 ^-6.36396 ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 100 positioned ~ ~4.08 ~ positioned ^-9 ^ ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 105 positioned ~ ~4.08 ~ positioned ^6.36396 ^6.36396 ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 110 positioned ~ ~4.08 ~ positioned ^ ^-9 ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 115 positioned ~ ~4.08 ~ positioned ^-6.36396 ^6.36396 ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 120 positioned ~ ~4.08 ~ positioned ^9 ^ ^3 run function ./snowflake_boss_icicle_projectile/summon
+    if score @s timer matches 125 positioned ~ ~4.08 ~ positioned ^-6.36396 ^-6.36396 ^3 run function ./snowflake_boss_icicle_projectile/summon
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 run tag @s add dnl.snowflake_boss.ability.teleport_rim
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/icicle_missile/play
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/sword_add
+    if score @s timer matches 150 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    if score @s timer matches 150 run tag @s remove dnl.snowflake_boss.ability.icicle_missile
+    if score @s timer matches 150 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 150 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 150 run scoreboard players set @s timer -1
+
+### Ice Spike ###
+function ./snowflake_boss/ability/ice_spike/main:
+
+    timer = 'dnl.snowflake_boss.ability.ice_spike.timer'
+    scoreboard players add @s timer 1
+
+    ### Particle ###
+    if score @s timer matches 30..90 run particle minecraft:snowflake ~ ~4.08 ~ 1.3 0.3 1.3 1 10 force
+    if score @s timer matches 0..90 run particle end_rod ~ ~ ~ ^ ^-1000000 ^ 0.000001 0 force
+    if score @s timer matches 0..90 run particle end_rod ~ ~ ~ ^ ^-1000000 ^ 0.000001 0 force
+
+    ### State ###
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+    if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_spike/play
+    if score @s timer matches 31 run function ./snowflake_boss/ability/ice_spike/activate
+    if score @s timer matches 51 run function ./snowflake_boss/ability/ice_spike/activate
+    if score @s timer matches 71 run function ./snowflake_boss/ability/ice_spike/activate
+    if score @s timer matches 150 run tag @s remove dnl.snowflake_boss.ability.ice_spike
+    if score @s timer matches 150 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    if score @s timer matches 150 run scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 150 run scoreboard players set @s timer -1
+
+function ./snowflake_boss/ability/ice_spike/activate:
+    target_all()
+    if score @s dnl.phase matches 1 at @a[tag=dnl.snowflake_boss.target] positioned over motion_blocking run function ./snowflake_boss_ice_spike/single/summon
+    if score @s dnl.phase matches 2 at @a[tag=dnl.snowflake_boss.target] positioned over motion_blocking run function ./snowflake_boss_ice_spike/multiple/summon
+
+### Ice Shield ###
+function ./snowflake_boss/ability/ice_shield/main:
+    timer = 'dnl.snowflake_boss.ability.ice_shield.timer'
+    shield_count = 'dnl.snowflake_boss.ability.ice_shield.count'
+
+    scoreboard players add @s timer 1
+
+    ### Particle ###
+    if score @s timer matches 90.. run particle minecraft:falling_obsidian_tear ~ ~10.08 ~ 3 3 3 0.001 10 force
+
+    ### State - Phase 2 ###
+
+    if score @s dnl.phase matches 1..2 run function ./snowflake_boss/ability/ice_shield/state/phase_1:
+        if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+        if score @s timer matches 0 run tag @s add dnl.snowflake_boss.ability.teleport_center
+        if score @s timer matches 0 run data modify entity @s Fire set value 0
+        if score @s timer matches 30 run tag @s add dnl.snowflake_boss.ability.ice_shield.active
+        if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+        if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield_start/play
+        if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/shield_add
+        if score @s timer matches 30 run effect give @s minecraft:resistance infinite 5 true
+        if score @s timer matches 30 run scoreboard players reset @s shield_count
+        if score @s timer matches 90 unless entity @s[tag=dnl.snowflake_boss.ability.ice_shield.loop] on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield/play
+        if score @s timer matches 90 run tag @s add dnl.snowflake_boss.ability.ice_shield.loop
+        if score @s timer matches 90.. if entity @s[tag=dnl.snowflake_boss.ability.ice_shield.active] run function ./snowflake_boss/ability/ice_shield/check_fire
+        if score @s timer matches 150 if entity @s[tag=dnl.snowflake_boss.ability.ice_shield.end_next_loop] run function ./snowflake_boss/ability/ice_shield/end
+        if score @s timer matches 150 unless entity @s[tag=dnl.snowflake_boss.ability.ice_shield.end_next_loop] run function ./snowflake_boss/ability/ice_shield/check_health
+
+    ### State - Phase 3 ###
+    if score @s dnl.phase matches 3 run function ./snowflake_boss/ability/ice_shield/state/phase_3:
+        if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+        if score @s timer matches 0 run data modify entity @s Fire set value 0
+        if score @s timer matches 30 run tag @s add dnl.snowflake_boss.ability.ice_shield.active
+        if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/stop
+        if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield_start/play
+        if score @s timer matches 30 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/shield_add
+        if score @s timer matches 30 run scoreboard players reset @s shield_count
+        if score @s timer matches 90 unless entity @s[tag=dnl.snowflake_boss.ability.ice_shield.loop] on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield/play
+        if score @s timer matches 90 run tag @s add dnl.snowflake_boss.ability.ice_shield.loop
+        if score @s timer matches 90.. if entity @s[tag=dnl.snowflake_boss.ability.ice_shield.active] run function ./snowflake_boss/ability/ice_shield/check_fire
+        if score @s timer matches 150 if entity @s[tag=dnl.snowflake_boss.ability.ice_shield.end_next_loop] run function ./snowflake_boss/ability/ice_shield/end
+
+function ./snowflake_boss/ability/ice_shield/check_fire:
+    store result score #dnl.snowflake_boss.fire_tick dnl.int run data get storage dnl:boss Boss.Fire
+    if score #dnl.snowflake_boss.fire_tick dnl.int matches 1.. run scoreboard players add @s shield_count 1
+    if score #dnl.snowflake_boss.fire_tick dnl.int matches 1.. if score @s shield_count matches ..3 run function ./snowflake_boss/ability/ice_shield/shield_reduce
+    if score #dnl.snowflake_boss.fire_tick dnl.int matches 1.. if score @s shield_count matches 4.. run function ./snowflake_boss/ability/ice_shield/shield_destroy
+
+function ./snowflake_boss/ability/ice_shield/shield_reduce:
+    playsound minecraft:block.amethyst_cluster.break master @a ~ ~ ~ 4 0.1 0
+    data modify entity @s Fire set value 0
+    if score @s shield_count matches 1 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/shield_remove_1
+    if score @s shield_count matches 2 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/shield_remove_2
+    if score @s shield_count matches 3 on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/shield_remove_3
+
+function ./snowflake_boss/ability/ice_shield/shield_destroy:
+    ### Sound Effect ###
+    playsound minecraft:block.amethyst_cluster.break master @a ~ ~ ~ 4 0.1 0
+    playsound minecraft:entity.generic.explode master @a ~ ~ ~ 4 1 0
+
+    ### Particle ###
+    particle minecraft:poof ~ ~4.08 ~ 4 4 4 0.5 100 force
+    particle minecraft:explosion ~ ~4.08 ~ 5 5 5 0.5 20 force
+    particle minecraft:snowflake ~ ~4.08 ~ 1.3 0.3 1.3 1 100 force
+
+    ### State ###
+    effect clear @s minecraft:resistance
+    data modify entity @s Fire set value 0
+    if score @s dnl.phase matches 1 run scoreboard players add @s dnl.phase 1
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/shield_remove
+    tag @s add dnl.snowflake_boss.ability.ice_shield.end_next_loop
+    tag @s remove dnl.snowflake_boss.ability.ice_shield.active
+
+function ./snowflake_boss/ability/ice_shield/check_health:
+    if score @s dnl.health matches ..299 run function ./snowflake_boss/ability/ice_shield/heal
+    if score @s dnl.health matches 300.. run function ./snowflake_boss/ability/ice_shield/shield_deactivate
+
+function ./snowflake_boss/ability/ice_shield/heal:
+    healing_amount = 5
+    
+    healing_amount_absorption = healing_amount + 700
+    scoreboard players set #dnl.snowflake_boss.healing dnl.int healing_amount_absorption
+    scoreboard players operation #dnl.snowflake_boss.healing dnl.int += @s dnl.health
+    store result entity @s AbsorptionAmount float 1 run scoreboard players get #dnl.snowflake_boss.healing dnl.int
+    scoreboard players set @s timer 90
+
+function ./snowflake_boss/ability/ice_shield/shield_deactivate:
+    tag @s add dnl.snowflake_boss.ability.ice_shield.end_next_loop
+    tag @s remove dnl.snowflake_boss.ability.ice_shield.active
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield/stop
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield_end/play
+    scoreboard players set @s timer 90
+
+function ./snowflake_boss/ability/ice_shield/end:
+    tag @s remove dnl.snowflake_boss.ability.ice_shield.loop
+    tag @s remove dnl.snowflake_boss.ability.ice_shield.end_next_loop
+    tag @s remove dnl.snowflake_boss.ability.ice_shield
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield/stop
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/ice_shield_end/stop
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:animations/idle/play
+    on passengers if entity @s[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function dnl_snowflake_boss:apply_variant/remove_all
+    scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    scoreboard players set @s timer -1
+
+### Blizzard ###
+function ./snowflake_boss/ability/blizzard/main:
+    timer = 'dnl.snowflake_boss.ability.blizzard.timer'
+    scoreboard players add @s timer 1
+
+    if score @s timer matches 0 run scoreboard players add @s dnl.snowflake_boss.ability.count 1
+    if score @s timer matches 0 run tag @s add dnl.snowflake_boss.ability.teleport_center
+    
+    ### Phase 2 ###
+    if score @s dnl.phase matches 2 run function ./snowflake_boss/ability/blizzard/phase_2:
+        for i in range(20):
+            clock = 30 + i * 4
+            if score @s timer matches clock run function ./snowflake_boss/ability/blizzard/summon_less
+        if score @s timer matches 120 run function ./snowflake_boss/ability/blizzard/end
+
+    ### Phase 3 ###
+    if score @s dnl.phase matches 3 run function ./snowflake_boss/ability/blizzard/phase_3:
+        if score @s timer matches 40 run function ./snowflake_boss/ability/blizzard/summon_less
+        if score @s timer matches 40 run scoreboard players set @s timer 30
+
+function ./snowflake_boss/ability/blizzard/summon_less:
+    rng 1 3
+    outcome 1..:
+        function ./snowflake_boss_flake/summon
+    outcome 2..:
+        function ./snowflake_boss_flake/summon
+    outcome 3..:
+        function ./snowflake_boss_flake/summon
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.snowflake_boss.core.lid dnl.lid at @s run spreadplayers ~ ~ 1 35 false @e[type=snowball,tag=dnl.snowflake_boss_flake,tag=!dnl.snowflake_boss_flake.teleported]
+    as @e[type=snowball,tag=dnl.snowflake_boss_flake,tag=!dnl.snowflake_boss_flake.teleported] at @s run function ./snowflake_boss/ability/blizzard/set_height
+
+function ./snowflake_boss/ability/blizzard/set_height:
+    rng 1 6
+    outcome 1:
+        align xyz positioned ~0.5 ~ ~0.5 positioned over motion_blocking run tp @s ~ ~20 ~
+    outcome 2:
+        align xyz positioned ~0.5 ~ ~0.5 positioned over motion_blocking run tp @s ~ ~22 ~
+    outcome 3:
+        align xyz positioned ~0.5 ~ ~0.5 positioned over motion_blocking run tp @s ~ ~24 ~
+    outcome 4:
+        align xyz positioned ~0.5 ~ ~0.5 positioned over motion_blocking run tp @s ~ ~26 ~
+    outcome 5:
+        align xyz positioned ~0.5 ~ ~0.5 positioned over motion_blocking run tp @s ~ ~28 ~
+    outcome 6:
+        align xyz positioned ~0.5 ~ ~0.5 positioned over motion_blocking run tp @s ~ ~30 ~
+    function ./snowflake_boss_flake/set_motion
+    tag @s add dnl.snowflake_boss_flake.teleported
+
+function ./snowflake_boss/ability/blizzard/end:
+    scoreboard players remove @s dnl.snowflake_boss.ability.count 1
+    scoreboard players set @s timer -1
+    tag @s remove dnl.snowflake_boss.ability.blizzard
+
+#########################################################################################################################################################################################
+#################################################################################### Other Entities #####################################################################################
+#########################################################################################################################################################################################
+
+### Ice Spike ###
+function ./snowflake_boss_ice_spike/single/summon:
+    align xyz positioned ~0.5 ~ ~0.5 rotated 0 0 run function dnl_snowflake_boss_ice_spike:summon/single
+    as @e[type=#dnl_snowflake_boss_ice_spike:aj_root,tag=aj.dnl_snowflake_boss_ice_spike.root,tag=!dnl.snowflake_boss_ice_spike.init] at @s run function ./snowflake_boss_ice_spike/single/init:
+        scoreboard objectives add dnl.snowflake_boss_ice_spike.cooldown dummy
+        tag @s add dnl.snowflake_boss_ice_spike.init
+        tag @s add dnl.snowflake_boss_ice_spike.single
+        tag @s add dnl.snowflake_boss_ice_spike
+        tag @s add dnl.tick
+        function dnl_snowflake_boss_ice_spike:animations/emerging/play
+
+function ./snowflake_boss_ice_spike/multiple/summon:
+    align xyz positioned ~0.5 ~ ~0.5 rotated 0 0 run function dnl_snowflake_boss_ice_spike:summon/multiple
+    as @e[type=#dnl_snowflake_boss_ice_spike:aj_root,tag=aj.dnl_snowflake_boss_ice_spike.root,tag=!dnl.snowflake_boss_ice_spike.init] at @s run function ./snowflake_boss_ice_spike/multiple/init:
+        scoreboard objectives add dnl.snowflake_boss_ice_spike.cooldown dummy
+        tag @s add dnl.snowflake_boss_ice_spike.init
+        tag @s add dnl.snowflake_boss_ice_spike.multiple
+        tag @s add dnl.snowflake_boss_ice_spike
+        tag @s add dnl.tick
+        function dnl_snowflake_boss_ice_spike:animations/emerging/play
+
+@listener(on_entity_display_tick)
+def snowflake_boss_ice_spike_tick():
+    if entity @s[tag=dnl.snowflake_boss_ice_spike] run function ./snowflake_boss_ice_spike/main
+
+function ./snowflake_boss_ice_spike/main:
+
+    damage_absolute = 2
+    damage_physical = 4 + damage_absolute
+
+    cooldown = 'dnl.snowflake_boss_ice_spike.cooldown'
+
+    scoreboard players add @s dnl.timer 1
+    scoreboard players add @s cooldown 1
+    scoreboard players reset #dnl.snowflake_boss.ice_spike_damage dnl.boolean
+
+    if entity @s[tag=dnl.snowflake_boss_ice_spike.single] run function ./snowflake_boss_ice_spike/single/main:
+        particle minecraft:snowflake ~ ~ ~ 0.3 1 0.3 0.1 1 force
+        particle minecraft:end_rod ~ ~ ~ 0.3 1 0.3 0.01 1 force
+        if score @s dnl.timer matches 20 run playsound minecraft:item.trident.throw master @a ~ ~ ~ 4 1 0
+        if score @s dnl.timer matches 20 run function ./snowflake_boss_ice_spike/single/damage_start:
+            store success score #dnl.snowflake_boss.breaked_block dnl.boolean run fill ~ ~ ~ ~ ~ ~ minecraft:air replace minecraft:powder_snow
+            if score #dnl.snowflake_boss.breaked_block dnl.boolean matches 1 run playsound minecraft:block.powder_snow.break master @a ~ ~ ~ 4 1 0
+        tag @s add dnl.this
+        if score @s dnl.timer matches 20.. if score @s cooldown matches 10.. positioned ~-0.3 ~ ~-0.3 as @a[dx=0.6,dy=0.5,dz=0.6] run function ./snowflake_boss_ice_spike/single/damage:
+            damage @s damage_absolute dnl:absolute at ~ ~ ~
+            damage @s damage_physical dnl:physical at ~ ~ ~
+            playsound minecraft:block.amethyst_block.break master @s ~ ~ ~ 4 1 0
+            particle minecraft:block ice ~ ~ ~ 0.3 0.3 0.3 0.1 100 force
+            scoreboard players reset @e[tag=dnl.this] cooldown
+        tag @s remove dnl.this
+        if score @s dnl.timer matches 100.. run function dnl_snowflake_boss_ice_spike:remove/this
+    
+    if entity @s[tag=dnl.snowflake_boss_ice_spike.multiple] run function ./snowflake_boss_ice_spike/multiple/main:
+        particle minecraft:snowflake ~ ~ ~ 1.3 0.5 1.3 0.1 3 force
+        particle minecraft:end_rod ~ ~ ~ 1.3 0.5 1.3 0.01 1 force
+        if score @s dnl.timer matches 20 run playsound minecraft:item.trident.throw master @a ~ ~ ~ 4 1 0
+        if score @s dnl.timer matches 20 run function ./snowflake_boss_ice_spike/multiple/damage_start:
+            store success score #dnl.snowflake_boss.breaked_block dnl.boolean run fill ~1 ~ ~1 ~-1 ~ ~-1 minecraft:air replace minecraft:powder_snow
+            if score #dnl.snowflake_boss.breaked_block dnl.boolean matches 1 run playsound minecraft:block.powder_snow.break master @a ~ ~ ~ 4 1 0
+        tag @s add dnl.this
+        if score @s dnl.timer matches 20.. if score @s cooldown matches 10.. positioned ~-1.3 ~ ~-1.3 as @a[dx=2.6,dy=0.5,dz=2.6] run function ./snowflake_boss_ice_spike/multiple/damage:
+            damage @s damage_absolute dnl:absolute at ~ ~ ~
+            damage @s damage_physical dnl:physical at ~ ~ ~
+            playsound minecraft:block.amethyst_block.break master @s ~ ~ ~ 4 1 0
+            particle minecraft:block ice ~ ~ ~ 1.3 0.3 1.3 0.1 100 force
+            scoreboard players reset @e[tag=dnl.this] cooldown
+        tag @s remove dnl.this
+        if score @s dnl.timer matches 100.. run function dnl_snowflake_boss_ice_spike:remove/this
+    
+    # if score #dnl.snowflake_boss.ice_spike_damage dnl.boolean matches 1 run function dnl_snowflake_boss_ice_spike:remove/this
+
+### Icicle Projectile ###
+@listener(on_entity_display_tick)
+def snowflake_boss_ice_projectile_tick():
+    if entity @s[tag=dnl.snowflake_boss_icicle_projectile] run function ./snowflake_boss_icicle_projectile/main
+
+
+@listener(on_special_projectile_hit)
+def special_projectile_hit():
+    if entity @s[tag=dnl.snowflake_boss_icicle_projectile] run function ./snowflake_boss_icicle_projectile/hit
+
+function ./snowflake_boss_icicle_projectile/main:
+    particle minecraft:end_rod ~ ~ ~ 0 0 0 0.01 1 force
+
+function ./snowflake_boss_icicle_projectile/hit:
+    
+    damage_absolute = 2
+    damage_physical = 4 + damage_absolute
+
+    playsound minecraft:block.amethyst_block.break master @a ~ ~ ~ 4 1 0
+    particle minecraft:snowflake ~ ~ ~ 0.5 0.5 0.5 0.1 20 force
+    positioned ^ ^ ^2 as @p[distance=..3] run function ./snowflake_boss_icicle_projectile/hit_player:
+        damage @s damage_absolute dnl:absolute at ~ ~ ~
+        damage @s damage_physical dnl:physical at ~ ~ ~
+        particle minecraft:snowflake ~ ~ ~ 0.5 0.5 0.5 0.1 20 force
+    if block ^ ^ ^2 minecraft:ice positioned ^ ^ ^2 run function ./snowflake_boss_icicle_projectile/hit_block: 
+        store success score #dnl.snowflake_boss.breaked_block dnl.boolean run fill ~1 ~1 ~1 ~-1 ~-1 ~-1 minecraft:water replace #minecraft:ice
+        if score #dnl.snowflake_boss.breaked_block dnl.boolean matches 1 run playsound minecraft:block.glass.break master @a ~ ~ ~ 4 1 0
+        store success score #dnl.snowflake_boss.breaked_block dnl.boolean run fill ~3 ~3 ~3 ~-3 ~-3 ~-3 minecraft:air replace minecraft:powder_snow
+        if score #dnl.snowflake_boss.breaked_block dnl.boolean matches 1 run playsound minecraft:block.powder_snow.break master @a ~ ~ ~ 4 1 0
+        particle minecraft:snowflake ~ ~ ~ 0.5 0.5 0.5 0.1 10 force
+    kill @s
+
+function ./snowflake_boss_icicle_projectile/summon:
+    summon snowball ~ ~ ~ {
+        Tags:["dnl.special_projectile","dnl.this"],
+        NoGravity:1b,
+        Item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_blank}},
+        Passengers:[{
+            id:"minecraft:item_display",
+            item_display:"head",
+            Tags:["dnl.tick","dnl.special_projectile","dnl.snowflake_boss_icicle_projectile","dnl.this"],
+            item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_icicle_projectile}},
+            transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[3f,3f,3f]}
+        }]
+    }
+    summon marker ~ ~ ~ {Tags:["dnl.direction"]}
+    as @e[type=marker,tag=dnl.direction] facing entity @p eyes positioned 0.0 0 0.0 run function ./snowflake_boss_icicle_projectile/get_motion:
+        tp @s ^ ^ ^3
+        data modify storage dnl:direction Motion set from entity @s Pos
+        data modify storage dnl:direction Rotation set from entity @s Rotation
+        kill @s
+    as @e[type=snowball,tag=dnl.special_projectile,tag=dnl.this,limit=1] at @s run function ./snowflake_boss_icicle_projectile/init:
+        data modify entity @s Motion set from storage dnl:direction Motion
+        on passengers run tp @s ~ ~ ~ facing entity @p
+        playsound minecraft:block.amethyst_block.resonate master @a ~ ~ ~ 4 1 0
+    tag @e remove dnl.this
+    
+### Flake ###
+@listener(on_entity_display_tick)
+def snowflake_boss_flake_tick():
+    if entity @s[tag=dnl.snowflake_boss_flake] run function ./snowflake_boss_flake/main
+
+@listener(on_special_projectile_hit)
+def snowflake_boss_flake_special_projectile_hit():
+    if entity @s[tag=dnl.snowflake_boss_flake] run function ./snowflake_boss_flake/hit
+
+function ./snowflake_boss_flake/main:
+    scoreboard players add @s dnl.timer 1
+    if score @s dnl.timer matches 5 run function ./snowflake_boss_flake/init_delayed:
+        particle minecraft:snowflake ~ ~ ~ 0 0 0 0.5 10 force
+        particle minecraft:end_rod ~ ~ ~ 0 0 0 0.5 10 force
+    if score @s dnl.timer matches 5.. run function ./snowflake_boss_flake/main_delayed:
+        particle minecraft:end_rod ~ ~ ~ 0 0 0 0.01 1 force
+        if entity @s[tag=dnl.snowflake_boss_flake.normal] run data modify entity @s item.tag.CustomModelData set value id_flake_type_a
+        if entity @s[tag=dnl.snowflake_boss_flake.stray] run data modify entity @s item.tag.CustomModelData set value id_flake_type_b
+
+function ./snowflake_boss_flake/hit:
+
+    damage_absolute = 2
+    damage_physical = 4 + damage_absolute
+
+    particle minecraft:end_rod ~ ~ ~ 0 0 0 0.5 10 force
+    playsound minecraft:block.amethyst_block.place master @a ~ ~ ~ 4 1 0
+    if entity @s[tag=dnl.snowflake_boss_flake.stray] run summon stray ~ ~ ~ {DeathLootTable:"minecraft:empty",Tags:["dnl.snowflake_boss_minion"],HandItems:[{id:"minecraft:bow",Count:1b},{}]}
+    if entity @s[tag=dnl.snowflake_boss_flake.normal] run if block ~ ~ ~ minecraft:air if block ~ ~-1 ~ minecraft:ice run fill ~1 ~ ~1 ~-1 ~ ~-1 minecraft:powder_snow replace air
+    as @p[distance=..1.5] run function ./snowflake_boss_flake/damage:
+        damage @s damage_absolute dnl:absolute at ~ ~ ~
+        damage @s damage_physical dnl:physical at ~ ~ ~
+    kill @s
+
+function ./snowflake_boss_flake/summon:
+    rng 1 5
+    outcome 1..4:
+        summon snowball ~ ~ ~ {
+            Tags:["dnl.special_projectile","dnl.snowflake_boss_flake"],
+            NoGravity:1b,
+            Item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_blank}},
+            Passengers:[{
+                id:"minecraft:item_display",
+                item_display:"head",
+                billboard:"vertical",
+                Tags:["dnl.tick","dnl.special_projectile","dnl.snowflake_boss_flake","dnl.snowflake_boss_flake.normal"],
+                item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_blank}},
+                transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}
+            }]
+        }
+    outcome 5:
+        summon snowball ~ ~ ~ {
+            Tags:["dnl.special_projectile","dnl.snowflake_boss_flake"],
+            NoGravity:1b,
+            Item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_blank}},
+            Passengers:[{
+                id:"minecraft:item_display",
+                item_display:"head",
+                billboard:"vertical",
+                Tags:["dnl.tick","dnl.special_projectile","dnl.snowflake_boss_flake","dnl.snowflake_boss_flake.stray"],
+                item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_blank}},
+                transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[1f,1f,1f]}
+            }]
+        }
+
+function ./snowflake_boss_flake/set_motion:
+    summon marker ~ ~ ~ {Tags:["dnl.direction"]}
+    as @e[type=marker,tag=dnl.direction] facing entity @p eyes positioned 0.0 0 0.0 run function ./snowflake_boss_flake/get_motion:
+        tp @s ~ ~-0.5 ~
+        data modify storage dnl:direction Motion set from entity @s Pos
+        data modify storage dnl:direction Rotation set from entity @s Rotation
+        kill @s
+    data modify entity @s Motion set from storage dnl:direction Motion
+
+### Death ###
 
 add_death_event("snowflake_boss")
 
 function ./snowflake_boss/death:
-    playsound minecraft:block.glass.break master @a ~ ~ ~ 1 1 1
+    remove_bossbar this
+
+    ### Sound Effect ###
+    playsound minecraft:block.amethyst_cluster.break master @a ~ ~ ~ 4 0.1 0
+    playsound minecraft:entity.generic.explode master @a ~ ~ ~ 4 1 0
+
+    ### Particle ###
+    particle minecraft:poof ~ ~4.08 ~ 4 4 4 0.5 100 force
+    particle minecraft:explosion ~ ~4.08 ~ 5 5 5 0.5 20 force
+    particle minecraft:snowflake ~ ~4.08 ~ 1.3 0.3 1.3 1 100 force
     particle block ice ~ ~0.4 ~ 0.2 0.2 0.2 0.01 20 normal
-    as @e[type=item_display,tag=dnl.snowflake_boss_display] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run kill @s
+    as @e[type=stray,tag=dnl.snowflake_boss_minion,distance=..64] at @s run function ./snowflake_boss/kill_minions:
+        tp @s ~ -1000 ~
+        kill @s
+
+    as @e[type=marker,tag=dnl.core,tag=dnl.snowflake_boss] if score @s dnl.lid = #dnl.death_entity_lid dnl.lid at @s run function ./snowflake_boss/core/death: 
+        setblock ~ ~ ~ minecraft:chest{LootTable:"dnl:entity/snowflake_boss/reward"}
+        kill @s
+    data modify entity @s Size set value 0
+    tp @s ~ ~-1000 ~
+    on passengers run function dnl_snowflake_boss:remove/this
+    kill @s

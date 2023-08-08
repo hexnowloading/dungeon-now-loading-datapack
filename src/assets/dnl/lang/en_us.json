@@ -1,3 +1,6 @@
 {
-    
+    "death.attack.absolute": "%1$s was hurt to death",
+    "death.attack.absolute.player": "%1$s was hurt to death",
+    "death.attack.physical": "%1$s was hurt to death",
+    "death.attack.physical.player": "%1$s was hurt to death"
 }

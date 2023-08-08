@@ -5,4 +5,5 @@ on_player_use_horn = Event('on_player_use_horn')
 @on_player_use_horn.handler
 def handler():
     function ../util/goat_horn_listener:
+        say in
         on_player_use_horn.trigger()

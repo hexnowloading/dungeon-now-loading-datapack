@@ -1,0 +1,1 @@
+function #dnl_snowflake_boss_ice_spike:on_summon_as_locators

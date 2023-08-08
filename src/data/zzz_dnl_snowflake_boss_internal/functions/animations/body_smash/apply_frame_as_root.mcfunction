@@ -1,0 +1,1 @@
+execute if score @s aj.anim_time matches 0..40 run function zzz_dnl_snowflake_boss_internal:animations/body_smash/tree/branch_0_40

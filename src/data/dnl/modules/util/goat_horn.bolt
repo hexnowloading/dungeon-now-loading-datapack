@@ -8,9 +8,10 @@ from reapermc:api import
 
 function ./goat_horn/on_player_use_horn:
     advancement revoke @s only ./on_player_use_horn
-    if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.use_horn dnl.int = @s dnl.offhand
-    if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.use_horn dnl.int = @s dnl.mainhand
-    if score #dnl.use_horn dnl.int matches 1.. run function ./goat_horn_listener
+    say 1
+    if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.horn_id dnl.int = @s dnl.offhand
+    if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.horn_id dnl.int = @s dnl.mainhand
+    if score #dnl.horn_id dnl.int matches 1.. run function ./goat_horn_listener
 
 advancement ./on_player_use_horn {
     "criteria": {

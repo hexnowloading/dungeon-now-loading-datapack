@@ -5,35 +5,35 @@ from ../util/death import add_death_event
 
 from reapermc:api import listener
 
-# add_summon snowflake_phantom phantom none 32 0 0 flame {
-#     DeathLootTable:"dnl:entity/snowflake_phantom/death",
-#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_phantom"],
-#     PersistenceRequired:1b,
-#     Passengers:[
-#         {
-#             id:"minecraft:block_display",
-#             Tags:["dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.chain"],
-#             block_state:{Name:"minecraft:chain",Properties:{axis:"y"}},
-#             transformation:{
-#                 left_rotation:[0f,0f,0f,1f],
-#                 right_rotation:[0f,0f,0f,1f],
-#                 translation:[-0.5f,-1f,-0.5f],
-#                 scale:[1f,1f,1f]
-#             }
-#         },
-#         {
-#             id:"minecraft:block_display",
-#             Tags:["dnl.display","dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.ice"],
-#             block_state:{Name:"minecraft:ice"},
-#             transformation:{
-#                 left_rotation:[0f,0f,0f,1f],
-#                 right_rotation:[0f,0f,0f,1f],
-#                 translation:[-0.5f,-2f,-0.5f],
-#                 scale:[1f,1f,1f]
-#             }
-#         }
-#     ]
-# }
+add_summon snowflake_phantom phantom none 32 0 0 flame {
+    DeathLootTable:"dnl:entity/snowflake_phantom/death",
+    Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_phantom"],
+    PersistenceRequired:1b,
+    Passengers:[
+        {
+            id:"minecraft:block_display",
+            Tags:["dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.chain"],
+            block_state:{Name:"minecraft:chain",Properties:{axis:"y"}},
+            transformation:{
+                left_rotation:[0f,0f,0f,1f],
+                right_rotation:[0f,0f,0f,1f],
+                translation:[-0.5f,-1f,-0.5f],
+                scale:[1f,1f,1f]
+            }
+        },
+        {
+            id:"minecraft:block_display",
+            Tags:["dnl.display","dnl.display_block","dnl.snowflake_phantom_display","dnl.snowflake_phantom_display.ice"],
+            block_state:{Name:"minecraft:ice"},
+            transformation:{
+                left_rotation:[0f,0f,0f,1f],
+                right_rotation:[0f,0f,0f,1f],
+                translation:[-0.5f,-2f,-0.5f],
+                scale:[1f,1f,1f]
+            }
+        }
+    ]
+}
 
 @listener(on_entity_mob_tick)
 def entity_mob_tick():

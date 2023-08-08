@@ -7,7 +7,7 @@ from ../api import
     get_nbt
 
 id = ctx.meta.item.ominous_horn
-nbt = get_nbt("ominous_horn", id)
+nbt = get_nbt("ominous_horn", id, "true")
 add_custom_model_data("ominous_horn", id, "goat_horn")
 
 loot_table ../item/ominous_horn {
@@ -66,5 +66,7 @@ loot_table ../item/ominous_horn {
 
 @listener(on_player_use_horn)
 def use_horn():
+    tellraw @p {"score":{"name":"#dnl.horn_id","objective":"dnl.int"}}
     if score #dnl.horn_id dnl.int matches id run function ./ominous_horn/effect:
+        say hi
         as @e[type=#dnl:illagers] run effect give @s minecraft:glowing 30 0 false

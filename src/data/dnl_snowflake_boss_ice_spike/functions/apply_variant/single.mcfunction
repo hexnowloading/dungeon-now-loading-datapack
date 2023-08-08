@@ -1,0 +1,2 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss_ice_spike.root] run function zzz_dnl_snowflake_boss_ice_spike_internal:apply_variant/single_as_root
+execute if entity @s[tag=!aj.dnl_snowflake_boss_ice_spike.root] run tellraw @a ["",{"text":"["},{"text":"Animated Java","color":"aqua"},{"text":"] "},{"text":"ERROR ☠","color":"red"},{"text":" > ","color":"gray"},[{"text":"The function","color":"yellow"},{"text":" dnl_snowflake_boss_ice_spike:apply_variant/single ","color":"blue"},{"text":"must be run"},{"text":" as ","color":"red"},{"text":"the root entity!"}]]

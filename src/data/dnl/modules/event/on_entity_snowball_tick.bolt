@@ -7,4 +7,8 @@ on_entity_snowball_tick = Event('on_entity_snowball_tick')
 def handler():
     execute function on_entity_snowball_tick.generate_path('entity_snowball_tick'):
         function ../util/entity_snowball_tick_listener:
+            scoreboard players add @s dnl.snowball.vf 1
+            if score @s dnl.snowball.vf matches 0 run data modify entity @s Air set value 0s
+            if score @s dnl.snowball.vf matches 1 run data modify entity @s Air set value 1s
+            if score @s dnl.snowball.vf matches 1 run scoreboard players set @s dnl.snowball.vf -1
             on_entity_snowball_tick.trigger()

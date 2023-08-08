@@ -1,0 +1,3 @@
+execute if score @s aj.dnl_snowflake_boss.animation.teleport.loop_mode = $aj.loop_mode.loop aj.i run function zzz_dnl_snowflake_boss_internal:animations/teleport/end_loop
+execute if score @s aj.dnl_snowflake_boss.animation.teleport.loop_mode = $aj.loop_mode.once aj.i run function dnl_snowflake_boss:animations/teleport/stop
+execute if score @s aj.dnl_snowflake_boss.animation.teleport.loop_mode = $aj.loop_mode.hold aj.i run function dnl_snowflake_boss:animations/teleport/pause

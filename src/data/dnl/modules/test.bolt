@@ -1,18 +1,1 @@
-from reapermc:api import listener
-from ./event/on_entity_display_tick import on_entity_display_tick
-
-function ./test/summon:
-    summon item_display ~ ~ ~ {item:{id:"minecraft:bell",Count:1b},Tags:["dnl.display","dnl.tick","dnl.test"]}
-
-@listener(on_entity_display_tick)
-def entity_display_tick():
-    if entity @s[tag=dnl.test] run function ./test/12:
-        tp @s ~ ~0.05 ~
-
-function ./test/transform:    
-    execute as @e[type=item_display] at @s run function ./test/transform/nest:
-        data merge entity @s {start_interpolation:0,interpolation_duration:1,transformation:{translation:[0f,1f,0f]}}
-        data modify entity @s transformation.scale[1] set value 3
-
-function ./test/summon/phantom:
-    summon phantom ~ ~ ~ {Passengers:[{id:"minecraft:block_display",Passengers:[{id:"minecraft:block_display",transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.5f,-1f,-0.5f],scale:[1f,1f,1f]},block_state:{Name:"minecraft:chain",Properties:{axis:"y"}}}],transformation:{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[-0.5f,-2f,-0.5f],scale:[1f,1f,1f]},block_state:{Name:"minecraft:ice"}}]}
+                                                                           

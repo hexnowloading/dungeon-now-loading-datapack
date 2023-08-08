@@ -1,0 +1,1 @@
+function zzz_dnl_snowflake_boss_ice_spike_internal:animations/emerging/tick_animation

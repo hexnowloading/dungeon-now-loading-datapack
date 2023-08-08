@@ -17,6 +17,7 @@ function ./all_settings/display:
         tellraw @s [{"translate":"[ > ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:world_death_penalty"}},{"translate":" World Death Penalty","color":"white"}]
         tellraw @s [{"translate":"[ > ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:maximum_heart"}},{"translate":" Maximum Hearts","color":"white"}]
         tellraw @s [{"translate":"[ > ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:developer_mode"}},{"translate":" Developer Mode","color":"white"}]
+        tellraw @s [{"translate":"[ > ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:test_mode"}},{"translate":" Test Mode","color":"white"}]
 
         tellraw @s {"translate":""}
         tellraw @s {"translate":"Player Settings","color":"gold"}

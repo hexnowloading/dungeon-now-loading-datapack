@@ -28,7 +28,9 @@ from ./event/on_player_play_music import on_player_play_music
 from ./event/on_player_stop_music import on_player_stop_music
 from ./event/on_player_respawn import on_player_respawn
 from ./event/on_player_load import on_player_load
+from ./event/on_player_place_block import on_player_place_block
 from ./event/on_player_mined_block import on_player_mined_block
+from ./event/on_player_freeze import on_player_freeze
 from ./event/on_projectile_ammo import on_projectile_ammo
 from ./event/on_projectile_land import on_projectile_land
 from ./event/on_projectile_load import on_projectile_load

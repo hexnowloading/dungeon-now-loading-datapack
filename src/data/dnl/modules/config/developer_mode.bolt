@@ -27,7 +27,7 @@ function ./developer_mode/display:
         tellraw @s {"translate":""}
         tellraw @s {"translate":"Enables Developer Mode."}
         tellraw @s {"translate":""}
-        unless score #dnl.developer_mode dnl.boolean matches 1 run function ./developer_mode/off_chosen:
+        unless score #dnl.developer_mode dnl.boolean matches 1 run function ./developer_mode/off_chosen:    
             function ./developer_mode/on_cross
             function ./developer_mode/off_check
         if score #dnl.developer_mode dnl.boolean matches 1 run function ./developer_mode/on_chosen:

@@ -1,0 +1,16 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+from ./on_entity_player_tick import on_entity_player_tick
+
+on_player_freeze = Event('on_player_freeze')
+
+@on_player_freeze.handler
+def handler():
+    @listener(on_entity_player_tick)
+    def _on_entity_player_tick():
+        store result score @s dnl.freeze run data get storage dnl:player Player.TicksFrozen
+        # scoreboard players reset #dnl.hold_item_id dnl.int
+        # if score @s dnl.offhand matches 1.. run scoreboard players operation #dnl.hold_item_id dnl.int = @s dnl.offhand
+        # if score @s dnl.mainhand matches 1.. run scoreboard players operation #dnl.hold_item_id dnl.int = @s dnl.mainhand
+        execute if score @s dnl.freeze matches 1.. run function ../util/player_freeze_listener:
+            on_player_freeze.trigger()

@@ -1,0 +1,2 @@
+scoreboard players set @s aj.dnl_snowflake_boss.rig_loaded 1
+execute unless score @s aj.dnl_snowflake_boss.export_version = aj.dnl_snowflake_boss.export_version aj.i at @s run function zzz_dnl_snowflake_boss_internal:upgrade_rig

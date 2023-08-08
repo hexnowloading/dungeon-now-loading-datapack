@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "block/ice_spike_indicator",
+		"particle": "dnl:mob/snowflake_slime/ice_spike"
+	},
+	"elements": [
+		{
+			"from": [3.5, 0, 3.5],
+			"to": [12.5, 0, 12.5],
+			"faces": {
+				"north": {"uv": [0, 0, 5.5, 0], "texture": "#1"},
+				"east": {"uv": [0, 0, 5.5, 0], "texture": "#1"},
+				"south": {"uv": [0, 0, 5.5, 0], "texture": "#1"},
+				"west": {"uv": [0, 0, 5.5, 0], "texture": "#1"},
+				"up": {"uv": [5.5, 5.5, 1, 1], "texture": "#1"},
+				"down": {"uv": [5.5, 5.5, 0, 11], "texture": "#1"}
+			}
+		}
+	],
+	"display": {}
+}

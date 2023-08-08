@@ -1,0 +1,1 @@
+function zzz_dnl_snowflake_boss_internal:animations/teleport/tick_animation

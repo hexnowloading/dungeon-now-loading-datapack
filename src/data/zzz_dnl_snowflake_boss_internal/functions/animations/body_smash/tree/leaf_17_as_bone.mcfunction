@@ -1,0 +1,1 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.body] run data modify entity @s {} merge value {transformation:[-5.9946046026074695f,0f,-0.25439272473350705f,0f,0f,6f,0f,-1.4719140625f,0.25439272473350705f,0f,-5.9946046026074695f,0f,0f,0f,0f,1f],start_interpolation:0}

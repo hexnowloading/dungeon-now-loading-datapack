@@ -1,0 +1,1 @@
+execute as @e[type=#dnl_snowflake_boss:aj_root,tag=aj.dnl_snowflake_boss.root] run function zzz_dnl_snowflake_boss_internal:tick_as_root

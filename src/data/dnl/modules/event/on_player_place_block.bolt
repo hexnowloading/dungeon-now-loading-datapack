@@ -1,0 +1,22 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_player_place_block = Event('on_player_place_block')
+
+@on_player_place_block.handler
+def handler():
+    execute function on_player_place_block.generate_path('player_place_block'):
+        function ../util/player_place_block_listener:
+            advancement revoke @s only dnl:util/player_place_block
+            on_player_place_block.trigger()
+
+advancement ../util/player_place_block {
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:placed_block"
+        }
+    },
+    "rewards": {
+        "function": "dnl:util/player_place_block_listener"
+    }
+}

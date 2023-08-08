@@ -1,0 +1,10 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.body] run data modify entity @s item.tag.CustomModelData set value 43
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.shield] run data modify entity @s item.tag.CustomModelData set value 44
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword] run data modify entity @s item.tag.CustomModelData set value 45
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword2] run data modify entity @s item.tag.CustomModelData set value 46
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword3] run data modify entity @s item.tag.CustomModelData set value 47
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword4] run data modify entity @s item.tag.CustomModelData set value 48
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword5] run data modify entity @s item.tag.CustomModelData set value 49
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword6] run data modify entity @s item.tag.CustomModelData set value 50
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword7] run data modify entity @s item.tag.CustomModelData set value 51
+execute if entity @s[tag=aj.dnl_snowflake_boss.bone.sword8] run data modify entity @s item.tag.CustomModelData set value 52

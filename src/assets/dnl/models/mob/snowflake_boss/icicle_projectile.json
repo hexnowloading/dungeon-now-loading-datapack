@@ -1,0 +1,40 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "dnl:mob/snowflake_boss/sword/sword",
+		"particle": "dnl:mob/snowflake_boss/sword/sword"
+	},
+	"elements": [
+		{
+			"from": [0.5, 0, 8],
+			"to": [15.5, 27, 8],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 13.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 7.5, 13.5], "texture": "#0"},
+				"east": {"uv": [0, 0, 0, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 7.5, 13.5], "texture": "#0"},
+				"west": {"uv": [0, 0, 0, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 15, 0], "texture": "#0"},
+				"down": {"uv": [0, 0, 15, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [8, 0, 0.5],
+			"to": [8, 27, 15.5],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 13.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 0, 16], "texture": "#0"},
+				"east": {"uv": [0, 0, 7.5, 13.5], "texture": "#0"},
+				"south": {"uv": [0, 0, 0, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 7.5, 13.5], "texture": "#0"},
+				"up": {"uv": [0, 0, 15, 0], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [0, 0, 15, 0], "rotation": 270, "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [90, 0, 0]
+		}
+	}
+}

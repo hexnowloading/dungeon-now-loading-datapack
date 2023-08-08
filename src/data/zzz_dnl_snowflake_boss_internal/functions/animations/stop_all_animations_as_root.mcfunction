@@ -1,0 +1,9 @@
+function zzz_dnl_snowflake_boss_internal:animations/idle/pause
+function zzz_dnl_snowflake_boss_internal:animations/wake_up/pause
+function zzz_dnl_snowflake_boss_internal:animations/teleport/pause
+function zzz_dnl_snowflake_boss_internal:animations/body_smash/pause
+function zzz_dnl_snowflake_boss_internal:animations/icicle_missile/pause
+function zzz_dnl_snowflake_boss_internal:animations/ice_spike/pause
+function zzz_dnl_snowflake_boss_internal:animations/ice_shield/pause
+function zzz_dnl_snowflake_boss_internal:animations/ice_shield_start/pause
+function zzz_dnl_snowflake_boss_internal:animations/ice_shield_end/pause

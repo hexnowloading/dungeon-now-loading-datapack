@@ -1,0 +1,16 @@
+# Define easing function for ease-in-out
+def ease_in_out(t):
+    if t < 0.5:
+        return 0.5 * (2 * t) ** 3
+    else:
+        return 0.5 * ((2 * t - 2) ** 3 + 2)
+
+# Define function to generate mcfunction file with ease-in-out animation for an item display entity in Minecraft
+def ease_in_out(entity_id, mcfunction_file, animation_ticks):
+    # Open mcfunction file for writing
+    function f"dnl:entity/{entity_id}/animation/{mcfunction_file}":
+        
+        for i in range(animation_ticks):
+            t = i / animation_ticks
+            scale = ease_in_out(t)
+            if score @s dnl.animation.timer matches i run data merge entity @s {start_interpolation:0,interpolation_duration:1,transformation:{translation:f'[0f,{scale}f,0f]'}}

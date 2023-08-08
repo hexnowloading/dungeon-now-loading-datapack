@@ -1,0 +1,69 @@
+from reapermc:api import
+    listener
+    on_server_load
+
+from ../event/on_server_init import on_server_init
+
+@listener(on_server_init)
+def server_init():
+    scoreboard players set #dnl.test_mode dnl.boolean 0
+
+cmd = ctx.meta.dnl.cmd_namespace
+
+function f"{cmd}:test_mode":
+    tag @s add dnl.player_opening_setting
+    schedule function ./test_mode/display 1t
+    playsound minecraft:ui.button.click master @s ~ ~ ~ 1 1 1
+
+function ./test_mode/display:
+    as @a[tag=dnl.player_opening_setting] run function ./test_mode/options:
+        tag @s remove dnl.player_opening_setting
+        function ../util/air_text
+        tellraw @s [{"translate":"                           ","strikethrough":true},{"translate":" Test Mode ","color":"gold","strikethrough":false,"bold":true},{"translate":"                           ","strikethrough":true}]
+        tellraw @s {"translate":""}
+        tellraw @s {"translate":"Enables Test Mode."}
+        tellraw @s {"translate":""}
+        unless score #dnl.test_mode dnl.boolean matches 1 run function ./test_mode/off_chosen:
+            function ./test_mode/on_cross
+            function ./test_mode/off_check
+        if score #dnl.test_mode dnl.boolean matches 1 run function ./test_mode/on_chosen:
+            function ./test_mode/on_check
+            function ./test_mode/off_cross
+            function ./test_mode/reset_button
+        tellraw @s {"translate":""}
+        tellraw @s [{"translate":"[ < ]","color":"yellow","hoverEvent":{"action":"show_text","contents":[{"translate":"Click!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function cmd:settings"}},{"translate":" Go Back","color":"white"}]
+
+function ./test_mode/on_cross:
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/test_mode/on_set"}},{"translate":"On","color":"white"}]
+
+function ./test_mode/off_cross:
+    tellraw @s [{"translate":"[ ❌ ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/test_mode/off_set"}},{"translate":"Off","color":"white"}]
+
+function ./test_mode/on_check:
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"On","color":"white"}]
+
+function ./test_mode/off_check:
+    tellraw @s [{"translate":"[ ✔ ] ","color":"green"},{"translate":"Off","color":"white"}]
+
+function ./test_mode/reset_button:
+    tellraw @s [{"translate":"[ Reset Spawners ] ","color":"red","hoverEvent":{"action":"show_text","contents":[{"translate":"Click to Enable!","color":"green"}]},"clickEvent":{"action":"run_command","value":"/function dnl:config/test_mode/reset"}}]
+
+
+function ./test_mode/on_set:
+    scoreboard players set #dnl.test_mode dnl.boolean 1
+    tag @s add dnl.player_opening_setting
+    schedule function ./test_mode/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+
+function ./test_mode/off_set:
+    scoreboard players set #dnl.test_mode dnl.boolean 0
+    tag @e[type=marker,tag=dnl.spawner,tag=dnl.mob_spawner.used] remove dnl.mob_spawner.used
+    tag @s add dnl.player_opening_setting
+    schedule function ./test_mode/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1
+
+function ./test_mode/reset:
+    tag @e[type=marker,tag=dnl.spawner,tag=dnl.mob_spawner.used] remove dnl.mob_spawner.used
+    tag @s add dnl.player_opening_setting
+    schedule function ./test_mode/display 1t
+    playsound minecraft:entity.experience_orb.pickup block @s ~ ~ ~ 1 1 1

@@ -1,0 +1,18 @@
+from ../event/on_entity_mob_tick import on_entity_mob_tick
+from ../event/on_entity_falling_block_tick import on_entity_falling_block_tick
+from ../util/mob import add_summon, assign_lid
+from ../util/death import add_death_event
+
+from reapermc:api import listener
+
+add_summon snowflake_stray stray none 32 0 0 flame {
+    DeathLootTable:"dnl:entity/snowflake_stray/death",
+    Tags:["dnl.mob","dnl.snowflake_mob","dnl.snowflake_stray"],
+    PersistenceRequired:1b
+}
+
+# @listener(on_entity_mob_tick)
+# def entity_mod_tick():
+#     if entity @s[tag=dnl.snowflake_stray] run function ./snowflake_stray/main
+
+# function ./snowflake_stray/main:

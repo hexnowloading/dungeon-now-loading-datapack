@@ -1,0 +1,1 @@
+execute if score @s aj.anim_time matches 0..20 run function zzz_dnl_snowflake_boss_internal:animations/teleport/tree/branch_0_20

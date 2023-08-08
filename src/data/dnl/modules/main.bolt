@@ -35,8 +35,12 @@ def load():
     scoreboard objectives add dnl.phase dummy
     scoreboard objectives add dnl.move dummy
     scoreboard objectives add dnl.var dummy
+    scoreboard objectives add dnl.ability.timer dummy
     scoreboard objectives add dnl.hurt.timer dummy
     scoreboard objectives add dnl.animation.timer dummy
+    scoreboard objectives add dnl.animation.delay dummy
+
+    scoreboard objectives add dnl.snowball.vf dummy
 
     scoreboard objectives add dnl.max_health dummy
     scoreboard objectives add dnl.time_since_death minecraft.custom:minecraft.time_since_death
@@ -56,17 +60,22 @@ def load():
     scoreboard objectives add dnl.shield.timer dummy
     scoreboard objectives add dnl.offhand_used dummy
     scoreboard objectives add dnl.offhand_delay dummy
+    scoreboard objectives add dnl.freeze dummy
 
     scoreboard objectives add dnl.stat.obtained_material dummy
 
     scoreboard players set #dnl.1 dnl.constant 1
+    scoreboard players set #dnl.2 dnl.constant 2
     scoreboard players set #dnl.8 dnl.constant 8
     scoreboard players set #dnl.9 dnl.constant 9
     scoreboard players set #dnl.10 dnl.constant 10
     scoreboard players set #dnl.80 dnl.constant 80
+    scoreboard players set #dnl.700 dnl.constant 700
 
     team add dnl.no_collision
     team modify dnl.no_collision collisionRule pushOwnTeam
+
+    say delete this
 
     unless score #loaded dnl.eid = #loaded dnl.eid run function ./entity_hit_matching/set_defaults
     unless score #dnl.global_lid dnl.lid matches 0.. run scoreboard players set #dnl.global_lid dnl.lid 0

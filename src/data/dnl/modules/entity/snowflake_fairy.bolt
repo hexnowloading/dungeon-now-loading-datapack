@@ -14,29 +14,29 @@ id_hurt = ctx.meta.mob.snowflake_fairy.hurt
 add_model_custom_model_data("snowflake_fairy/idle", id_idle, "snowball", "true")
 add_model_custom_model_data("snowflake_fairy/hurt", id_hurt, "snowball", "true")
 
-# add_summon snowflake_fairy vex none 32 0 0 flame {
-#     DeathLootTable:"dnl:entity/snowflake_fairy/death",
-#     Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_fairy"],
-#     PersistenceRequired:1b,
-#     Silent:1b,
-#     NoAI:0b,
-#     ActiveEffects:[{Id:14,Amplifier:0b,Duration:-1,ShowParticles:0b}],
-#     Passengers:[
-#         {
-#             id:"minecraft:item_display",
-#             Tags:["dnl.display","dnl.display_item","dnl.snowflake_fairy_display","dnl.snowflake_fairy_display.body"],
-#             brightness:{sky:15,block:15},
-#             billboard:"center",
-#             item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_idle}},
-#             transformation:{
-#                 left_rotation:[0f,0f,0f,1f],
-#                 right_rotation:[0f,0f,0f,1f],
-#                 translation:[0f,0f,0f],
-#                 scale:[1f,1f,1f]
-#             }
-#         }
-#     ]
-# }
+add_summon snowflake_fairy vex none 32 0 0 flame {
+    DeathLootTable:"dnl:entity/snowflake_fairy/death",
+    Tags:["dnl.mob","dnl.tick","dnl.snowflake_mob","dnl.snowflake_fairy"],
+    PersistenceRequired:1b,
+    Silent:1b,
+    NoAI:0b,
+    ActiveEffects:[{Id:14,Amplifier:0b,Duration:-1,ShowParticles:0b}],
+    Passengers:[
+        {
+            id:"minecraft:item_display",
+            Tags:["dnl.display","dnl.display_item","dnl.snowflake_fairy_display","dnl.snowflake_fairy_display.body"],
+            brightness:{sky:15,block:15},
+            billboard:"center",
+            item:{id:"minecraft:snowball",Count:1b,tag:{CustomModelData:id_idle}},
+            transformation:{
+                left_rotation:[0f,0f,0f,1f],
+                right_rotation:[0f,0f,0f,1f],
+                translation:[0f,0f,0f],
+                scale:[1f,1f,1f]
+            }
+        }
+    ]
+}
 
 @listener(on_entity_mob_tick)
 def entity_mob_tick():

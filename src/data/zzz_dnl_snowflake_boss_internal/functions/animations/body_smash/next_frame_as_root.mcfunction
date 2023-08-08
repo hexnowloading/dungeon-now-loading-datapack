@@ -1,0 +1,1 @@
+function zzz_dnl_snowflake_boss_internal:animations/body_smash/tick_animation

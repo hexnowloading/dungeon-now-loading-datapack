@@ -1,0 +1,54 @@
+from ../api import
+    on_entity_effect
+    on_player_respawn
+    on_player_place_block
+    on_player_freeze
+
+from reapermc:api import
+    listener
+    on_server_load
+
+@listener(on_entity_effect)
+def entity_effect():
+    if entity @s[tag=dnl.hypothermia] run function ./hypothermia/main
+
+@listener(on_server_load)
+def load():
+    scoreboard objectives add dnl.timer.hypothermia dummy
+
+@listener(on_player_place_block)
+def player_place_block():
+    if entity @s[tag=dnl.hypothermia] run function ./hypothermia/place_block
+
+@listener(on_player_freeze)
+def player_freeze():
+    if entity @s[tag=dnl.hypothermia] if score #dnl.1s dnl.tick matches 1 run function ./hypothermia/in_powder_snow
+
+function ./hypothermia/apply:
+    unless entity @s[tag=dnl.hypothermia] run scoreboard players add @s dnl.effect 1
+    scoreboard players set @s dnl.timer.hypothermia 1
+    tag @s add dnl.hypothermia
+
+function ./hypothermia/remove:
+    scoreboard players remove @s dnl.effect 1
+    tag @s remove dnl.hypothermia
+    scoreboard players reset @s dnl.timer.hypothermia
+
+function ./hypothermia/main:
+    scoreboard players add @s dnl.timer.hypothermia 1
+    particle minecraft:snowflake ~ ~ ~ 0.3 2 0.3 0.001 1 force
+    if score #dnl.1s dnl.tick matches 1 if block ~ ~ ~ minecraft:water run function ./hypothermia/in_water
+    if score @s dnl.timer.hypothermia matches 100.. run function ./hypothermia/remove
+
+function ./hypothermia/in_water:
+    damage @s 5 minecraft:freeze at ~ ~ ~
+    effect give @s minecraft:slowness 10 2 false
+    title @s actionbar [{"translate":"Hypothermia","color":"red","italic":false},{"translate":": Staying in water causes Slowness III and 5 freezing damage per second!","color":"white","italic":false}]
+
+function ./hypothermia/in_powder_snow:
+    damage @s 3 minecraft:freeze at ~ ~ ~
+    title @s actionbar [{"translate":"Hypothermia","color":"red","italic":false},{"translate":": Staying in powder snow deals 3 freezing damage per second!","color":"white","italic":false}]
+
+function ./hypothermia/place_block:
+    damage @s 10 minecraft:freeze at ~ ~ ~
+    title @s actionbar [{"translate":"Hypothermia","color":"red","italic":false},{"translate":": Placing block deals 10 freezing damage to yourself!","color":"white","italic":false}]

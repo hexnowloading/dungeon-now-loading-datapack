@@ -1,0 +1,10 @@
+from reapermc:event_handler import Event, listener
+from reapermc:flag_handler import Flag
+
+on_special_projectile_hit = Event('on_special_projectile_hit')
+
+@on_special_projectile_hit.handler
+def handler():
+    execute function on_special_projectile_hit.generate_path('special_projectile_hit'):
+        function ../util/snowball/special_projectile_hit_listener:
+            on_special_projectile_hit.trigger()

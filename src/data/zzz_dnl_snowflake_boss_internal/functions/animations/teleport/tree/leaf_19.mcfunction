@@ -1,0 +1,1 @@
+execute on passengers run function zzz_dnl_snowflake_boss_internal:animations/teleport/tree/leaf_19_as_bone

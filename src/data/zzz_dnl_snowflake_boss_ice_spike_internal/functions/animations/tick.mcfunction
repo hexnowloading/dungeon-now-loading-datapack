@@ -1,0 +1,1 @@
+execute if entity @s[tag=aj.dnl_snowflake_boss_ice_spike.animation.emerging] run function zzz_dnl_snowflake_boss_ice_spike_internal:animations/emerging/tick

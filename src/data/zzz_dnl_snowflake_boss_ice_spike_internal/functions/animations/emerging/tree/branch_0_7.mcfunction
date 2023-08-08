@@ -1,0 +1,2 @@
+execute if score @s aj.anim_time matches 0 run function zzz_dnl_snowflake_boss_ice_spike_internal:animations/emerging/tree/leaf_0
+execute if score @s aj.anim_time matches 1 run function zzz_dnl_snowflake_boss_ice_spike_internal:animations/emerging/tree/leaf_1

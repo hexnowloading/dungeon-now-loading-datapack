@@ -19,30 +19,23 @@ require:
   - bolt
   - bolt_expressions
   - reapermc
+  - beet.contrib.unknown_files
 
 pipeline:
   - mecha
   - plugins.remove_empty_files
-  - beet.contrib.copy_files
   - beet.contrib.worldgen
 
 meta:
   bolt:
     entrypoint:
       - dnl:*
-  copy_files:
-    resource_pack:
-      assets: "src/assets/*.*"
-      assets/minecraft/optifine: "src/assets/minecraft/optifine/*.*"
-      assets/dnl/optifine: "src/assets/dnl/optifine/*.*"
-      assets/minecraft/optifine/anim: "src/assets/minecraft/optifine/anim/*.*"
-      assets/minecraft/optifine/cit/armor: "src/assets/minecraft/optifine/cit/armor/*.*"
-      assets/minecraft/optifine/random/entity/ghast: "src/assets/minecraft/optifine/random/entity/ghast/*.*"
-      assets/minecraft/optifine/random/entity/slime: "src/assets/minecraft/optifine/random/entity/slime/*.*"
   dnl:
     namespace: 'dnl'
     cmd_namespace: 'cmd'
     datapack_version: 19
+  util:
+    blank: 1010001
   item:
     ancient_bow: 1
     ancient_bow_red: 2
@@ -134,4 +127,7 @@ meta:
     snowflake_slime:
       ice_spike: 3030011
     snowflake_boss:
-      idle: 3030021
+      icicle_projectile: 3030021
+      ice_spike: 3030022
+      flake_type_a: 3030023
+      flake_type_b: 3030024

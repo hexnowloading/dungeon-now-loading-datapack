@@ -1,0 +1,1 @@
+execute if score @s aj.anim_time matches 0..120 run function zzz_dnl_snowflake_boss_internal:animations/icicle_missile/tree/branch_0_120

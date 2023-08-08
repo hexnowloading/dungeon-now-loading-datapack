@@ -212,3 +212,8 @@ def add_model_custom_model_data(custom_item_name, id, base_item, custom_model):
                     "layer0": model_path
                 }
             }
+
+id_blank = ctx.meta.util.blank
+
+add_model_custom_model_data("util/blank/white_dye", id_blank, "white_dye", "false")
+add_model_custom_model_data("util/blank/snowball", id_blank, "snowball", "false")

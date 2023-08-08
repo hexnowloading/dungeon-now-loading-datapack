@@ -1,0 +1,3 @@
+execute if score @s aj.dnl_snowflake_boss.animation.body_smash.loop_mode = $aj.loop_mode.loop aj.i run function zzz_dnl_snowflake_boss_internal:animations/body_smash/end_loop
+execute if score @s aj.dnl_snowflake_boss.animation.body_smash.loop_mode = $aj.loop_mode.once aj.i run function dnl_snowflake_boss:animations/body_smash/stop
+execute if score @s aj.dnl_snowflake_boss.animation.body_smash.loop_mode = $aj.loop_mode.hold aj.i run function dnl_snowflake_boss:animations/body_smash/pause

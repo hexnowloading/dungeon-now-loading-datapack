@@ -253,9 +253,12 @@ function ./entity_hit_matching/on_hurt/reward:
     scoreboard players reset #dnl.ehm.generic dnl.boolean
     scoreboard players reset #dnl.ehm.projectile dnl.boolean
     scoreboard players reset #dnl.ehm.blocked dnl.boolean
+    # scoreboard players reset #dnl.ehm.arrow dnl.boolean
     if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={generic=true}}] run scoreboard players set #dnl.ehm.generic dnl.boolean 1
     if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={projectile=true}}] run scoreboard players set #dnl.ehm.projectile dnl.boolean 1
     if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={blocked=true}}] run scoreboard players set #dnl.ehm.blocked dnl.boolean 1
+    # if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={arrow=true}}] run scoreboard players set #dnl.ehm.arrow dnl.boolean 1
+    if entity @s[advancements={dnl:util/entity_hit_matching/on_hurt={snowball=true}}] run say snowball
 
     ### Player Data ###
     scoreboard players operation #dnl.weapon_id.target dnl.int = @s dnl.mainhand
@@ -278,6 +281,7 @@ function ./entity_hit_matching/on_hurt/reward:
         if score #dnl.ehm.generic dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt_attacker_listener
     if score #dnl.ehm.generic dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt_target_listener
     if score #dnl.ehm.projectile dnl.boolean matches 1 run schedule function dnl:util/projectiles/arrow_hit_entity_schedule 1t
+    # if score #dnl.ehm.arrow dnl.boolean matches 1 run function ./entity_hit_matching/on_hurt/arrow
     tag @s remove dnl.ehm.target
     advancement revoke @s only dnl:util/entity_hit_matching/on_hurt
 
@@ -305,3 +309,16 @@ def entity_player_tick():
     if entity @s[advancements={dnl:util/entity_hit_matching/using_shield=true}] run function ./entity_hit_matching/using_shield/true:
         scoreboard players add @s dnl.shield.timer 1
         advancement revoke @s only dnl:util/entity_hit_matching/using_shield
+
+# ### Arrow ###
+# function ./entity_hit_matching/on_hurt/arrow:
+#     as @e[type=arrow,tag=dnl.special_projectile,limit=1,sort=nearest] run function ./entity_hit_matching/on_hurt/on_special_projectile_arrow_listener:
+#         say piercing
+#         scoreboard players reset #dnl.ehm.arrow.icicle_missile dnl.boolean
+#         if entity @s[tag=dnl.icicle_missile] run scoreboard players set #dnl.ehm.arrow.icicle_missile dnl.boolean 1
+#         if entity @s[tag=dnl.icicle_missile] run say score
+#         kill @s
+#     function ./entity_hit_matching/on_hurt/on_special_projectile_player_listener
+
+# function ./entity_hit_matching/on_hurt/on_special_projectile_player_listener:
+#     if score #dnl.ehm.arrow.icicle_missile dnl.boolean matches 1 run say player

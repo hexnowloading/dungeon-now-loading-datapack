@@ -1,0 +1,15 @@
+damage_type dnl:absolute {
+    "message_id": "absolute",
+    "exhaustion": 0,
+    "scaling": "never",
+    "effects": "hurt",
+    "death_message_type": "default"
+}
+
+damage_type dnl:physical {
+    "message_id": "physical",
+    "exhaustion": 0,
+    "scaling": "never",
+    "effects": "hurt",
+    "death_message_type": "default"
+}
